@@ -61,8 +61,7 @@ namespace Kthura
 
         static MainConfig() {
             Debug.WriteLine($"System detected as {Platform}/{ADP}/{Environment.OSVersion.Platform}");
-            Dirry.InitAltDrives(ADP);            
-            
+            Dirry.InitAltDrives(ADP);                        
         }
 
     }

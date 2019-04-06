@@ -38,6 +38,14 @@ function private:cpy($bindir,$packagename){
 	copy-item $bindir ../Releases
 }
 
+function private:clearreleases{
+	write-host "Clearing Release Folder " -Foreground Yellow
+    $Readme=cat ../Releases/ReadMe.md
+    del ../Releases/*.*
+    echo $Readme > ../Releases/ReadMe.md
+}
+
 builddate
+clearreleases
 bld "KthuraLauncher" "Launcher"
 cpy "Kthuralauncher/bin/Release/*.exe" "Launcher"

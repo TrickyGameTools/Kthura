@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,6 +23,7 @@ namespace Kthura
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Init Window
         public MainWindow()
         {
             InitializeComponent();
@@ -39,14 +40,14 @@ namespace Kthura
                     }
                 }
             }
+            Scan4Projects();
         }
+        #endregion
+
+        #region GUI Callbacks
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
-        }
-
-        private void Scan4Projects() {
 
         }
 
@@ -89,14 +90,61 @@ namespace Kthura
                 if (CrPrjMapFolder.Text == "*InProject*") {
                     var td = $"{prjdir}/Maps";
                     Directory.CreateDirectory(td);
-                    Project.D("Maps", td);
+                    Project.D("Maps", td.Replace("\\","/"));
                 }
                 Project.SaveSource(prjfile);
                 MessageBox.Show("A new project has been created!");
+                Scan4Projects();
             } catch (Exception E) {
                 Afgekeurd($"Creating a new project failed!\n\n{E.Message}");
             }
 
         }
+
+        private void LstProjects_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            AutoEnable();
+            Scan4Maps();
+        }
+
+        private void LstMaps_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            AutoEnable();
+        }
+
+        #endregion
+
+        #region AutoSet
+        void AutoEnable() {
+            //var prj = LstProjects.SelectedItem.ToString();
+            LstMaps.IsEnabled = LstProjects.SelectedItem != null;            
+        }
+        #endregion
+
+        #region General functionality
+        private void Scan4Projects() {
+            LstProjects.Items.Clear();
+            foreach (string p in FileList.GetDir(MainConfig.WorkSpace, 2)) {
+                LstProjects.Items.Add(p);
+            }
+            AutoEnable();
+        }
+
+        void Scan4Maps() {
+            if (LstProjects.SelectedItem == null) return; // Crash prevention
+            try {
+                var prj = LstProjects.SelectedItem.ToString();
+                Debug.WriteLine($"Scanning projecT: {prj}");
+                var prjfile = $"{MainConfig.WorkSpace}/{prj}/{prj}.Project.GINI";
+                TGINI Project = GINI.ReadFromFile(prjfile);
+                if (Project==null) { MessageBox.Show($"Reading {prjfile} failed!", "Project scanning errorr", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                var maps = FileList.GetDir(Project.C("Maps"));
+                LstMaps.Items.Clear();
+                LstMaps.Items.Add("** New Map **");
+                foreach (string m in maps) LstMaps.Items.Add(m);
+            } catch (Exception E) {
+                MessageBox.Show(E.Message, "Project scanning errorr", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
     }
 }
