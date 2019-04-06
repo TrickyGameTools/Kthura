@@ -110,12 +110,27 @@ namespace Kthura
             AutoEnable();
         }
 
+        private void NewMap_TextChanged(object sender, TextChangedEventArgs e) => AutoEnable();
+
         #endregion
 
         #region AutoSet
         void AutoEnable() {
             //var prj = LstProjects.SelectedItem.ToString();
-            LstMaps.IsEnabled = LstProjects.SelectedItem != null;            
+            Dictionary<bool, Visibility> b2v = new Dictionary<bool, Visibility>();
+            b2v[false] = Visibility.Hidden;
+            b2v[true] = Visibility.Visible;
+            LstMaps.IsEnabled = LstProjects.SelectedItem != null; 
+            LstMaps.Visibility=b2v[LstProjects.SelectedItem != null];
+            LabelMaps.Visibility = LstMaps.Visibility;
+            NewMap.Visibility=b2v[LstProjects.SelectedItem != null && LstMaps.SelectedItem != null && LstMaps.SelectedItem.ToString() == "** New Map **"];
+            LabelNewMap.Visibility = NewMap.Visibility;
+            var canstart = LstProjects.SelectedItem != null;
+            canstart = canstart && LstProjects.SelectedItem != null;
+            canstart = canstart && LstMaps.SelectedItem != null;
+            canstart = canstart && (LstMaps.SelectedItem.ToString() != "** New Map **" || NewMap.Text != "");
+            StartTheEditor.IsEnabled = canstart;
+            StartTheEditor.Visibility = b2v[canstart];
         }
         #endregion
 
@@ -146,5 +161,6 @@ namespace Kthura
         }
         #endregion
 
+        
     }
 }

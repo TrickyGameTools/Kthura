@@ -51,7 +51,7 @@
                     </Grid.Background>
                     <Image HorizontalAlignment="Left" Height="132" VerticalAlignment="Top" Width="140" RenderTransformOrigin="0.96,1.587" Margin="13,72,0,0" Source="Kthura.ico"/>
                     <Label Content="Project" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FFFFB400" FontSize="24" Margin="70,25,0,0"/>
-                    <Label Foreground="#ffffb400" FontSize="24" Content="Map" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.146,3.654" Margin="92,233,0,0"/>
+                    <Label x:Name="LabelMaps" Foreground="#ffffb400" FontSize="24" Content="Map" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.146,3.654" Margin="92,233,0,0"/>
                     <ListBox x:Name="LstProjects" HorizontalAlignment="Left" Height="179" VerticalAlignment="Top" Width="1377" RenderTransformOrigin="1.339,1.077" Margin="174,25,0,0" SelectionChanged="LstProjects_SelectionChanged">
                         <ListBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -88,7 +88,7 @@
                         </ListBox.Background>
                     </ListBox>
                     <Label x:Name="LabelNewMap" Foreground="#ffffb400" FontSize="24" Content="New Map" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.146,3.654" Margin="41,729,0,0"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="1377" Margin="174,746,0,0">
+                    <TextBox x:Name="NewMap" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="1377" Margin="174,746,0,0" TextChanged="NewMap_TextChanged">
                         <TextBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="1"/>
@@ -109,6 +109,12 @@
                         </TextBox.Background>
                     </TextBox>
                     <Button x:Name="StartTheEditor" Content="Start The Editor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1510" Margin="41,776,0,0" Height="45" IsDefault="True">
+                        <Button.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Blue" Offset="0"/>
+                                <GradientStop Color="Red" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.BorderBrush>
                         <Button.Foreground>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Yellow" Offset="0"/>
