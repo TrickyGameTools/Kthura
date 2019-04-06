@@ -23,7 +23,19 @@ namespace Kthura
         public MainWindow()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             BDate.Content = $"Build date: {BuildDate.sBuildDate}";
+            if (MainConfig.WorkSpace == "") {
+                MessageBox.Show("Workspace has not yet been set.\nPlease select a folder that I can use as Workspace (the folder where your Kthura project data will be stored)!");
+                using (var dialog = new System.Windows.Forms.FolderBrowserDialog()) {
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                    if (result == System.Windows.Forms.DialogResult.OK) {
+                        MainConfig.WorkSpace = dialog.SelectedPath;
+                    } else {
+                        Environment.Exit(1);
+                    }
+                }
+            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
