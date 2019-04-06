@@ -12,8 +12,7 @@ function private:builddate{
    write-host $date -foregroundcolor cyan
 }
 
-function private:bld($packagedir,$packagename)
-{
+function private:bld($packagedir,$packagename) {
 	$compiler = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe";
 
 	write-host "Compiling: " -nonewline -Foregroundcolor Yellow
@@ -33,5 +32,12 @@ function private:bld($packagedir,$packagename)
 	
 }
 
+function private:cpy($bindir,$packagename){
+	write-host "  Copying: " -nonewline -Foregroundcolor Yellow
+	write-host $packagename -ForeGroundColor Cyan
+	copy-item $bindir ../Releases
+}
+
 builddate
-bld "KthuraLauncher" "Laucher"
+bld "KthuraLauncher" "Launcher"
+cpy "Kthuralauncher/bin/Release/*.exe" "Launcher"
