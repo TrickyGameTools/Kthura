@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using System.Text.RegularExpressions;
+using TrickyUnits;
 
 namespace Kthura
 {
@@ -44,13 +46,57 @@ namespace Kthura
 
         }
 
+        private void Scan4Projects() {
+
+        }
+
         private void Afgekeurd(string m) => MessageBox.Show(m, "Project Creation Error", MessageBoxButton.OK, MessageBoxImage.Error);
         
 
-        private void CreateProject_Click(object sender, RoutedEventArgs e) {
+        private void CreateProject_Click(object sender, RoutedEventArgs e) {            
+            Dictionary<bool, string> TexField = new Dictionary<bool, string>();
+            TexField[false] = "Textures";
+            TexField[true] = "TexturesGrabFoldersMerge";
             var prjallowregex = new Regex(@"^[a-zA-Z0-9_ ]+$");
             var prjname = CrPrjName.Text;
-            if (!prjallowregex.IsMatch(prjname)) { Afgekeurd("Illegal characters in Project Title"); }
+            if (prjname.Trim()=="") { Afgekeurd("No Project Title"); return; }
+            if (!prjallowregex.IsMatch(prjname)) { Afgekeurd("Illegal characters in Project Title"); return; }
+            var prjdir = $"{MainConfig.WorkSpace}/{prjname}";
+            var prjfile = $"{prjdir}/{prjname}.Project.GINI";
+            var prjmeta = CrPrjMeta.Text.Split(';');
+            var prjtexmerge = qstr.Prefixed(CrPrjTextureFolders.Text, "@MERGE@");
+            var prjtex = CrPrjTextureFolders.Text.Split(';');
+            if (prjtexmerge) prjtex = qstr.RemPrefix(CrPrjTextureFolders.Text, "@MERGE@").Split(';');
+            if (CrPrjTextureFolders.Text == "*InProject*") { prjtex = new string[] { $"{prjdir}/Textures/" }; }
+            TGINI Project = new TGINI();
+            Project.D("Project", prjname);
+            Project.D("Maps", CrPrjMapFolder.Text);
+            Project.CL("GeneralData");
+            foreach (string m in prjmeta) Project.List("GeneralData").Add(m.Trim());
+            Project.CL(TexField[prjtexmerge]);
+            foreach (string f in prjtex) Project.List(TexField[prjtexmerge]).Add(f.Trim());
+            if (File.Exists(prjdir)) {
+                Afgekeurd($"Hey!\nThere is a file named {prjdir}!\n\nRemove it first please (files do not belong in the workspace root)!");
+                return;
+            }
+            if (Directory.Exists(prjdir)) {
+                Afgekeurd("There already appears to be a project directory with that name.\nEither remove or rename that project, or pick a different name for this project!");
+                return;
+            }
+            try {
+                Directory.CreateDirectory(prjdir);
+                if (CrPrjTextureFolders.Text == "*InProject*") { Directory.CreateDirectory( $"{prjdir}/Textures/"); }
+                if (CrPrjMapFolder.Text == "*InProject*") {
+                    var td = $"{prjdir}/Maps";
+                    Directory.CreateDirectory(td);
+                    Project.D("Maps", td);
+                }
+                Project.SaveSource(prjfile);
+                MessageBox.Show("A new project has been created!");
+            } catch (Exception E) {
+                Afgekeurd($"Creating a new project failed!\n\n{E.Message}");
+            }
+
         }
     }
 }

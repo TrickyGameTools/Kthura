@@ -117,7 +117,7 @@
                         </TextBox.Background>
                     </TextBox>
                     <Label Content="Texture Folders:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="29.556,73,0,0" Foreground="White" Grid.Column="1"/>
-                    <TextBox x:Name="CrPrjProjectFolders" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1325" Margin="133.556,76,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
+                    <TextBox x:Name="CrPrjTextureFolders" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="*InProject*" VerticalAlignment="Top" Width="1325" Margin="133.556,76,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
                         <TextBox.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="0"/>
@@ -140,6 +140,29 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
+                    <Button x:Name="CreateProject" Content="Create Project Folder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1429" Margin="30,218,0,0" Foreground="Yellow" Click="CreateProject_Click" Grid.Column="1">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Red" Offset="0"/>
+                                <GradientStop Color="Blue" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <TextBox x:Name="CrPrjMapFolder" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="*InProject*" VerticalAlignment="Top" Width="1325" Margin="134,135,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
+                        <TextBox.SelectionBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Blue" Offset="0"/>
+                                <GradientStop Color="Lime" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.SelectionBrush>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF191200" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="Map Folder:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,132,0,0" Foreground="White" Cursor="Pen" Grid.Column="1"/>
                 </Grid>
             </TabItem>
 
