@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kthura"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Kthura Map Editor" Height="900" Width="1600">
     <Grid>
-        
+        <TabControl HorizontalAlignment="Left" Height="859" VerticalAlignment="Top" Width="1582" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="Welcome">
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF010002" Offset="0"/>
+                            <GradientStop Color="#FF500064" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Image HorizontalAlignment="Left" Height="132" VerticalAlignment="Top" Width="140" RenderTransformOrigin="0.96,1.587" Margin="130,163,0,0" Source="Kthura.ico"/>
+                    <Label Content="Kthura Map Editor" Margin="298,163,630,620" FontFamily="Segoe UI Black" FontSize="24" Background="{x:Null}" Foreground="#FFFFB400"/>
+                    <Label Content="Coded by: Jeroen P. Broks" Foreground="#ffffb400" Margin="298,211,878,585" Width="400" Height="35" FontSize="15"/>
+                    <Label x:Name="BDate" Content="..."  Foreground="#ffffb400" Margin="298,246,878,550" Width="400" Height="35" FontSize="15" />
+                    <Label Content="(c) Jeroen P. Broks, Licensed under the GPL 3" Foreground="#ffffb400" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="298,286,0,0"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Load Project and Map">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="New Project">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+
+        </TabControl>
+
     </Grid>
 </Window>

@@ -23,6 +23,12 @@ namespace Kthura
         public MainWindow()
         {
             InitializeComponent();
+            BDate.Content = $"Build date: {BuildDate.sBuildDate}";
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
