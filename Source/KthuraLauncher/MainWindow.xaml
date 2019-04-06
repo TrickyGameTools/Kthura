@@ -95,7 +95,51 @@
                         <GradientStop Color="#FF00B4E5" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Background="#FFE5E5E5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="29*"/>
+                        <ColumnDefinition Width="1547*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Blue" Offset="0"/>
+                            <GradientStop Color="#FB191200" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Label Content="This wizard allows only some quick settings. For further setup settings I need to refer to the project file created, which you can just open with your favorite source editor" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontSize="20" Grid.ColumnSpan="2"/>
+                    <Label Content="Name Project:" FontSize="12" Foreground="#ffffffff" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="29.556,42,0,0" Grid.Column="1"/>
+                    <TextBox x:Name="CrPrjName" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1325" Margin="133.556,42,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF191200" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="Texture Folders:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="29.556,73,0,0" Foreground="White" Grid.Column="1"/>
+                    <TextBox x:Name="CrPrjProjectFolders" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1325" Margin="133.556,76,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF191200" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                    <Label Content="Meta Data Fields:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="29.556,104,0,0" Foreground="White" Cursor="Pen" Grid.Column="1"/>
+                    <TextBox x:Name="CrPrjMeta" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="1325" Margin="133.556,107,0,0" Foreground="#FFFFB400" AutomationProperties.HelpText="Name of the project. Only roman letters, numbers spaces and underscores allowed!" Grid.Column="1">
+                        <TextBox.SelectionBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Blue" Offset="0"/>
+                                <GradientStop Color="Lime" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.SelectionBrush>
+                        <TextBox.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0"/>
+                                <GradientStop Color="#FF191200" Offset="1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
                 </Grid>
             </TabItem>
 

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace Kthura
 {
@@ -41,6 +42,15 @@ namespace Kthura
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void Afgekeurd(string m) => MessageBox.Show(m, "Project Creation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        
+
+        private void CreateProject_Click(object sender, RoutedEventArgs e) {
+            var prjallowregex = new Regex(@"^[a-zA-Z0-9_ ]+$");
+            var prjname = CrPrjName.Text;
+            if (!prjallowregex.IsMatch(prjname)) { Afgekeurd("Illegal characters in Project Title"); }
         }
     }
 }
