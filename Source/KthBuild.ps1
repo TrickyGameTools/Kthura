@@ -45,7 +45,23 @@ function private:clearreleases{
     echo $Readme > ../Releases/ReadMe.md
 }
 
+function private:PackAssets{
+	write-host "  Packing: " -nonewline -Foregroundcolor Yellow
+	write-host "Assets" -ForeGroundColor Cyan
+    $result = jcr6 add -i ../Assets ../Releases/KthuraEdit.jcr
+    if (-Not $?) {
+       echo $result
+       write-host "ERROR PACKING" -ForegroundColor Red
+       exit
+    }
+}
+
 builddate
 clearreleases
+PackAssets
 bld "KthuraLauncher" "Launcher"
 cpy "Kthuralauncher/bin/Release/*.exe" "Launcher"
+bld "KthuraEdit" "Editor"
+cpy "KthuraEdit/bin/Windows/x86/Release/*.exe" "Editor Executables"
+cpy "KthuraEdit/bin/Windows/x86/Release/*.dll" "Editor Libraries"
+cpy "KthuraEdit/bin/Windows/x86/Release/*.xml" "Editor Data"
