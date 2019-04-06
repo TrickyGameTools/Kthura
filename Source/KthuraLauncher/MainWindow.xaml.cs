@@ -23,6 +23,9 @@ namespace Kthura
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        static public string MyExe => System.Reflection.Assembly.GetEntryAssembly().Location;
+
         #region Init Window
         public MainWindow()
         {
@@ -112,6 +115,23 @@ namespace Kthura
 
         private void NewMap_TextChanged(object sender, TextChangedEventArgs e) => AutoEnable();
 
+
+        private void StartTheEditor_Click(object sender, RoutedEventArgs e) {            
+            if (!StartTheEditor.IsEnabled) return;
+            var parameters = $"\"{LstProjects.SelectedItem.ToString()}\" ";
+            if (LstMaps.SelectedItem.ToString() == "** New Map **")
+                parameters += $"\"{NewMap.Text}\"";
+            else
+                parameters += $"\"{LstMaps.SelectedItem.ToString()}\"";
+            try {
+                var editor = $"{qstr.ExtractDir(MyExe)}/KthuraEdit.exe";
+                Process.Start(editor, parameters);
+            } catch (Exception err) {
+                Debug.WriteLine($"Launching the editor failed!\n{err.Message}");
+                MessageBox.Show($"Launching the editor failed!\n{err.Message}");
+            }
+        }
+
         #endregion
 
         #region AutoSet
@@ -159,8 +179,7 @@ namespace Kthura
                 MessageBox.Show(E.Message, "Project scanning errorr", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        #endregion
 
-        
+        #endregion
     }
 }

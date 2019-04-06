@@ -108,7 +108,7 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                    <Button x:Name="StartTheEditor" Content="Start The Editor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1510" Margin="41,776,0,0" Height="45" IsDefault="True">
+                    <Button x:Name="StartTheEditor" Content="Start The Editor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1510" Margin="41,776,0,0" Height="45" IsDefault="True" Click="StartTheEditor_Click">
                         <Button.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Blue" Offset="0"/>
