@@ -52,7 +52,7 @@
                     <Image HorizontalAlignment="Left" Height="132" VerticalAlignment="Top" Width="140" RenderTransformOrigin="0.96,1.587" Margin="13,72,0,0" Source="Kthura.ico"/>
                     <Label Content="Project" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FFFFB400" FontSize="24" Margin="70,25,0,0"/>
                     <Label Foreground="#ffffb400" FontSize="24" Content="Map" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.146,3.654" Margin="92,233,0,0"/>
-                    <ListBox HorizontalAlignment="Left" Height="179" VerticalAlignment="Top" Width="1377" RenderTransformOrigin="1.339,1.077" Margin="174,25,0,0">
+                    <ListBox x:Name="LstProjects" HorizontalAlignment="Left" Height="179" VerticalAlignment="Top" Width="1377" RenderTransformOrigin="1.339,1.077" Margin="174,25,0,0">
                         <ListBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FF00B4FF" Offset="0"/>
@@ -72,7 +72,7 @@
                             </LinearGradientBrush>
                         </ListBox.Background>
                     </ListBox>
-                    <ListBox HorizontalAlignment="Left" Height="534" VerticalAlignment="Top" Width="1377" Margin="174,233,0,0" Foreground="#FF00B4FF">
+                    <ListBox x:Name="LstMaps" HorizontalAlignment="Left" Height="534" VerticalAlignment="Top" Width="1377" Margin="174,233,0,0" Foreground="#FF00B4FF">
                         <ListBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="Black" Offset="1"/>
