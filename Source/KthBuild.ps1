@@ -1,3 +1,24 @@
+# This script will compile all applications, and build up the assets 
+# file. Before doing so, you need to check a few things:
+#
+# This script requires the JCR6 cli tools, and they must be in the 
+# system's path. Make sure you installed those, and that their dir is
+# in the path.
+#
+# In the "bld" function you can see my path to msbuild.exe 
+# That's what it was on my system. Is it the same in yours? If not
+# edit the $compiler variable there!
+#
+# Next make sure that Kthura's folder lives in a parent folder totally
+# dedicated to my projects alone. Make sure that from there TQMG,
+# TrickyUnits and JCR6 are also available.
+#
+# If any of those things are not well-set, this script won't work!
+
+
+
+
+
 # What is vital to understand is that Kthura is a multi-app package
 # Just using any macros or constants containing build dates wouldn't do
 # as that only captures that specific app. This routine is meant to 
