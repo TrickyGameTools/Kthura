@@ -170,11 +170,15 @@
     <Compile Include="..\..\..\TrickyUnits\qstream.cs">
       <Link>Include\Units\qstream.cs</Link>
     </Compile>
+    <Compile Include="..\KthuraLauncher\builddate.cs">
+      <Link>builddate.cs</Link>
+    </Compile>
     <Compile Include="Core.cs" />
     <Compile Include="Kthura_EditCore.cs" />
     <Compile Include="Kthura_Start.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stages\Abstract.cs" />
+    <Compile Include="Stages\DBG.cs" />
     <Compile Include="Stages\MainEdit.cs" />
     <Compile Include="User Interface.cs" />
   </ItemGroup>

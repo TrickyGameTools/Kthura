@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using KthuraEdit.Stages;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using TrickyUnits;
@@ -120,6 +120,7 @@ namespace KthuraEdit
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
+                case 3001: DBG.ComeToMe(); break;
                 case 9999: Core.Quit(); break;
             }
         }

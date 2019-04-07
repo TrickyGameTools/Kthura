@@ -90,7 +90,7 @@ namespace KthuraEdit
         #endregion
 
         #region Shutdown
-        static public  void Quit() {
+        static public void Quit() {
             MGCore.Quit = true;
         }
         #endregion
