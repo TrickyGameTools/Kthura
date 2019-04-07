@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace KthuraEdit
 {
@@ -59,18 +60,21 @@ namespace KthuraEdit
             // TODO: Unload any non ContentManager content here
         }
 
+        bool UpdatedOnce = false;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>        
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-
+            if (!UpdatedOnce) Debug.WriteLine("First Update call");
+            UpdatedOnce = true;
+            Core.PerformUpdate();
             base.Update(gameTime);
         }
 
@@ -81,6 +85,12 @@ namespace KthuraEdit
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
+            if (!UpdatedOnce)
+                Debug.WriteLine("Skipping draw as the first update has not yet taken place! (Security measure to prevent needless crashes)");
+            else
+                Core.PerformDraw();
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
 
