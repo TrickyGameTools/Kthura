@@ -112,7 +112,7 @@ namespace KthuraEdit
         static public TQMGFont font64 = TQMG.GetFont("Fonts/nasa21.64.jfbf");
         #endregion
         #region Postions
-        const int LayW = 50;
+        const int LayW = 100;
         const int PDnH = 25;
         static int ToolW => 100 + (back.Width % 100);
         static int ToolX => ScrWidth - ToolW;
@@ -136,12 +136,30 @@ namespace KthuraEdit
         }
         #endregion
 
+        #region Layers
+        static string selectedlayer = "";
+        static public void DrawLayerBox() {
+            TQMG.Color(255, 255, 255);
+            TQMG.SimpleTile(back, 0, 0, LayW, ScrHeight);
+            var y = PDnH + 5;
+            foreach(string layname in Core.Map.Layers.Keys) {
+                TQMG.Color(0, 255, 255);
+                if (selectedlayer == layname) {
+                    TQMG.DrawRectangle(0, y, LayW, 16);
+                    TQMG.Color(0, 0, 0);
+                }
+                font16.DrawMax(layname, 2, y, LayW - 4);
+                if (selectedlayer == "") selectedlayer = layname;
+            }
+        }
+        #endregion
+
         #region LayerBox
         #endregion
 
         static public void DrawScreen() {
             // DrawMap();
-            // DrawLayerBox();
+            DrawLayerBox();
             // DrawToolBox();
             DrawPullDown();
             DrawStatus();
