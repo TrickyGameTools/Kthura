@@ -1,0 +1,6 @@
+namespace Kthura{
+	
+	class KthuraSave{
+	}
+
+}
