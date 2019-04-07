@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace KthuraEdit
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is the very core stuff. But all it does is set the actual "Core" of the editor in motion. 
     /// </summary>
     public class Kthura_EditCore : Game
     {
@@ -16,6 +16,7 @@ namespace KthuraEdit
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Core.CoreInit(this);
         }
 
         /// <summary>
@@ -26,8 +27,13 @@ namespace KthuraEdit
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            #region Go into Full Screen
+            graphics.HardwareModeSwitch = false;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
+            #endregion
 
+            Core.Start(graphics,GraphicsDevice,spriteBatch);
             base.Initialize();
         }
 
@@ -39,6 +45,7 @@ namespace KthuraEdit
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Core.StartStep3(spriteBatch);
 
             // TODO: use this.Content to load your game content here
         }
