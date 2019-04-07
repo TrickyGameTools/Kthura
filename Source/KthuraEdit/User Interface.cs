@@ -55,6 +55,11 @@ namespace KthuraEdit
                 new PullDownItem("Show Grid Blocks",2001,Keys.D),
                 new PullDownItem("Grid Mode",2002,Keys.G)
                 ));
+            ret.Add(new PullDownHeader("Layers",
+                new PullDownItem("New Layer", 4001, Keys.N),
+                new PullDownItem("Remove Layer", 4002, Keys.NumPad0),
+                new PullDownItem("Rename Layer",4003,Keys.NumPad5)
+                ));
             ret.Add(new PullDownHeader("Debug",
                 new PullDownItem("Show Debug Log",3001,Keys.F1),
                 new PullDownItem("Show Blockmap",3002,Keys.B),
@@ -129,6 +134,9 @@ namespace KthuraEdit
             if (Core.ms.Y > PDnH && Core.ms.X > LayW && Core.ms.Y < ScrHeight - 25 && Core.ms.X < ToolX)
                 font20.DrawText($"Scr({ScrollX},{ScrollY}); Mse({Core.ms.X},{Core.ms.Y}); Pos({PosX},{PosY})", ScrWidth - 5, ScrHeight - 24, TQMG_TextAlign.Right);
         }
+        #endregion
+
+        #region LayerBox
         #endregion
 
         static public void DrawScreen() {
