@@ -106,13 +106,37 @@ namespace KthuraEdit
         static public TQMGFont font32 = TQMG.GetFont("Fonts/nasa21.32.jfbf");
         static public TQMGFont font64 = TQMG.GetFont("Fonts/nasa21.64.jfbf");
         #endregion
+        #region Postions
+        const int LayW = 50;
+        const int PDnH = 25;
+        static int ToolW => 100 + (back.Width % 100);
+        static int ToolX => ScrWidth - ToolW;
+        static int ScrollX = 0;
+        static int ScrollY = 0;
+        static int PosX => ScrollX + Core.ms.X - LayW;
+        static int PosY => ScrollY + Core.ms.Y - PDnH;
+        #endregion
+
+        #region Status
+        static TQMGText BottomLine;
+        static public void DrawStatus() {
+            TQMG.Color(255, 255, 255);
+            TQMG.SimpleTile(back,0, ScrHeight - 25, ScrWidth, 25);
+            TQMG.Color(0, 255, 255);
+            if (BottomLine == null)
+                BottomLine = font20.Text($"{Core.Project}::{Core.MapFile}");
+            BottomLine.Draw(5, ScrHeight - 24);
+            if (Core.ms.Y > PDnH && Core.ms.X > LayW && Core.ms.Y < ScrHeight - 25 && Core.ms.X < ToolX)
+                font20.DrawText($"Scr({ScrollX},{ScrollY}); Mse({Core.ms.X},{Core.ms.Y}); Pos({PosX},{PosY})", ScrWidth - 5, ScrHeight - 24, TQMG_TextAlign.Right);
+        }
+        #endregion
 
         static public void DrawScreen() {
-            // DrawMap()
-            // DrawLayerBox()
-            // DrawToolBox()
+            // DrawMap();
+            // DrawLayerBox();
+            // DrawToolBox();
             DrawPullDown();
-            // DrawStatus()
+            DrawStatus();
         }
 
         static public void UI_Update() {
