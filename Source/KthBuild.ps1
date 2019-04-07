@@ -40,7 +40,7 @@ function private:bld($packagedir,$packagename) {
 	write-host $packagename -ForeGroundColor Cyan
     pushd
     cd $packagedir
-	$result = &$compiler
+	$result = &$compiler /p:Configuration=Release
 	if (-Not $?){
 	   popd
 	   #cls
