@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using TrickyUnits;
 
@@ -24,7 +24,7 @@ namespace KthuraEdit.Stages
         DBG() {
             Log("Kthura Map Editor for .NET");
             Log("Coded by: Jeroen P. Broks");
-            Log($"Build: {Kthura.BuildDate.sBuildDate}");
+            Log($"Build: {BuildDate.sBuildDate}");
             Log("Released under the terms of the GPL 3");
             Log("");
         }
@@ -32,7 +32,10 @@ namespace KthuraEdit.Stages
 
         public static void Log(string line) {
             var lns = line.Split('\n');
-            foreach (string l in lns) Lines.Add(l);
+            foreach (string l in lns) {
+                Lines.Add(l);
+                Debug.WriteLine($"DBGLOG> {l}");
+            }
             while (Lines.Count > 500) Lines.RemoveAt(0);
             ScrollUp = 0;
         }

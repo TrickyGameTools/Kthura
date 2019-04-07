@@ -170,6 +170,18 @@
     <Compile Include="..\..\..\TrickyUnits\qstream.cs">
       <Link>Include\Units\qstream.cs</Link>
     </Compile>
+    <Compile Include="..\Class\KthuraCore.cs">
+      <Link>Class\KthuraCore.cs</Link>
+    </Compile>
+    <Compile Include="..\Class\KthuraDraw.cs">
+      <Link>Class\KthuraDraw.cs</Link>
+    </Compile>
+    <Compile Include="..\Class\KthuraDrawMonoGame.cs">
+      <Link>Class\KthuraDrawMonoGame.cs</Link>
+    </Compile>
+    <Compile Include="..\Class\KthuraSave.cs">
+      <Link>Class\KthuraSave.cs</Link>
+    </Compile>
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>builddate.cs</Link>
     </Compile>

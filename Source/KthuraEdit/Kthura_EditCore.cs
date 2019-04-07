@@ -48,8 +48,13 @@ namespace KthuraEdit
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Core.StartStep3(spriteBatch);
+#if DEBUG
+            Core.Project = "Test";
+            Core.MapFile = "TestMap";
+#else
+            Core.Crash("Project from parameters not yet set");
+#endif
 
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>

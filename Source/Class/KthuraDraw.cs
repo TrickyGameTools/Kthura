@@ -1,4 +1,4 @@
-namespace Kthura{
+namespace NSKthura{
 	abstract class KthuraDraw{
 	#region The Abstract part every Draw Driver must have!
 	#endregion

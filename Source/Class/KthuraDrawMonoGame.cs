@@ -1,4 +1,4 @@
-namespace Kthura {
+namespace NSKthura {
 
 	class KthuraDrawMonoGame:KthuraDraw{
 	}

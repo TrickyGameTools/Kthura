@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using TrickyUnits;
 using UseJCR6;
 using KthuraEdit.Stages;
+using NSKthura;
 
 namespace KthuraEdit
 {
@@ -93,6 +94,101 @@ namespace KthuraEdit
         static public void Quit() {
             MGCore.Quit = true;
         }
+        #endregion
+
+        #region Platform Detection        
+        public static AltDrivePlaforms ADP {
+            get {
+                switch (Environment.OSVersion.Platform) {
+                    case PlatformID.MacOSX: return AltDrivePlaforms.Mac;
+                    case PlatformID.Unix: return AltDrivePlaforms.Linux; // Most likely the case, or else the Linux rules apply anyway
+                    case PlatformID.Win32NT:
+                    case PlatformID.Win32S:
+                    case PlatformID.Win32Windows:
+                        return AltDrivePlaforms.Windows;
+                    default:
+                        throw new Exception("Unknown Platform");
+                }
+            }
+        }
+
+        public static string Platform {
+            get {
+                switch (ADP) {
+                    case AltDrivePlaforms.Mac: return "Mac";
+                    case AltDrivePlaforms.Linux: return "Linux";
+                    case AltDrivePlaforms.Windows: return "Windows";
+                    default:
+                        throw new Exception("If you see this error you hacked the system! Very cool, but not very nice! Fix it please!");
+                        // This error instruction just had to exist as the C# is not sophisticated enough to understand that this scenario can never happen!
+                }
+            }
+        }
+        #endregion
+
+
+        #region Global configuration
+        static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI");
+        static TGINI GlobalConfig = GINI.ReadFromFile(ConfigFile);
+        static string GlobalWorkSpace => Dirry.AD(GlobalConfig.C($"WorkSpace.{Platform}"));
+        static TJCRDIR TexJCR;
+        #endregion
+
+
+        #region Project Data
+        private static string _prj = ""; // "Real" variable. PSST! This is very very secret!
+        public static string Project {
+            get => _prj;
+            set {
+                if (_prj != "") throw new Exception("Duplicate Project defintion!");
+                Dirry.InitAltDrives(ADP);
+                _prj = value;
+                DBG.Log($"Opening Project: {value}");
+                ProjectConfig = GINI.ReadFromFile(ProjectFile);
+                if (ProjectConfig==null) {
+                    Crash($"Loading project {ProjectFile} failed!");
+                    return;
+                }
+                TexJCR = new TJCRDIR();
+                foreach (string dd in ProjectConfig.List("Textures")) {
+                    var d = dd.Replace("\\", "/");
+                    DBG.Log($"Adding Texture Resource: {d}");
+                    TexJCR.PatchFile(d);
+                }
+                foreach (string d in ProjectConfig.List("TEXTURESGRABFOLDERSMERGE")) {
+                    var dir = FileList.GetDir(d, 1);
+                    foreach (string p in dir) {
+                        var path = $"{d.Replace("\\","/")}/{p}";
+                        DBG.Log($"Adding Texture Resource: {path}");
+                        if (JCR6.Recognize(path) != "NONE") TexJCR.PatchFile(path);
+                    }
+                }
+            }
+        }
+        static string ProjectFile => $"{GlobalWorkSpace}/{_prj}/{_prj}.Project.GINI";
+        public static TGINI ProjectConfig { get; private set; }
+        #endregion
+
+        #region The action map
+        static public Kthura Map { get; private set; }
+        private static string _map = "";
+        public static string MapPath => Dirry.AD(ProjectConfig.C("MAPS"));
+        public static string MapFile {
+            get => _map;
+            set {
+                if (_map != "") throw new Exception("Duplicate mapfile definition");
+                _map = value;
+                if (File.Exists(FPMapFile)) {
+                    DBG.Log($"Loading Map: {value}");
+                    Map = Kthura.Load(value,"",TexJCR);
+                } else {
+                    DBG.Log($"Creating Map: {value}");
+                    Map = Kthura.Create(TexJCR);
+                }
+                    
+            }
+        }
+        public static string FPMapFile => $"{MapPath}/{_map}";
         #endregion
     }
 }
