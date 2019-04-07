@@ -13,7 +13,7 @@ namespace KthuraEdit.Stages
         }
 
         public override void Update() {
-            
+            UI.UI_Update();
         }
 
         public static void ComeToMe() => Core.GoStage(me);

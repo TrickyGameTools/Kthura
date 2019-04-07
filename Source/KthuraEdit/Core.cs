@@ -67,6 +67,7 @@ namespace KthuraEdit
             kb = Keyboard.GetState();
             ms = Mouse.GetState();
             joy = Joystick.GetState(0);
+            TQMGKey.Start(kb);
         }
         static public void ShowMouse() { TQMG.Color(255, 255, 255); MousePointer.Draw(ms.X, ms.Y); }
         #endregion
@@ -84,6 +85,13 @@ namespace KthuraEdit
 
         static public void PerformUpdate() {
             UpdateStates();
+            CurrentStage.Update();
+        }
+        #endregion
+
+        #region Shutdown
+        static public  void Quit() {
+            MGCore.Quit = true;
         }
         #endregion
     }

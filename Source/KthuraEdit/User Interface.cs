@@ -79,6 +79,16 @@ namespace KthuraEdit
             }
         }
 
+        static int PDEvent = 0;
+        static void PullDownQuickKeys() {
+            //Debug.WriteLine($"Ctrl keys held {TQMGKey.Held(Keys.LeftControl)} || {TQMGKey.Held(Keys.RightControl)} = {TQMGKey.Held(Keys.LeftControl) || TQMGKey.Held(Keys.RightControl)} ");
+            if (TQMGKey.Held(Keys.LeftControl) || TQMGKey.Held(Keys.RightControl)) {
+                var k = TQMGKey.GetKey();
+                //if (k != Keys.F19) Debug.WriteLine($"Is {k} a quick key?");
+                if (PDKeyToEvent.ContainsKey(k)) PDEvent = PDKeyToEvent[k];
+            }
+        }
+
         #endregion
 
         #region Screen Size
@@ -103,6 +113,15 @@ namespace KthuraEdit
             // DrawToolBox()
             DrawPullDown();
             // DrawStatus()
+        }
+
+        static public void UI_Update() {
+            PDEvent = 0;
+            PullDownQuickKeys();
+            //Debug.WriteLine(PDEvent);
+            switch (PDEvent) {
+                case 9999: Core.Quit(); break;
+            }
         }
     }
 }
