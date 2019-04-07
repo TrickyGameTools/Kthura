@@ -5,7 +5,7 @@ class KthuraObject{}
 class KthuraLayer{} 
 
 class Kthura{
-public Dictionary<string,KthuraLayer> Layers = new Dictionary<string,KthuraLayer>
+public Dictionary<string,KthuraLayer> Layers = new Dictionary<string,KthuraLayer>();
 #region Data specific to the map!
 #endregion
 
