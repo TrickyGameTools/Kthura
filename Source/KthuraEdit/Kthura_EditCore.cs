@@ -34,7 +34,7 @@ namespace KthuraEdit
             graphics.ApplyChanges();
             #endregion
 
-            Core.Start(graphics,GraphicsDevice,spriteBatch);
+            Core.Start(graphics,GraphicsDevice,spriteBatch,this);
             base.Initialize();
         }
 

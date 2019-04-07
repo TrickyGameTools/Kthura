@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using TrickyUnits;
 using UseJCR6;
+using KthuraEdit.Stages;
 
 namespace KthuraEdit
 {
@@ -18,6 +19,7 @@ namespace KthuraEdit
         static GraphicsDeviceManager GDM;
         static GraphicsDevice GD;
         static SpriteBatch SB;
+        static public Kthura_EditCore MGCore { get; private set; }
 
         static TJCRDIR JCR;
         static Core() {
@@ -32,22 +34,27 @@ namespace KthuraEdit
 #endif
         }
         public static void CoreInit(Kthura_EditCore TC) => TrueCore = TC;
-        public static void Start(GraphicsDeviceManager _GDM, GraphicsDevice _GD, SpriteBatch SB) {
+        public static void Start(GraphicsDeviceManager _GDM, GraphicsDevice _GD, SpriteBatch SB, Kthura_EditCore core) {
             GDM = _GDM;
             GD = _GD;
-            
+            MGCore = core;
         }
         public static void StartStep3(SpriteBatch _SB) {
             SB = _SB;
             if (JCR == null) Crash($"JCR Null: {JCR6.JERROR}");
             TQMG.Init(GDM, GD, SB, JCR);
             MousePointer = TQMG.GetImage("MousePointer.png");
+            MainEdit.ComeToMe();
         }
         #endregion
 
         #region Error Handling
         public static void Crash(string Message) {
             Debug.WriteLine($"ERROR!\n{Message} ");
+        }
+
+        public static void Crash(Exception e) {
+            Crash($"{e.Message}\n\nTraceback:\n{e.StackTrace}\n\nIt's likely you encountered a bug. Please report this!");
         }
         #endregion
 
@@ -61,12 +68,18 @@ namespace KthuraEdit
             ms = Mouse.GetState();
             joy = Joystick.GetState(0);
         }
-        static public void ShowMouse() => MousePointer.Draw(ms.X, ms.Y);
+        static public void ShowMouse() { TQMG.Color(255, 255, 255); MousePointer.Draw(ms.X, ms.Y); }
         #endregion
 
         #region Flow State
+        static BaseStage CurrentStage;
+        public static void GoStage(BaseStage stage) => CurrentStage = stage;
+
         static public void PerformDraw()  {
-            ShowMouse();
+            try {
+                CurrentStage.Draw();
+                ShowMouse();
+            } catch (Exception EX) { Crash(EX); }
         }
 
         static public void PerformUpdate() {
