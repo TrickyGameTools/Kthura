@@ -149,9 +149,12 @@ namespace KthuraEdit
                     TQMG.Color(0, 0, 0);
                 }
                 font16.DrawMax(layname, 2, y, LayW - 4);
+                if (Core.ms.X < LayW && Core.ms.Y > y && Core.ms.Y < y + 16 && Core.MsHit(1)) selectedlayer = layname;
                 if (selectedlayer == "") selectedlayer = layname;
+                y += 18;
             }
         }
+        static public void LayerReset() => selectedlayer = "";
 
         #endregion
 

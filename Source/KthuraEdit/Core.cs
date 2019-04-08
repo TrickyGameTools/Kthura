@@ -63,14 +63,28 @@ namespace KthuraEdit
         static public KeyboardState kb { get; private set; }
         static public MouseState ms { get; private set; }
         static public JoystickState joy { get; private set; }
+        static MouseState oldms = new MouseState(0, 0, 0, ButtonState.Pressed, ButtonState.Pressed, ButtonState.Pressed, ButtonState.Pressed, ButtonState.Pressed);
         static TQMGImage MousePointer;
         static public void UpdateStates() {
+            oldms = ms;
             kb = Keyboard.GetState();
             ms = Mouse.GetState();
             joy = Joystick.GetState(0);
             TQMGKey.Start(kb);
+            DontMouse = DontMouse && ms.LeftButton == ButtonState.Released && ms.RightButton == ButtonState.Released;
         }
+        static public bool DontMouse = false;
         static public void ShowMouse() { TQMG.Color(255, 255, 255); MousePointer.Draw(ms.X, ms.Y); }
+        static public bool MsHit(byte b) {
+            switch (b) {
+                case 1:
+                    return (!DontMouse) && oldms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
+                case 2:
+                    return (!DontMouse) && oldms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
+                default:
+                    throw new Exception($"Unknown mouse button requires: {b}");
+            }
+        }
         #endregion
 
         #region Flow State
