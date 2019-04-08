@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System;
 using UseJCR6;
 
 namespace NSKthura { 
@@ -28,15 +30,26 @@ namespace NSKthura {
         SortedDictionary<string, KthuraObject> DominanceMap = new SortedDictionary<string, KthuraObject>();
         Kthura Parent;
         public KthuraLayer(Kthura hufter) {
-            Parent = hufter;
+            Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
         }
     }
 
     class Kthura {
-        public Dictionary<string, KthuraLayer> Layers = new Dictionary<string, KthuraLayer>();
         #region Data specific to the map!
         public TJCRDIR TextureJCR;
+        public Dictionary<string, KthuraLayer> Layers = new Dictionary<string, KthuraLayer>();
         #endregion
+
+        #region Control Methods
+        public void CreateLayer(string name) {
+            if (Layers.ContainsKey(name)) {
+                Debug.Print($"Kthura map already has a layer named {name}. Please pick a different name!");
+                return;
+            }
+            Layers[name] = new KthuraLayer(this);
+        }
+        #endregion
+
 
         #region New Map constructors
         private Kthura() { } // I won't allow "New". A bit dangerous. So some static functions act as "constructors".
@@ -75,9 +88,12 @@ namespace NSKthura {
         }
         #endregion
 
+
+
+
         #region Core functions as statics (since C# requires classes even when you don't need them).
         static TJCRDIR DefaultTextureJCR = null;
-        static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;
+        static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;        
         #endregion
     }
 
