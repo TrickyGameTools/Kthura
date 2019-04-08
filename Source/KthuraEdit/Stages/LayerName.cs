@@ -29,6 +29,10 @@ namespace KthuraEdit.Stages
                 AlreadyThere.Draw(UI.ScrWidth / 2, 300, TQMG_TextAlign.Center);
                 dontconfirm = true;
             }
+            TQMG.Color(20, 20, 20);
+            TQMG.DrawRectangle(20, 200, UI.ScrWidth - 40, 25);
+            TQMG.Color(255, 255, 255);
+            UI.font20.DrawText($"{nieuw}_", 22, 202);
         }
 
         public override void Update() {
@@ -36,8 +40,21 @@ namespace KthuraEdit.Stages
             Keys k = TQMGKey.GetKey();
             // The functions above do not read out the key buffer. That happens earlier. The functions above only draw conclusions from that.
             if (ch > 32 && ch < 97 && nieuw.Length < 20) nieuw += ch;
-            if (k==Keys.Back && nieuw != "") nieuw = qstr.Left(nieuw, nieuw.Length - 1);
+            if (ch >= 97 && ch <= 122 && nieuw.Length < 20) nieuw += (char) (ch - 32);
+            if (k == Keys.Back && nieuw != "") nieuw = qstr.Left(nieuw, nieuw.Length - 1);
             if (k == Keys.Escape) MainEdit.ComeToMe();
+            if (k == Keys.Enter) {
+                if (create)
+                    Core.Map.CreateLayer(nieuw);
+                else {
+                    var tl = Core.Map.Layers[oud];
+                    Core.Map.Layers.Remove(oud);
+                    Core.Map.Layers[nieuw] = tl;
+                    UI.LayerReset();
+                }
+                MainEdit.ComeToMe();
+
+            }
         }
 
         #region Core init
@@ -49,7 +66,7 @@ namespace KthuraEdit.Stages
 
         #region Come to me
         readonly static LayerName me = new LayerName();
-        static public void ComeToMe() { Core.GoStage(me); me.oud = "";  me.create = true; }
+        static public void ComeToMe() { Core.GoStage(me); me.oud = ""; me.nieuw = ""; me.create = true; }
         static public void ComeToMe(string oldlayername) { Core.GoStage(me); me.oud = oldlayername; me.nieuw = oldlayername; me.create = false; }
         #endregion
 
