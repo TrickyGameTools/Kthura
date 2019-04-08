@@ -185,6 +185,7 @@
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>builddate.cs</Link>
     </Compile>
+    <Compile Include="Stages\LayerName.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Kthura_EditCore.cs" />
     <Compile Include="Kthura_Start.cs" />
