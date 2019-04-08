@@ -48,9 +48,9 @@ namespace KthuraEdit.Stages
         #endregion
 
         #region Come to me
-        readonly LayerName me = new LayerName();
-        void ComeToMe() { Core.GoStage(me); oud = "";  create = true; }
-        void ComeToMe(string oldlayername) { Core.GoStage(me); oud = oldlayername; nieuw = oldlayername; create = false; }
+        readonly static LayerName me = new LayerName();
+        static public void ComeToMe() { Core.GoStage(me); me.oud = "";  me.create = true; }
+        static public void ComeToMe(string oldlayername) { Core.GoStage(me); me.oud = oldlayername; me.nieuw = oldlayername; me.create = false; }
         #endregion
 
     }

@@ -41,7 +41,7 @@ namespace KthuraEdit.Stages
         }
 
         public override void Draw() {
-            UI.BackFull()
+            UI.BackFull();
             var y = ScrollUp - StartY;
             foreach(string line in Lines) {
                 if (y > -30)

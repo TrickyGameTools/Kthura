@@ -174,6 +174,8 @@ namespace KthuraEdit
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
                 case 3001: DBG.ComeToMe(); break;
+                case 4001: LayerName.ComeToMe(); break;
+                case 4003: LayerName.ComeToMe(selectedlayer); break;
                 case 9999: Core.Quit(); break;
             }
         }
