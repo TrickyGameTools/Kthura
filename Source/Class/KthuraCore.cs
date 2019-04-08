@@ -37,7 +37,7 @@ namespace NSKthura {
     class Kthura {
         #region Data specific to the map!
         public TJCRDIR TextureJCR;
-        public Dictionary<string, KthuraLayer> Layers = new Dictionary<string, KthuraLayer>();
+        public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
         #endregion
 
         #region Control Methods

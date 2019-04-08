@@ -43,7 +43,7 @@ namespace KthuraEdit.Stages
             if (ch >= 97 && ch <= 122 && nieuw.Length < 20) nieuw += (char) (ch - 32);
             if (k == Keys.Back && nieuw != "") nieuw = qstr.Left(nieuw, nieuw.Length - 1);
             if (k == Keys.Escape) MainEdit.ComeToMe();
-            if (k == Keys.Enter) {
+            if (k == Keys.Enter && !dontconfirm) {
                 if (create)
                     Core.Map.CreateLayer(nieuw);
                 else {
