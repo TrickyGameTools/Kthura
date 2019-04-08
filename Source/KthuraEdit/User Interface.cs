@@ -152,11 +152,14 @@ namespace KthuraEdit
                 if (selectedlayer == "") selectedlayer = layname;
             }
         }
+
         #endregion
 
-        #region LayerBox
+        #region Just some public crap
+        static public void BackFull() => TQMG.SimpleTile(back,0, 0, ScrWidth, ScrHeight);
         #endregion
 
+        #region int main() :P
         static public void DrawScreen() {
             // DrawMap();
             DrawLayerBox();
@@ -174,5 +177,6 @@ namespace KthuraEdit
                 case 9999: Core.Quit(); break;
             }
         }
+        #endregion
     }
 }

@@ -41,7 +41,7 @@ namespace KthuraEdit.Stages
         }
 
         public override void Draw() {
-            TQMG.SimpleTile(UI.back,0, 0, UI.ScrWidth, UI.ScrHeight);
+            UI.BackFull()
             var y = ScrollUp - StartY;
             foreach(string line in Lines) {
                 if (y > -30)
