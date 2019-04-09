@@ -122,7 +122,7 @@ namespace NSKthura {
                 if (o.Tag != "") {
                     var ok = true;
                     if (o.Tag != o.Tag.Trim()) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": invalid tag!"); }
-                    if (TagMap.ContainsKey(o.Tag) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": duplicate tag!"); }
+                    if (TagMap.ContainsKey(o.Tag)) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": duplicate tag!"); }
                     if (ok) TagMap[o.Tag] = o;
                 }
             }

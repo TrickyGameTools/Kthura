@@ -155,7 +155,13 @@ namespace KthuraEdit
             }
         }
         static public void LayerReset() => selectedlayer = "";
-
+        static public void DeleteLayer(params string[] arg)  {
+            if (Core.Map.Layers.Count<=1) {
+                DBG.Log("ERROR: A Kthura map MUST have at least one layer, so I cannot remove the last one!");
+                return;
+            }
+            Core.Map.Layers.Remove(arg[0]);
+        }
         #endregion
 
         #region Just some public crap
@@ -171,14 +177,19 @@ namespace KthuraEdit
             DrawStatus();
         }
 
+        
+
         static public void UI_Update() {
             PDEvent = 0;
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
                 case 3001: DBG.ComeToMe(); break;
+                // Layers
                 case 4001: LayerName.ComeToMe(); break;
+                case 4002: Yes.ComeToMe($"Do you really want to remove layer \"{selectedlayer}\"?", DeleteLayer, selectedlayer); break;
                 case 4003: LayerName.ComeToMe(selectedlayer); break;
+                // Quit
                 case 9999: Core.Quit(); break;
             }
         }
