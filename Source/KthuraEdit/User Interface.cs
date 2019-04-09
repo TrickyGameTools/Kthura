@@ -169,9 +169,19 @@ namespace KthuraEdit
         #endregion
 
         #region Toolbox
+        static void InitToolBox() {
+
+        }
+
         static public void DrawToolBox() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, ToolX, 0, ToolW, ScrHeight, 0);
+        }
+        #endregion
+
+        #region Start Call
+        static UI() {
+            InitToolBox();
         }
         #endregion
 
