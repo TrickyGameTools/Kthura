@@ -5,24 +5,60 @@ using UseJCR6;
 
 namespace NSKthura { 
 
-    class KthuraObject {
+    class KthuraObject {        
+        int cnt = 0;
         readonly public string kind;
         readonly public KthuraLayer Parent;
-        public int x,y;
+        int _x = 0, _y = 0;
         public int w, h;
         public int insertx = 0, inserty = 0;
         public int R=255, G=255, B=255;
         public int ScaleX, ScaleY;
-        public int Dominance = 20;        
+        int _Dominance = 20;        
         public float TrueScaleX => (float)ScaleX / 1000;
         public float TrueScaleY => (float)ScaleY / 1000;
-        public string Labels = "";
+        string _Labels = "";
         string _Tag = "";
         public string Tag { get => _Tag; set {
                 _Tag = value;
                 if (Kthura.automap) Parent.RemapTags();
             }
         }
+        public int x {
+            get => _x;
+            set {
+                _x = value;
+                if (Kthura.automap) Parent.RemapDominance();
+            }
+        }
+        public int y {
+            get => _y;
+            set
+            {
+                _y = value;
+                if (Kthura.automap) Parent.RemapDominance();
+            }
+        }
+        public int Dominance {
+            get => _Dominance;
+            set
+            {
+                _Dominance = value;
+                if (Kthura.automap) Parent.RemapDominance();
+            }
+        }
+        public string Labels {
+            get => _Labels;
+            set {
+                _Labels = value;
+                if (Kthura.automap) Parent.RemapDominance();
+            }
+        }
+
+        public string DomMapVal => $"{Dominance.ToString("D9")}.{y.ToString("D9")}.{x.ToString("D9")}.{cnt.ToString("D9")}";
+        // Dominance takes prioity over all. When domincance is the same then y will play a role, and then the x value.
+        // cnt just has to make sure every value is unique.
+
 
         #region recalc values
         public int Alpha255=255;
@@ -62,14 +98,18 @@ namespace NSKthura {
         public KthuraObject(string objectkind, KthuraLayer prnt) {
             kind = objectkind;
             Parent = prnt;
+            cnt = Parent.cnt;
+            Parent.cnt++;
+
         }
     }
 
     class KthuraLayer {
+        internal int cnt = 0; 
         List<KthuraObject> Objects = new List<KthuraObject>(); // Really this is basically the true core of Kthura!
         Dictionary<string, KthuraObject> TagMap = new Dictionary<string, KthuraObject>();
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
-        SortedDictionary<string, KthuraObject> DominanceMap = new SortedDictionary<string, KthuraObject>();
+        List<KthuraObject> ObjectDrawOrder;
         Kthura Parent;
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
@@ -84,6 +124,35 @@ namespace NSKthura {
                     if (o.Tag != o.Tag.Trim()) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": invalid tag!"); }
                     if (TagMap.ContainsKey(o.Tag) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": duplicate tag!"); }
                     if (ok) TagMap[o.Tag] = o;
+                }
+            }
+        }
+
+        public void RemapDominance() {
+            // This was (for now) the easiest way to go, but maybe not the most optimal.
+            // If you think you got a faster method... Lemme know!
+            var DominanceMap = new SortedDictionary<string, KthuraObject>();
+            foreach (KthuraObject o in Objects)
+                DominanceMap[o.DomMapVal] = o;
+            ObjectDrawOrder.Clear();
+            foreach (KthuraObject o in DominanceMap.Values) ObjectDrawOrder.Insert(0, o);
+        }
+
+        public void RemapLabels() {
+            LabelMap.Clear();
+            foreach (KthuraObject o in Objects) {
+                if (o.Labels != "") {
+                    var sp = o.Labels.Split(',');
+                    foreach (string s in sp) {
+                        var tl = s.Trim();
+                        if (tl == "")
+                            Kthura.Log("RemapLabels: Label syntax error");
+                        else {
+                            if (!LabelMap.ContainsKey(tl))
+                                LabelMap[tl] = new List<KthuraObject>();
+                            LabelMap[tl].Add(o);
+                        }
+                    }
                 }
             }
         }
