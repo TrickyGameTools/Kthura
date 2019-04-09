@@ -114,7 +114,7 @@ namespace KthuraEdit
         #region Postions
         const int LayW = 100;
         const int PDnH = 25;
-        static int ToolW => 100 + (back.Width % 100);
+        static int ToolW => 300 + (back.Width % 100);
         static int ToolX => ScrWidth - ToolW;
         static int ScrollX = 0;
         static int ScrollY = 0;
@@ -168,11 +168,18 @@ namespace KthuraEdit
         static public void BackFull() => TQMG.SimpleTile(back,0, 0, ScrWidth, ScrHeight);
         #endregion
 
+        #region Toolbox
+        static public void DrawToolBox() {
+            TQMG.Color(255, 255, 255);
+            TQMG.SimpleTile(back, ToolX, 0, ToolW, ScrHeight, 0);
+        }
+        #endregion
+
         #region int main() :P
         static public void DrawScreen() {
             // DrawMap();
             DrawLayerBox();
-            // DrawToolBox();
+            DrawToolBox();
             DrawPullDown();
             DrawStatus();
         }
