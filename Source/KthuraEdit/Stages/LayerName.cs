@@ -44,13 +44,15 @@ namespace KthuraEdit.Stages
             if (k == Keys.Back && nieuw != "") nieuw = qstr.Left(nieuw, nieuw.Length - 1);
             if (k == Keys.Escape) MainEdit.ComeToMe();
             if (k == Keys.Enter && !dontconfirm) {
-                if (create)
+                if (create) {
                     Core.Map.CreateLayer(nieuw);
-                else {
+                    DBG.Log($"Created new layer: {nieuw}");
+                } else {
                     var tl = Core.Map.Layers[oud];
                     Core.Map.Layers.Remove(oud);
                     Core.Map.Layers[nieuw] = tl;
                     UI.LayerReset();
+                    DBG.Log($"Layer '{oud}' has been renamed to '{nieuw}'");
                 }
                 MainEdit.ComeToMe();
 
