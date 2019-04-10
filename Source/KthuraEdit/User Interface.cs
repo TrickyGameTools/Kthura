@@ -364,7 +364,7 @@ namespace KthuraEdit
                             ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                             ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                         }
-                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "Tag through modify",IkZegAltijdNee);
+                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
                     } else {
                         ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
                         ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
@@ -385,7 +385,6 @@ namespace KthuraEdit
                         ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
                         ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
                         ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
-
                     }
                 }
             }
