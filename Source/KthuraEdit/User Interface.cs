@@ -196,6 +196,7 @@ namespace KthuraEdit
 
         #region Toolbox
         delegate void TBWork();
+        delegate bool TBEnabled(object data = null);
 
         class TBItem {
             internal static int initx { get; private set; } = ToolX;
@@ -203,6 +204,7 @@ namespace KthuraEdit
             internal Dictionary<bool, TQMGImage> Button = new Dictionary<bool, TQMGImage>();
             readonly internal int X, Y;
             readonly public TBWork Work;
+            readonly internal string Name;
 
             internal TBItem(string fbutton,TBWork w) {
                 DBG.Log($"  = Init button {fbutton}");
@@ -216,10 +218,40 @@ namespace KthuraEdit
                 Y = inity;
                 initx += Button[true].Width+3;
                 Work = w;
+                ObjectParamFields[fbutton] = new Dictionary<string, tbfields>();
+                Name = fbutton;
             }
         }
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
+
+        static bool IkZegAltijdNee(object d = null) => false;
+        static bool ModifyEnable(object d = null) => false; // This will change later, but for now, this must do.
+
+        class tbfields {
+            readonly TBEnabled GetEnabled;
+            public string dtype;
+            public string value;
+            public int intvalue => qstr.ToInt(value);
+            public int x = 0, y = 0;
+            public int w = 0, h = 0;
+            bool _Enabled=true;
+            object EnabledData;
+            public bool Enabled {
+                get {
+                    if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
+                }
+                set {
+                    if (GetEnabled == null) _Enabled = value; else DBG.Log("ERROR! Tried to changed the enabled state of an auto-enabled field");
+                }
+            }
+            public tbfields(int sx,int sy, int sw, int sh, string otype, string defaultvalue, TBEnabled EnabledFunction = null)         {
+                x = sx; y = sy; w = sw; h = sh;
+                value = defaultvalue;
+                GetEnabled = EnabledFunction;
+                dtype = otype;
+            }
+        }
 
         struct tblabels {
             public int x, y;
@@ -229,10 +261,32 @@ namespace KthuraEdit
         }
 
         static List<tblabels> oplabs;
+        static Dictionary<string, Dictionary<string, tbfields>> ObjectParamFields = new Dictionary<string, Dictionary<string, tbfields>>();
+        static tbfields curfield = null;
+
         static void ObjectParameters() {
             TQMG.Color(255, 255, 255);
             foreach(tblabels label in oplabs) {
                 label.capttext.Draw(label.x, label.y);
+            }
+            foreach(tbfields field in ObjectParamFields[currentTBItem.Name].Values) {
+                if (!field.Enabled)
+                    TQMG.Color(25, 0, 0);
+                else {
+                    if (curfield == null) curfield = field;
+                    if (curfield == field)
+                        TQMG.Color(0, 255, 255);
+                    else
+                        TQMG.Color(0, 25, 25);                    
+                }
+                TQMG.DrawRectangle(field.x, field.y, field.w, field.h);
+                if (!field.Enabled)
+                    TQMG.Color(255, 0, 0);
+                else if (curfield == field)
+                    TQMG.Color(0, 25, 25);
+                else
+                    TQMG.Color(0, 255, 255);
+                font20.DrawMax(field.value, field.x + 2, field.y + 1, field.w - 4);
             }
         }
 
@@ -267,7 +321,34 @@ namespace KthuraEdit
                 new tblabels(x,y+273,"Scale:"),
                 new tblabels(x,y+294,"Tag:")
             });
-
+            foreach(TBItem i in TBItems) {
+                if (i.Name != "Other") {
+                    var ct = ObjectParamFields[i.Name];
+                    if (i.Name != "Modify") {
+                        var form = "click"; if (i.Name == "Obstacles") form = "N/A";
+                        ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", i.Name, IkZegAltijdNee);
+                        ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
+                        ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
+                        if (i.Name == "TiledArea") {
+                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "0");
+                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "0");
+                        } else {
+                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);                                
+                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "N/A",IkZegAltijdNee);
+                        }
+                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", form, IkZegAltijdNee);
+                        ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", form, IkZegAltijdNee);
+                    } else {
+                        ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
+                        ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
+                        ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "", ModifyEnable);
+                        ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "", ModifyEnable);
+                        ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "", ModifyEnable);
+                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", "", ModifyEnable);                           
+                        ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", "", ModifyEnable);
+                    }
+                }
+            }
         }
 
         static public void DrawToolBox() {
@@ -278,7 +359,7 @@ namespace KthuraEdit
                 if (currentTBItem == null) currentTBItem = i;
                 i.Button[currentTBItem == i].Draw(i.X, i.Y);
                 if (Core.MsHit(1) && Core.ms.X > i.X && Core.ms.X < i.X + i.Button[true].Width && Core.ms.Y > i.Y && Core.ms.Y < i.Y + 50) currentTBItem = i;
-            }
+            }            
             currentTBItem.Work?.Invoke();
         }
         #endregion
