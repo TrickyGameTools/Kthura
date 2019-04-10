@@ -169,13 +169,48 @@ namespace KthuraEdit
         #endregion
 
         #region Toolbox
-        static void InitToolBox() {
+        class TBItem {
+            private static int initx=ToolX,inity=PDnH+10;
+            internal Dictionary<bool, TQMGImage> Button = new Dictionary<bool, TQMGImage>();
+            readonly internal int X, Y;
 
+            internal TBItem(string fbutton) {
+                DBG.Log($"  = Init button {fbutton}");
+                Button[true] = TQMG.GetImage($"CTb_{fbutton}.png");
+                Button[false] = TQMG.GetImage($"Tab_{fbutton}.png");
+                if (initx + Button[true].Width > ScrWidth - 10) {
+                    initx = ToolX;
+                    inity += Button[false].Height+3;
+                }
+                X = initx;
+                Y = inity;
+                initx += Button[true].Width+3;
+                
+            }
+        }
+        static TBItem currentTBItem;
+        static List<TBItem> TBItems;
+
+        static void InitToolBox() {
+            DBG.Log("- Setting up toolbox");
+            TBItems = new List<TBItem>(new TBItem[] {
+                new TBItem("TiledArea"),
+                new TBItem("Obstacles"),
+                new TBItem("Zones"),
+                new TBItem("Other"),
+                new TBItem("Modify")
+            });
         }
 
         static public void DrawToolBox() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, ToolX, 0, ToolW, ScrHeight, 0);
+            if (TBItems == null) InitToolBox();
+            foreach(TBItem i in TBItems) {
+                if (currentTBItem == null) currentTBItem = i;
+                i.Button[currentTBItem == i].Draw(i.X, i.Y);
+                if (Core.MsHit(1) && Core.ms.X > i.X && Core.ms.X < i.X + i.Button[true].Width && Core.ms.Y > i.Y && Core.ms.Y < i.Y + 50) currentTBItem = i;
+            }
         }
         #endregion
 
