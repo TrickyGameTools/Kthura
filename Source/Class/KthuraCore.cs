@@ -10,15 +10,17 @@ namespace NSKthura {
         readonly public string kind;
         readonly public KthuraLayer Parent;
         int _x = 0, _y = 0;
-        public int w, h;
+        public int w=0, h=0;
         public int insertx = 0, inserty = 0;
         public int R=255, G=255, B=255;
-        public int ScaleX, ScaleY;
+        public int ScaleX=1000, ScaleY=1000;
         int _Dominance = 20;        
         public float TrueScaleX => (float)ScaleX / 1000;
         public float TrueScaleY => (float)ScaleY / 1000;
         string _Labels = "";
         string _Tag = "";
+        bool _impassible = false;
+        bool _forcepassible = false;
         public string Tag { get => _Tag; set {
                 _Tag = value;
                 if (Kthura.automap) Parent.RemapTags();
@@ -53,6 +55,23 @@ namespace NSKthura {
                 _Labels = value;
                 if (Kthura.automap) Parent.RemapDominance();
             }
+        }
+
+        public bool Impassible {
+            get => _impassible;
+            set {
+                _impassible = value;
+                if (Kthura.automap) Parent.BuildBlockMap();
+            }
+        }
+
+        public bool ForcePassible {
+            get => _forcepassible;
+            set {
+                _forcepassible = value;
+                if (Kthura.automap) Parent.BuildBlockMap();
+            }
+
         }
 
         public string DomMapVal => $"{Dominance.ToString("D9")}.{y.ToString("D9")}.{x.ToString("D9")}.{cnt.ToString("D9")}";
@@ -156,6 +175,8 @@ namespace NSKthura {
                 }
             }
         }
+
+        public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */}
         #endregion
     }
 
