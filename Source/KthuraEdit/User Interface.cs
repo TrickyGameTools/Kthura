@@ -24,7 +24,7 @@
 // Version: 19.04.10
 // EndLic
 
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KthuraEdit.Stages;
@@ -195,12 +195,16 @@ namespace KthuraEdit
         #endregion
 
         #region Toolbox
+        delegate void TBWork();
+
         class TBItem {
-            private static int initx=ToolX,inity=PDnH+10;
+            internal static int initx { get; private set; } = ToolX;
+            internal static int inity { get; private set; } = PDnH + 10;
             internal Dictionary<bool, TQMGImage> Button = new Dictionary<bool, TQMGImage>();
             readonly internal int X, Y;
+            readonly public TBWork Work;
 
-            internal TBItem(string fbutton) {
+            internal TBItem(string fbutton,TBWork w) {
                 DBG.Log($"  = Init button {fbutton}");
                 Button[true] = TQMG.GetImage($"CTb_{fbutton}.png");
                 Button[false] = TQMG.GetImage($"Tab_{fbutton}.png");
@@ -211,21 +215,59 @@ namespace KthuraEdit
                 X = initx;
                 Y = inity;
                 initx += Button[true].Width+3;
-                
+                Work = w;
             }
         }
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
 
+        struct tblabels {
+            public int x, y;
+            public string capt;
+            public TQMGText capttext;
+            public tblabels(int ax, int ay, string acapt) { x = ax; y = ay;capt = acapt;capttext = font20.Text(acapt); }
+        }
+
+        static List<tblabels> oplabs;
+        static void ObjectParameters() {
+            TQMG.Color(255, 255, 255);
+            foreach(tblabels label in oplabs) {
+                label.capttext.Draw(label.x, label.y);
+            }
+        }
+
         static void InitToolBox() {
             DBG.Log("- Setting up toolbox");
+            // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
-                new TBItem("TiledArea"),
-                new TBItem("Obstacles"),
-                new TBItem("Zones"),
-                new TBItem("Other"),
-                new TBItem("Modify")
+                new TBItem("TiledArea",ObjectParameters),
+                new TBItem("Obstacles",ObjectParameters),
+                new TBItem("Zones",ObjectParameters),
+                new TBItem("Other",null),
+                new TBItem("Modify",ObjectParameters)
             });
+
+            // Labels in Object paramters
+            var y = TBItem.inity+60;
+            var x = ToolX + 5;
+            oplabs = new List<tblabels>(new tblabels[] {
+                new tblabels(x,y+0,"Kind:"),
+                new tblabels(x,y+21,"Coords:"),
+                new tblabels(x,y+42,"Insert:"),
+                new tblabels(x,y+63,"Format:"),
+                new tblabels(x,y+84,"Labels:"),
+                new tblabels(x,y+105,"Dominance:"),
+                new tblabels(x,y+126,"Alpha:"),
+                new tblabels(x,y+147,"Impassible:"),
+                new tblabels(x,y+168,"Force Passible:"),
+                new tblabels(x,y+189,"Rotation (deg):"),
+                new tblabels(x,y+210,"Color:"),
+                new tblabels(x,y+231,"Anim Speed:"),
+                new tblabels(x,y+252,"Frame:"),
+                new tblabels(x,y+273,"Scale:"),
+                new tblabels(x,y+294,"Tag:")
+            });
+
         }
 
         static public void DrawToolBox() {
@@ -237,6 +279,7 @@ namespace KthuraEdit
                 i.Button[currentTBItem == i].Draw(i.X, i.Y);
                 if (Core.MsHit(1) && Core.ms.X > i.X && Core.ms.X < i.X + i.Button[true].Width && Core.ms.Y > i.Y && Core.ms.Y < i.Y + 50) currentTBItem = i;
             }
+            currentTBItem.Work?.Invoke();
         }
         #endregion
 
