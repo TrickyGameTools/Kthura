@@ -24,7 +24,7 @@
 // Version: 19.04.10
 // EndLic
 
-ï»¿using System;
+using System;
 
 namespace KthuraEdit
 {

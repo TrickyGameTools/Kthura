@@ -24,7 +24,7 @@
 // Version: 19.04.10
 // EndLic
 
-ï»¿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
@@ -117,7 +117,7 @@ namespace KthuraEdit
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
             if (!UpdatedOnce)
                 Debug.WriteLine("Skipping draw as the first update has not yet taken place! (Security measure to prevent needless crashes)");
             else
