@@ -36,6 +36,7 @@ using TrickyUnits;
 using UseJCR6;
 using KthuraEdit.Stages;
 using NSKthura;
+using NLua;
 
 namespace KthuraEdit
 {
@@ -166,6 +167,30 @@ namespace KthuraEdit
         }
         #endregion
 
+        #region Lua init
+        static public Lua Script { get; private set; } = new Lua();
+        static Lua_API LAPI = new Lua_API();
+        static public void InitLua() {
+            try {
+                var basescript = JCR.LoadString("Script/BasisScript.lua");
+                var scriptfile = $"{GlobalWorkSpace}/{Project}/{Project}.Script.lua";
+                var tscript = basescript;
+                DBG.Log("- Setting up Lua");
+                DBG.Log("  = Setting up API");
+                Script["Kthura"] = LAPI;
+                if (File.Exists(scriptfile)) {
+                    DBG.Log($"  = Loading {scriptfile}");
+                    var impscript = QuickStream.LoadString(scriptfile);
+                    tscript = tscript.Replace("--[[CONTENT]]", impscript);
+                }
+                DBG.Log("  = Compiling Script");
+                Script.DoString(tscript, "Kthura Script");
+            } catch (Exception e) {
+                DBG.Log($"   = ERROR: {e.Message}");
+                DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots won't work now!");
+            }
+        }
+        #endregion
 
         #region Global configuration
         static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI");

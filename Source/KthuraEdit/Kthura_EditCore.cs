@@ -80,6 +80,7 @@ namespace KthuraEdit
 #else
             Core.Crash("Project from parameters not yet set");
 #endif
+            Core.InitLua();
 
         }
 
