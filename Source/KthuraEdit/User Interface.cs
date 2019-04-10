@@ -333,19 +333,59 @@ namespace KthuraEdit
                             ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "0");
                             ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "0");
                         } else {
-                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);                                
-                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "N/A",IkZegAltijdNee);
+                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
                         }
                         ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", form, IkZegAltijdNee);
                         ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", form, IkZegAltijdNee);
+                        ct["Labels"] = new tbfields(x + 150, y + 84, 150, 20, "string", "");
+                        ct["Dominance"] = new tbfields(x + 150, y + 105, 150, 20, "int", "20");
+                        if (i.Name != "Zones") {
+                            ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "1000");
+                            ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "255");
+                            ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "255");
+                            ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "255");
+                            ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "-1");
+                            ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0");
+                        } else {
+                            ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0", IkZegAltijdNee);
+                        }
+                        if (i.Name == "Obstacles") {
+                            ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "1000");
+                            ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000");
+                            ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000");
+                        } else {
+                            ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
+                            ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
+                        }
+                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "Tag through modify",IkZegAltijdNee);
                     } else {
                         ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
                         ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
                         ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "", ModifyEnable);
                         ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "", ModifyEnable);
                         ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "", ModifyEnable);
-                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", "", ModifyEnable);                           
+                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", "", ModifyEnable);
                         ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", "", ModifyEnable);
+                        ct["Labels"] = new tbfields(x + 150, y + 84, 150, 20, "string", "", ModifyEnable);
+                        ct["Dominance"] = new tbfields(x + 150, y + 105, 150, 20, "int", "20", ModifyEnable);
+                        ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "1000", ModifyEnable);
+                        ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "", ModifyEnable);
+                        ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "-1", ModifyEnable);
+                        ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0", ModifyEnable);
+                        ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
+                        ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
+                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
+
                     }
                 }
             }
