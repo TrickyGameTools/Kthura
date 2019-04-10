@@ -255,7 +255,10 @@ namespace NSKthura {
         public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */}
 
         public void TotalRemap() {
-
+            RemapDominance();
+            RemapTags();
+            RemapLabels();
+            BuildBlockMap();
         }
         #endregion
     }
