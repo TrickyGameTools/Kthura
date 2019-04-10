@@ -198,6 +198,9 @@ namespace NSKthura {
 
 
         #region Remap
+        /// <summary>
+        /// Updates the tagmap. Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
+        /// </summary>
         public void RemapTags() {
             TagMap.Clear();
             foreach(KthuraObject o in Objects) {
@@ -210,7 +213,9 @@ namespace NSKthura {
             }
         }
 
-
+        /// <summary>
+        /// Remaps drawing order based on dominance settings. Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
+        /// </summary>
         public void RemapDominance() {
             // This was (for now) the easiest way to go, but maybe not the most optimal.
             // If you think you got a faster method... Lemme know!
@@ -222,7 +227,9 @@ namespace NSKthura {
         }
 
 
-
+        /// <summary>
+        /// Remaps labels. Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
+        /// </summary>
         public void RemapLabels() {
             LabelMap.Clear();
             foreach (KthuraObject o in Objects) {
@@ -242,8 +249,14 @@ namespace NSKthura {
             }
         }
 
-
+        /// <summary>
+        /// Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
+        /// </summary>
         public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */}
+
+        public void TotalRemap() {
+
+        }
         #endregion
     }
 
@@ -256,42 +269,31 @@ namespace NSKthura {
     /// </summary>
     class Kthura {
         #region debug
-
-       static public KthuraLog Log = delegate (string m) { Debug.Print(m); };
-
+        /// <summary>
+        /// This delegate function can put messages on the debug console of Visual Studio. Kthura can use it to find errors in its own system or in your maps. If you want another way to make Kthura do that, hey write your own function and put it in this delegate.
+        /// </summary>
+        static public KthuraLog Log = delegate (string m) { Debug.Print(m); };
         #endregion
 
         #region Data specific to the map!
         /// <summary>
-
         /// When set to true, values requiring remapping (such as Tags, Lables, Dominance, BlockMapValues and (believe it or not) the y coordinate) will immediately cause that to happen.
-
         /// Please note that that if you have a lot of modifications to do, this will take away performance, so then you can best turn it off, do your modifications and remap everything later.
-
         /// </summary>
         static public bool automap = true;
         public TJCRDIR TextureJCR;
-
         public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
 
         #endregion
 
         #region Control Methods
-
         public void CreateLayer(string name) {
-
             if (Layers.ContainsKey(name)) {
-
                 Debug.Print($"Kthura map already has a layer named {name}. Please pick a different name!");
-
                 return;
-
             }
-
             Layers[name] = new KthuraLayer(this);
-
         }
-
         #endregion
 
         #region New Map constructors
