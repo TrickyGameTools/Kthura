@@ -333,6 +333,10 @@ ASALocalRun/
 # Some Temp dirs
 Dev
 
+# MKL
+MKL*
+*MKL*
+
 # And for Mac users
 .DS_Store
 ._*
