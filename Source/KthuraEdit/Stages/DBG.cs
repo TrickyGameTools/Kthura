@@ -37,6 +37,7 @@ namespace KthuraEdit.Stages
         static List<string> Lines = new List<string>();
         static int ScrollUp = 0;
         static DBG me = new DBG();
+        static public bool TimeToCrash = false;
         TQMGFont MonoFont = TQMG.GetFont("Fonts/Monof55.20.jfbf");
         int LinesOnScreen => TQMG.ScrWidth / 16;
         int StartY {
@@ -77,7 +78,12 @@ namespace KthuraEdit.Stages
         }
 
         public override void Update() {
-            if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) MainEdit.ComeToMe();
+            if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) {
+                if (TimeToCrash)
+                    Core.Quit();
+                else
+                    MainEdit.ComeToMe();
+            }
         }
 
         static public void ComeToMe() => Core.GoStage(me);

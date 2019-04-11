@@ -78,11 +78,13 @@ namespace KthuraEdit
 
         #region Error Handling
         public static void Crash(string Message) {
-            Debug.WriteLine($"ERROR!\n{Message} ");
+            DBG.Log($"ERROR!\n{Message}\n\nHit Escape to exit this program");
+            DBG.TimeToCrash = true;
+            DBG.ComeToMe();
         }
 
         public static void Crash(Exception e) {
-            Crash($"{e.Message}\n\nTraceback:\n{e.StackTrace}\n\nIt's likely you encountered a bug. Please report this!");
+            Crash($"{e.Message}\n\nTraceback:\n{e.StackTrace}\n\nIt's likely you encountered a bug. Please report this!\n\nHit Escape to exit this program");
         }
         #endregion
 
