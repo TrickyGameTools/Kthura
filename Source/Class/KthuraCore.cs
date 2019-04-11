@@ -194,6 +194,10 @@ namespace NSKthura {
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
         }
+        public bool HasTag(string Tag,bool AlwaysRemapFirst = false) {
+            if (AlwaysRemapFirst) RemapTags();
+            return TagMap.ContainsKey(Tag);
+        }
 
 
 

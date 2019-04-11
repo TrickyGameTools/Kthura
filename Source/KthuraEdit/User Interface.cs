@@ -163,7 +163,7 @@ namespace KthuraEdit
         #endregion
 
         #region Layers
-        static string selectedlayer = "";
+        static public string selectedlayer { get; private set; } = "";
         static public void DrawLayerBox() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, 0, 0, LayW, ScrHeight);
