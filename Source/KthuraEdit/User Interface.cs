@@ -262,7 +262,16 @@ namespace KthuraEdit
 
         static List<tblabels> oplabs;
         static Dictionary<string, Dictionary<string, tbfields>> ObjectParamFields = new Dictionary<string, Dictionary<string, tbfields>>();
-        static tbfields curfield = null;
+        static Dictionary<string, tbfields> tbcurfield = new Dictionary<string, tbfields>();
+        static tbfields curfield {
+            get {
+                if (!tbcurfield.ContainsKey(currentTBItem.Name)) return null;
+                return tbcurfield[currentTBItem.Name];
+            }
+            set {
+                tbcurfield[currentTBItem.Name] = value;
+            }
+        }
 
         static void ObjectParameters() {
             TQMG.Color(255, 255, 255);
@@ -274,6 +283,7 @@ namespace KthuraEdit
                     TQMG.Color(25, 0, 0);
                 else {
                     if (curfield == null) curfield = field;
+                    if (Core.MsHit(1) && Core.ms.X > field.x && Core.ms.X < field.x + field.w && Core.ms.Y > field.y && Core.ms.Y < field.y + field.h) curfield = field;
                     if (curfield == field)
                         TQMG.Color(0, 255, 255);
                     else
