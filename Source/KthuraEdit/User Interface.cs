@@ -334,6 +334,7 @@ namespace KthuraEdit
                 CheckboxImage[chkbox.value].Draw(chkbox.x, chkbox.y);
             }
         }
+        static bool EnableIns(object o = null) => !ObjectCheckBoxes["TiledArea"]["AutoIns"].value;
 
         static void InitToolBox() {
             DBG.Log("- Setting up toolbox");
@@ -355,10 +356,11 @@ namespace KthuraEdit
             });
 
             // Labels in Object paramters
-            var y = TBItem.inity+60;
+            var y = TBItem.inity+60+21;
             var x = ToolX + 5;
             oplabs = new List<tblabels>(new tblabels[] {
-                new tblabels(x,y+0,"Kind:"),
+                new tblabels(x,y-21,"Kind:"),
+                new tblabels(x,y,"Texture:"),
                 new tblabels(x,y+21,"Coords:"),
                 new tblabels(x,y+42,"Insert:"),
                 new tblabels(x,y+63,"Format:"),
@@ -380,12 +382,13 @@ namespace KthuraEdit
                     var cb = ObjectCheckBoxes[i.Name];
                     if (i.Name != "Modify") {
                         var form = "click"; if (i.Name == "Obstacles") form = "N/A";
-                        ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", i.Name, IkZegAltijdNee);
+                        ct["Kind"] = new tbfields(x + 150, y-21, 150, 20, "string", i.Name, IkZegAltijdNee);
                         ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
                         ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
                         if (i.Name == "TiledArea") {
-                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "0");
-                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "0");
+                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "0",EnableIns);
+                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "0",EnableIns);
+                            cb["AutoIns"] = new tbcheckbox(x + 110, y + 42);
                         } else {
                             ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
                             ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
@@ -395,6 +398,7 @@ namespace KthuraEdit
                         ct["Labels"] = new tbfields(x + 150, y + 84, 150, 20, "string", "");
                         ct["Dominance"] = new tbfields(x + 150, y + 105, 150, 20, "int", "20");
                         if (i.Name != "Zones") {
+                            ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "");
                             ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "1000");
                             ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "255");
                             ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "255");
@@ -402,6 +406,7 @@ namespace KthuraEdit
                             ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "-1");
                             ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0");
                         } else {
+                            ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
                             ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "N/A", IkZegAltijdNee);
                             ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
                             ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
@@ -422,7 +427,8 @@ namespace KthuraEdit
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168);
                     } else {
-                        ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
+                        ct["Kind"] = new tbfields(x + 150, y-21, 150, 20, "string", "", IkZegAltijdNee);
+                        ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
                         ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
                         ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "", ModifyEnable);
                         ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "", ModifyEnable);
