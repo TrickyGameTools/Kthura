@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.10
+// version: 19.04.11
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -18,6 +18,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
+
 namespace NSKthura{
 	abstract class KthuraDraw{
 	#region The Abstract part every Draw Driver must have!
@@ -27,4 +28,5 @@ namespace NSKthura{
 	#endregion
 	}
 }
+
 
