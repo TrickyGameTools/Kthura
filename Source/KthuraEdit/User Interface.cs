@@ -505,6 +505,24 @@ namespace KthuraEdit
         
 
         static public void UI_Update() {
+            // Scroll
+            if (Core.kb.IsKeyDown(Keys.LeftControl) || Core.kb.IsKeyDown(Keys.RightControl)) {
+                var k = TQMGKey.GetKey();
+                switch (k) {
+                    case Keys.Up:
+                        ScrollY -= MapLayer.GridY / 2;
+                        break;
+                    case Keys.Down:
+                        ScrollY += MapLayer.GridY / 2;
+                        break;
+                    case Keys.Left:
+                        ScrollX -= MapLayer.GridX / 2;
+                        break;
+                    case Keys.Right:
+                        ScrollX += MapLayer.GridX / 2;
+                        break;
+                }
+            }
 
             // Update Pulldown stuff
             PDEvent = 0;
