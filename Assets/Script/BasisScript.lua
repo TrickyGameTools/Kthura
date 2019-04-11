@@ -53,7 +53,7 @@ function reveach(a) -- each in reversed order!
    local idx=#acopy+1
    return function()
       idx=idx-1
-      if (idx<=0) return nil
+      if (idx<=0) then return nil end
       return acopy[idx]
    end
 emd
