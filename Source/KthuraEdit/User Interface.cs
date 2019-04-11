@@ -207,8 +207,9 @@ namespace KthuraEdit
             readonly internal int X, Y;
             readonly public TBWork Work;
             readonly internal string Name;
+            readonly public bool area;
 
-            internal TBItem(string fbutton,TBWork w) {
+            internal TBItem(string fbutton,TBWork w,bool doarea=true) {
                 DBG.Log($"  = Init button {fbutton}");
                 Button[true] = TQMG.GetImage($"CTb_{fbutton}.png");
                 Button[false] = TQMG.GetImage($"Tab_{fbutton}.png");
@@ -349,10 +350,10 @@ namespace KthuraEdit
             // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
                 new TBItem("TiledArea",ObjectParameters),
-                new TBItem("Obstacles",ObjectParameters),
+                new TBItem("Obstacles",ObjectParameters,false),
                 new TBItem("Zones",ObjectParameters),
-                new TBItem("Other",null),
-                new TBItem("Modify",ObjectParameters)
+                new TBItem("Other",null,false),
+                new TBItem("Modify",ObjectParameters,false)
             });
 
             // Labels in Object paramters

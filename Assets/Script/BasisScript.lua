@@ -10,8 +10,9 @@ everything in the underlying APIs.
 ]]
 
 -- Locals appear to be faster than globals
-local table=table
-local os = os
+local table = table
+local os    = os
+local math  = math
 
 function ASH(value)
 	if type(value)=="nil" then return nil
