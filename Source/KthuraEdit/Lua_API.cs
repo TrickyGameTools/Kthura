@@ -31,6 +31,7 @@ using System.Text;
 using System.Threading.Tasks;
 using KthuraEdit.Stages;
 using NSKthura;
+using TrickyUnits;
 
 namespace KthuraEdit
 {
@@ -43,6 +44,18 @@ namespace KthuraEdit
         public void KthuraPrint(string content) => DBG.Log(content);
 
         public string Build => BuildDate.sBuildDate;
+
+        public string GenKey(string prefix="") {
+            var time = "";
+            var cnt = -1;
+            var ret = "";            
+            do {
+                time = DateTime.Now.ToString();
+                cnt++;
+                ret = $"{qstr.md5($"{prefix}{time}{cnt}")}";
+            } while (Core.Map.Layers[UI.selectedlayer].HasTag(ret,true));
+            return ret;
+        }
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME;
