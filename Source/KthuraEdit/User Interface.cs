@@ -219,11 +219,13 @@ namespace KthuraEdit
                 initx += Button[true].Width+3;
                 Work = w;
                 ObjectParamFields[fbutton] = new Dictionary<string, tbfields>();
+                ObjectCheckBoxes[fbutton] = new Dictionary<string, tbcheckbox>();
                 Name = fbutton;
             }
         }
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
+        static Dictionary<bool, TQMGImage> CheckboxImage = new Dictionary<bool, TQMGImage>();
 
         static bool IkZegAltijdNee(object d = null) => false;
         static bool ModifyEnable(object d = null) => false; // This will change later, but for now, this must do.
@@ -260,6 +262,28 @@ namespace KthuraEdit
             public tblabels(int ax, int ay, string acapt) { x = ax; y = ay;capt = acapt;capttext = font20.Text(acapt); }
         }
 
+        class tbcheckbox {
+            readonly TBEnabled GetEnabled;
+            bool _Enabled = true;
+            object EnabledData;
+            public bool Enabled {
+                get {
+                    if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
+                }
+                set {
+                    if (GetEnabled == null) _Enabled = value; else DBG.Log("ERROR! Tried to changed the enabled state of an auto-enabled field");
+                }
+            }
+            public bool value = false;
+            public int x, y;
+            public void Toggle()  => this.value = !this.value;
+            public tbcheckbox(int ax, int ay, TBEnabled fEnabled=null) {
+                x = ax;
+                y = ay;
+                GetEnabled = fEnabled;
+            }
+        }
+        static Dictionary<string, Dictionary<string, tbcheckbox>> ObjectCheckBoxes = new Dictionary<string, Dictionary<string, tbcheckbox>>();
         static List<tblabels> oplabs;
         static Dictionary<string, Dictionary<string, tbfields>> ObjectParamFields = new Dictionary<string, Dictionary<string, tbfields>>();
         static Dictionary<string, tbfields> tbcurfield = new Dictionary<string, tbfields>();
@@ -298,10 +322,27 @@ namespace KthuraEdit
                     TQMG.Color(0, 255, 255);
                 font20.DrawMax(field.value, field.x + 2, field.y + 1, field.w - 4);
             }
+            foreach(tbcheckbox chkbox in ObjectCheckBoxes[currentTBItem.Name].Values) {
+                if (!chkbox.Enabled)
+                    TQMG.Color(255, 0, 0);
+                else {
+                    TQMG.Color(0, 255, 255);
+                    if (Core.MsHit(1) && Core.ms.X >= chkbox.x && Core.ms.X <= chkbox.x + 20 && Core.ms.Y >= chkbox.y && Core.ms.Y <= chkbox.y + 20) chkbox.Toggle();
+                }
+                CheckboxImage[chkbox.value].Draw(chkbox.x, chkbox.y);
+            }
         }
 
         static void InitToolBox() {
             DBG.Log("- Setting up toolbox");
+            // Load checkboxes
+            try {
+                CheckboxImage[false] = TQMG.GetImage("Check_Unchecked.png"); if (CheckboxImage[false] == null) Core.Crash($"Uncheck load fail: {UseJCR6.JCR6.JERROR}");
+                CheckboxImage[true] = TQMG.GetImage("Check_Checked.png"); if (CheckboxImage[true] == null) Core.Crash($"Check load fail: {UseJCR6.JCR6.JERROR}");
+            } catch (Exception e) {
+                Core.Crash($"{e.Message}\n\n{UseJCR6.JCR6.JERROR}\n\nIs there something wrong with your installation?");
+            }
+
             // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
                 new TBItem("TiledArea",ObjectParameters),
@@ -334,6 +375,7 @@ namespace KthuraEdit
             foreach(TBItem i in TBItems) {
                 if (i.Name != "Other") {
                     var ct = ObjectParamFields[i.Name];
+                    var cb = ObjectCheckBoxes[i.Name];
                     if (i.Name != "Modify") {
                         var form = "click"; if (i.Name == "Obstacles") form = "N/A";
                         ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", i.Name, IkZegAltijdNee);
@@ -375,6 +417,8 @@ namespace KthuraEdit
                             ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                         }
                         ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
+                        cb["Impassible"] = new tbcheckbox(x + 150, y + 147);
+                        cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168);
                     } else {
                         ct["Kind"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
                         ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
@@ -395,6 +439,8 @@ namespace KthuraEdit
                         ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
                         ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
                         ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
+                        cb["Impassible"] = new tbcheckbox(x + 150, y + 147, ModifyEnable);
+                        cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168, ModifyEnable);
                     }
                 }
             }
