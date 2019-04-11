@@ -481,9 +481,18 @@ namespace KthuraEdit
             }
         }
 
+        static public void DrawOrigin() {
+            TQMG.Color(200, 0, 0);
+            if (ScrollX < 0) 
+                TQMG.DrawRectangle(LayW, 0, -ScrollX, ScrHeight);
+            if (ScrollY < 0)
+                TQMG.DrawRectangle(0, PDnH, ScrWidth, -ScrollY);
+        }
+
         static public void DrawMap() {
             if (selectedlayer == "") return;
             DrawGrid();
+            DrawOrigin();
         }
         #endregion
 
