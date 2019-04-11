@@ -191,6 +191,7 @@ namespace NSKthura {
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
         List<KthuraObject> ObjectDrawOrder;
         Kthura Parent;
+        public int GridX = 32, GridY = 32;
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
         }

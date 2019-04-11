@@ -46,7 +46,7 @@ namespace KthuraEdit
             public int EventCode;
             public Keys QKey;
             public PullDownHeader Parent;
-            public PullDownItem(string caption,int evCode, Keys QuickKey) {
+            public PullDownItem(string caption, int evCode, Keys QuickKey) {
                 if (font20 == null) Core.Crash("Hey! No font!");
                 CaptString = caption;
                 CaptText = font20.Text(caption);
@@ -71,40 +71,40 @@ namespace KthuraEdit
                 }
             }
         }
-        static List<PullDownHeader> InitPullDownMenus()  {
+        static List<PullDownHeader> InitPullDownMenus() {
             var ret = new List<PullDownHeader>();
             ret.Add(new PullDownHeader("General",
                 new PullDownItem("Save", 1001, Keys.S),
-                new PullDownItem("Quit",9999,Keys.Q)
+                new PullDownItem("Quit", 9999, Keys.Q)
                 ));
             ret.Add(new PullDownHeader("Grid",
-                new PullDownItem("Show Grid Blocks",2001,Keys.D),
-                new PullDownItem("Grid Mode",2002,Keys.G)
+                new PullDownItem("Show Grid Blocks", 2001, Keys.D),
+                new PullDownItem("Grid Mode", 2002, Keys.G)
                 ));
             ret.Add(new PullDownHeader("Layers",
                 new PullDownItem("New Layer", 4001, Keys.N),
                 new PullDownItem("Remove Layer", 4002, Keys.NumPad0),
-                new PullDownItem("Rename Layer",4003,Keys.NumPad5)
+                new PullDownItem("Rename Layer", 4003, Keys.NumPad5)
                 ));
             ret.Add(new PullDownHeader("Debug",
-                new PullDownItem("Show Debug Log",3001,Keys.F1),
-                new PullDownItem("Show Blockmap",3002,Keys.B),
-                new PullDownItem("Count Objects",3003,Keys.T),
-                new PullDownItem("Scan and remove \"Rotten\" objects",3004,Keys.F2),
-                new PullDownItem("List Object Tags",3005,Keys.Z),
-                new PullDownItem("Go To Screen Postion",3006,Keys.F3)
+                new PullDownItem("Show Debug Log", 3001, Keys.F1),
+                new PullDownItem("Show Blockmap", 3002, Keys.B),
+                new PullDownItem("Count Objects", 3003, Keys.T),
+                new PullDownItem("Scan and remove \"Rotten\" objects", 3004, Keys.F2),
+                new PullDownItem("List Object Tags", 3005, Keys.Z),
+                new PullDownItem("Go To Screen Postion", 3006, Keys.F3)
                 ));
 
             return ret;
         }
 
         static void DrawPullDown() {
-            if (PullDownMenus==null) PullDownMenus = InitPullDownMenus();
+            if (PullDownMenus == null) PullDownMenus = InitPullDownMenus();
             TQMG.Color(255, 255, 255);
-            TQMG.SimpleTile(back,0, 0, ScrWidth, 25);
+            TQMG.SimpleTile(back, 0, 0, ScrWidth, 25);
             TQMG.Color(0, 255, 255);
             var x = 20;
-            foreach(PullDownHeader h in PullDownMenus) {
+            foreach (PullDownHeader h in PullDownMenus) {
                 h.CaptText.Draw(x, 3);
                 x += h.CaptText.Width + 10;
             }
@@ -152,7 +152,7 @@ namespace KthuraEdit
         static TQMGText BottomLine;
         static public void DrawStatus() {
             TQMG.Color(255, 255, 255);
-            TQMG.SimpleTile(back,0, ScrHeight - 25, ScrWidth, 25);
+            TQMG.SimpleTile(back, 0, ScrHeight - 25, ScrWidth, 25);
             TQMG.Color(0, 255, 255);
             if (BottomLine == null)
                 BottomLine = font20.Text($"{Core.Project}::{Core.MapFile}");
@@ -164,6 +164,7 @@ namespace KthuraEdit
 
         #region Layers
         static public string selectedlayer { get; private set; } = "";
+        static public NSKthura.KthuraLayer MapLayer { get => Core.Map.Layers[selectedlayer]; }
         static public void DrawLayerBox() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, 0, 0, LayW, ScrHeight);
@@ -459,6 +460,32 @@ namespace KthuraEdit
         }
         #endregion
 
+        #region Draw Map
+        static bool ShowGrid = true;
+        static void DrawGrid() {
+            if (!ShowGrid) return;
+            var modx = ScrollX % MapLayer.GridX;
+            var mody = ScrollY % MapLayer.GridY;
+            var bl = false;
+            for(int y = -mody; y < ScrHeight + MapLayer.GridY; y += MapLayer.GridY) {
+                var cl = bl; bl = !bl;
+                for (int x = -modx; x < ScrWidth + MapLayer.GridX; x += MapLayer.GridX) {
+                    cl = !cl;
+                    if (cl)
+                        TQMG.Color(15, 0, 20);
+                    else
+                        TQMG.Color(0, 20, 20);
+                    TQMG.DrawRectangle(x + LayW, y + PDnH, MapLayer.GridX, MapLayer.GridY);
+                }
+            }
+        }
+
+        static public void DrawMap() {
+            if (selectedlayer == "") return;
+            DrawGrid();
+        }
+        #endregion
+
         #region Start Call
         static UI() {
             InitToolBox();
@@ -467,7 +494,7 @@ namespace KthuraEdit
 
         #region int main() :P
         static public void DrawScreen() {
-            // DrawMap();
+             DrawMap();
             DrawLayerBox();
             DrawToolBox();
             DrawPullDown();
@@ -481,6 +508,9 @@ namespace KthuraEdit
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
+                // Grid
+                case 2001: ShowGrid = !ShowGrid; break;                    
+                // Debug
                 case 3001: DBG.ComeToMe(); break;
                 // Layers
                 case 4001: LayerName.ComeToMe(); break;
