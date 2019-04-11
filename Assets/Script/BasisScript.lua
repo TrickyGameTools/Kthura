@@ -1,3 +1,5 @@
+
+
 --[[
 
 Base Script.
@@ -6,6 +8,15 @@ scripts written in Lua should contain. Since I do not want to write
 everything in the underlying APIs.
 
 ]]
+
+-- Locals appear to be faster than globals
+local table=table
+local os = os
+
+-- Using os.exit() is not desirable
+function os.exit()
+    error("os.exit() has been disabled for security reasons!")
+end
 
 
 -- Replacing Lua's own "print" command
@@ -33,8 +44,28 @@ function each(a)
    end
 end
 
+function spairs(a,func)
+   assert(type(a)=="table","HEY! 'each' requires a table. Not a "..type(a).."!");
+   local keys = {}
+   local acopy = {}
+   for k,v in pairs(a) do
+      keys[#keys+1]=k
+      acopy[k]=v
+   end
+   if (func) then
+      assert(type(func)=="function","HEY! I need a function for sorting. Not a "..type(func).."!")
+      table.sort(keys,func)
+   else
+      table.sort(keys)
+   end   
+   local idx=0
+   return function()
+      idx=idx+1
+      if keys[idx]==nil then return nil,nil end
+      return keys[idx],acopy[keys[idx]]
+   end
+end   
 
---[[CONTENT]]
 
 
 -- Destroy import function for safety reasons

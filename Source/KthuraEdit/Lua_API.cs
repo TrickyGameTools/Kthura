@@ -42,6 +42,8 @@ namespace KthuraEdit
         // Should Replace Lua's own print command
         public void KthuraPrint(string content) => DBG.Log(content);
 
+        public string Build => BuildDate.sBuildDate;
+
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME;
     }

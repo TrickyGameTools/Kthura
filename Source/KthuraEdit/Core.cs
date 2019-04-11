@@ -173,21 +173,25 @@ namespace KthuraEdit
         static public void InitLua() {
             try {
                 var basescript = JCR.LoadString("Script/BasisScript.lua");
-                var scriptfile = $"{GlobalWorkSpace}/{Project}/{Project}.Script.lua";
+                var scriptfile = ($"{GlobalWorkSpace}/{Project}/{Project}.Script.lua").Replace("\\","/");
                 var tscript = basescript;
                 DBG.Log("- Setting up Lua");
                 DBG.Log("  = Setting up API");
                 Script["Kthura"] = LAPI;
+                DBG.Log("  = Compiling Main Script");
+                Script.DoString(tscript, "Kthura Script");
                 if (File.Exists(scriptfile)) {
                     DBG.Log($"  = Loading {scriptfile}");
-                    var impscript = QuickStream.LoadString(scriptfile);
-                    tscript = tscript.Replace("--[[CONTENT]]", impscript);
+                    //var impscript = QuickStream.LoadString(scriptfile);
+                    DBG.Log($"  = Compiling {scriptfile}");
+                    //tscript = tscript.Replace("--[[CONTENT]]", impscript);
+                    Script.DoFile(scriptfile);
+                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");
                 }
-                DBG.Log("  = Compiling Script");
-                Script.DoString(tscript, "Kthura Script");
+
             } catch (Exception e) {
                 DBG.Log($"   = ERROR: {e.Message}");
-                DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots won't work now!");
+                DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots may not work properly now!");
             }
         }
         #endregion
