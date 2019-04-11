@@ -56,7 +56,7 @@ function reveach(a) -- each in reversed order!
       if (idx<=0) then return nil end
       return acopy[idx]
    end
-emd
+end
 
 function spairs(a,func)
    assert(type(a)=="table","HEY! 'each' requires a table. Not a "..type(a).."!");
