@@ -13,6 +13,15 @@ everything in the underlying APIs.
 local table=table
 local os = os
 
+function ASH(value)
+	if type(value)=="nil" then return nil
+	elseif type(value)=="boolean" then
+		if value then return "true" else return "false" end
+	elseif type(value)=="string" return value
+	elseif type(value)=="number" return ""..value -- Guarantees a string
+	else return "<<"..type(value)..">>" end
+end
+
 -- Using os.exit() is not desirable
 function os.exit()
     error("os.exit() has been disabled for security reasons!")
@@ -59,7 +68,7 @@ function reveach(a) -- each in reversed order!
 end
 
 function spairs(a,func)
-   assert(type(a)=="table","HEY! 'each' requires a table. Not a "..type(a).."!");
+   assert(type(a)=="table","HEY! 'spairs' requires a table. Not a "..type(a).."!");
    local keys = {}
    local acopy = {}
    for k,v in pairs(a) do
@@ -78,6 +87,12 @@ function spairs(a,func)
       if keys[idx]==nil then return nil,nil end
       return keys[idx],acopy[keys[idx]]
    end
+end   
+
+function GenerateKey(prefix)
+   assert(type(prefix)=="string", "GenerateKey("..ASH(prefix).."): I only accept strings for a prefix and a "..type(prefix))
+   local ret = Kthura:GenKey(prefix)
+   assert(ret and ret~="","GenerateKey("..ASH(prefix).."): Failed!")
 end   
 
 
