@@ -505,6 +505,8 @@ namespace KthuraEdit
         
 
         static public void UI_Update() {
+
+            // Update Pulldown stuff
             PDEvent = 0;
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
