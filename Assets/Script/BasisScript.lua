@@ -44,6 +44,20 @@ function each(a)
    end
 end
 
+function reveach(a) -- each in reversed order!
+   assert(type(a)=="table","HEY! 'reveach' requires a table. Not a "..type(a).."!");
+   local acopy={}
+   for i,c in ipairs(a) do
+	acopy[i]=c
+   end
+   local idx=#acopy+1
+   return function()
+      idx=idx-1
+      if (idx<=0) return nil
+      return acopy[idx]
+   end
+emd
+
 function spairs(a,func)
    assert(type(a)=="table","HEY! 'each' requires a table. Not a "..type(a).."!");
    local keys = {}
