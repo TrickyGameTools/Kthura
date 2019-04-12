@@ -112,7 +112,17 @@ namespace KthuraEdit
                 case 2:
                     return (!DontMouse) && oldms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
                 default:
-                    throw new Exception($"Unknown mouse button requires: {b}");
+                    throw new Exception($"Core.MsHit: Unknown mouse button required: {b}");
+            }
+        }
+        static public bool MsDown(byte b) {
+            switch (b) {
+                case 1:
+                    return (!DontMouse) && ms.LeftButton == ButtonState.Pressed;
+                case 2:
+                    return (!DontMouse) &&  ms.RightButton == ButtonState.Pressed;
+                default:
+                    throw new Exception($"Core.MsDown: Unknown mouse button required: {b}");
             }
         }
         #endregion
