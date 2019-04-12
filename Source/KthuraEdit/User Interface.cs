@@ -305,16 +305,17 @@ namespace KthuraEdit
             foreach(tblabels label in oplabs) {
                 label.capttext.Draw(label.x, label.y);
             }
-            foreach(tbfields field in ObjectParamFields[currentTBItem.Name].Values) {
-                if (!field.Enabled)
+            foreach (tbfields field in ObjectParamFields[currentTBItem.Name].Values) {
+                if (!field.Enabled) {
                     TQMG.Color(25, 0, 0);
-                else {
+                    if (curfield == field) curfield = null;
+                } else {
                     if (curfield == null) curfield = field;
                     if (Core.MsHit(1) && Core.ms.X > field.x && Core.ms.X < field.x + field.w && Core.ms.Y > field.y && Core.ms.Y < field.y + field.h) curfield = field;
                     if (curfield == field)
                         TQMG.Color(0, 255, 255);
                     else
-                        TQMG.Color(0, 25, 25);                    
+                        TQMG.Color(0, 25, 25);
                 }
                 TQMG.DrawRectangle(field.x, field.y, field.w, field.h);
                 if (!field.Enabled)
