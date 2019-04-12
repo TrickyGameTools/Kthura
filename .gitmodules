@@ -1,0 +1,3 @@
+[submodule "Source/KthuraTextEditor"]
+	path = Source/KthuraTextEditor
+	url = https://github.com/TrickyGameTools/KthuraTextEditor.git
