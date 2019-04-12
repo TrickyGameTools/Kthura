@@ -151,6 +151,7 @@ namespace KthuraEdit
 
         #region Status
         static TQMGText BottomLine;
+        static TQMGText TextGridMode;
         static public void DrawStatus() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, 0, ScrHeight - 25, ScrWidth, 25);
@@ -160,6 +161,10 @@ namespace KthuraEdit
             BottomLine.Draw(5, ScrHeight - 24);
             if (Core.ms.Y > PDnH && Core.ms.X > LayW && Core.ms.Y < ScrHeight - 25 && Core.ms.X < ToolX)
                 font20.DrawText($"Scr({ScrollX},{ScrollY}); Mse({Core.ms.X},{Core.ms.Y}); Pos({PosX},{PosY})", ScrWidth - 5, ScrHeight - 24, TQMG_TextAlign.Right);
+            if (GridMode) {
+                if (TextGridMode == null) TextGridMode = font20.Text("GridMode");
+                TextGridMode.Draw(ScrWidth / 2, ScrHeight - 24, TQMG_TextAlign.Center);
+            }
         }
         #endregion
 
@@ -471,6 +476,7 @@ namespace KthuraEdit
 
         #region Draw Map
         static bool ShowGrid = true;
+        static bool GridMode = true;
         static void DrawGrid() {
             if (!ShowGrid) return;
             var modx = ScrollX % MapLayer.GridX;
@@ -547,7 +553,8 @@ namespace KthuraEdit
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
                 // Grid
-                case 2001: ShowGrid = !ShowGrid; break;                    
+                case 2001: ShowGrid = !ShowGrid; break;
+                case 2002: GridMode = !GridMode; break;
                 // Debug
                 case 3001: DBG.ComeToMe(); break;
                 // Layers
