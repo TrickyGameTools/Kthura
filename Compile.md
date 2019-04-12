@@ -19,7 +19,7 @@ cd TrickyProjects
 git clone https://github.com/Tricky1975/trickyunits_csharp.git TrickyUnits
 git clone https://github.com/jcr6/JCR6_CSharp.git JCR6
 git clone https://github.com/TrickyGameTools/TQMG
-git clone https://github.com/TrickyGameTools/Kthura
+git clone https://github.com/TrickyGameTools/Kthura --recurse-submodules
 
 # Let's get into the Kthura directory
 cd Kthura/Source
