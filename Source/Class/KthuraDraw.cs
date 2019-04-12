@@ -20,13 +20,22 @@
 
 
 namespace NSKthura{
-	abstract class KthuraDraw{
-	#region The Abstract part every Draw Driver must have!
-	#endregion
 
-	#region Some static functions for Kthura's functionality in general
-	#endregion
-	}
+    delegate void DelDrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+
+	abstract class KthuraDraw{
+        #region The Abstract part every Draw Driver must have!
+        abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        #endregion
+
+        #region Some static functions for Kthura's functionality in general
+        static public KthuraDraw DrawDriver = null;
+        static public DelDrawZone DrawZone = delegate { }; // Normally zones should be ignored! Only editors should use this, and thus this delegate!
+
+        static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
+        static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) { }
+        #endregion
+    }
 }
 
 

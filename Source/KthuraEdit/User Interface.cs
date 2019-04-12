@@ -27,7 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using NSKthura;
 using KthuraEdit.Stages;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
@@ -147,6 +147,8 @@ namespace KthuraEdit
         static int ScrollY = 0;
         static int PosX => ScrollX + Core.ms.X - LayW;
         static int PosY => ScrollY + Core.ms.Y - PDnH;
+        static int HoldX = 0, HoldY = 0, HoldEX = 0, HoldEY = 0;
+        static bool HoldArea = false;
         #endregion
 
         #region Status
@@ -159,8 +161,13 @@ namespace KthuraEdit
             if (BottomLine == null)
                 BottomLine = font20.Text($"{Core.Project}::{Core.MapFile}");
             BottomLine.Draw(5, ScrHeight - 24);
-            if (Core.ms.Y > PDnH && Core.ms.X > LayW && Core.ms.Y < ScrHeight - 25 && Core.ms.X < ToolX)
-                font20.DrawText($"Scr({ScrollX},{ScrollY}); Mse({Core.ms.X},{Core.ms.Y}); Pos({PosX},{PosY})", ScrWidth - 5, ScrHeight - 24, TQMG_TextAlign.Right);
+            if (Core.ms.Y > PDnH && Core.ms.X > LayW && Core.ms.Y < ScrHeight - 25 && Core.ms.X < ToolX) {
+                if (HoldArea) {
+                    font20.DrawText($"Marking for {currentTBItem.Name}: ({HoldX},{HoldY})-({HoldEX},{HoldEY})", ScrWidth - 5, ScrHeight - 25, TQMG_TextAlign.Right);
+                } else {
+                    font20.DrawText($"Scr({ScrollX},{ScrollY}); Mse({Core.ms.X},{Core.ms.Y}); Pos({PosX},{PosY})", ScrWidth - 5, ScrHeight - 24, TQMG_TextAlign.Right);
+                }
+            }
             if (GridMode) {
                 if (TextGridMode == null) TextGridMode = font20.Text("GridMode");
                 TextGridMode.Draw(ScrWidth / 2, ScrHeight - 24, TQMG_TextAlign.Center);
@@ -204,6 +211,7 @@ namespace KthuraEdit
         #region Toolbox
         delegate void TBWork();
         delegate bool TBEnabled(object data = null);
+        delegate void AreaRelease(int x1, int y1, int x2, int y2);
 
         class TBItem {
             internal static int initx { get; private set; } = ToolX;
@@ -212,9 +220,10 @@ namespace KthuraEdit
             readonly internal int X, Y;
             readonly public TBWork Work;
             readonly internal string Name;
-            readonly public bool area;
+            public bool area =>AR!=null;
+            readonly public AreaRelease AR;
 
-            internal TBItem(string fbutton,TBWork w,bool doarea=true) {
+            internal TBItem(string fbutton,TBWork w,AreaRelease aAR) {
                 DBG.Log($"  = Init button {fbutton}");
                 Button[true] = TQMG.GetImage($"CTb_{fbutton}.png");
                 Button[false] = TQMG.GetImage($"Tab_{fbutton}.png");
@@ -229,6 +238,7 @@ namespace KthuraEdit
                 ObjectParamFields[fbutton] = new Dictionary<string, tbfields>();
                 ObjectCheckBoxes[fbutton] = new Dictionary<string, tbcheckbox>();
                 Name = fbutton;
+                AR = aAR;
             }
         }
         static TBItem currentTBItem;
@@ -355,11 +365,11 @@ namespace KthuraEdit
 
             // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
-                new TBItem("TiledArea",ObjectParameters),
-                new TBItem("Obstacles",ObjectParameters,false),
-                new TBItem("Zones",ObjectParameters),
-                new TBItem("Other",null,false),
-                new TBItem("Modify",ObjectParameters,false)
+                new TBItem("TiledArea",ObjectParameters,AR_Tiled),
+                new TBItem("Obstacles",ObjectParameters,null),
+                new TBItem("Zones",ObjectParameters,AR_Zones),
+                new TBItem("Other",null,null),
+                new TBItem("Modify",ObjectParameters,null)
             });
 
             // Labels in Object paramters
@@ -466,11 +476,39 @@ namespace KthuraEdit
             TQMG.SimpleTile(back, ToolX, 0, ToolW, ScrHeight, 0);
             if (TBItems == null) InitToolBox();
             foreach(TBItem i in TBItems) {
-                if (currentTBItem == null) currentTBItem = i;
+                if (currentTBItem == null) {
+                    currentTBItem = i;
+                    Debug.WriteLine($"currentTBItem was null, so I set it to TBItem {i.Name}");
+                }
                 i.Button[currentTBItem == i].Draw(i.X, i.Y);
                 if (Core.MsHit(1) && Core.ms.X > i.X && Core.ms.X < i.X + i.Button[true].Width && Core.ms.Y > i.Y && Core.ms.Y < i.Y + 50) currentTBItem = i;
             }            
             currentTBItem.Work?.Invoke();
+        }
+        #endregion
+
+        #region AreaRelease
+        static Random rnd = new Random();
+        static void AR_Tiled(int x1,int y1,int x2, int y2) { }
+        static void AR_Zones(int x1, int y1, int x2, int y2) {
+            var startx = x1;
+            var starty = y1;
+            var width = Math.Abs(x2 - x1);
+            var height = Math.Abs(y2 - y1);
+            if (x1 > x2) startx = x2;
+            if (y1 > y2) starty = y2;
+            var zone = new KthuraObject("Zone",MapLayer);
+            zone.x = startx;
+            zone.y = starty;
+            zone.w = width;
+            zone.h = height;
+            zone.R = rnd.Next(100, 255);
+            zone.G = rnd.Next(100, 255);
+            zone.B = rnd.Next(100, 255);
+            var cnt = -1;
+            var tag = "";
+            do { cnt++; tag = $"Zone ${cnt}"; } while (MapLayer.HasTag(tag));
+            zone.Tag = tag;
         }
         #endregion
 
@@ -503,10 +541,26 @@ namespace KthuraEdit
                 TQMG.DrawRectangle(0, PDnH, ScrWidth, -ScrollY);
         }
 
+        static void DrawHold() {
+            if (!currentTBItem.area) return;
+            if (!HoldArea) return;
+            var s = DateTime.Now.Second;
+            var s6 = (s * 6)*(Math.PI*180);
+            var r = (int)(Math.Abs(Math.Sin(s6)) * 255);
+            var g = (int)(Math.Abs(Math.Cos(s6)) * 255);
+            var b = s * 2;
+            TQMG.Color((byte)r, (byte)g, (byte)b);
+            TQMG.SetAlpha(15);
+            TQMG.DrRect((HoldX-ScrollX)+LayW, (HoldY-ScrollY)+PDnH, (HoldEX-ScrollX)+LayW, (HoldEY-ScrollY)+PDnH);
+            TQMG.SetAlpha(255);
+        }
+
         static public void DrawMap() {
             if (selectedlayer == "") return;
             DrawGrid();
             DrawOrigin();
+            // POINT: Map rendering itself
+            DrawHold();
         }
         #endregion
 
@@ -518,7 +572,7 @@ namespace KthuraEdit
 
         #region int main() :P
         static public void DrawScreen() {
-             DrawMap();
+            DrawMap();            
             DrawLayerBox();
             DrawToolBox();
             DrawPullDown();
@@ -545,6 +599,34 @@ namespace KthuraEdit
                         ScrollX += MapLayer.GridX / 2;
                         break;
                 }
+            }
+            // Mousedown/up
+            if (Core.ms.X < LayW || Core.ms.X > ToolX || Core.ms.Y < PDnH || Core.ms.Y > ScrHeight - 25)
+                HoldArea = false;
+            else if (currentTBItem!=null) {
+                //Debug.Print($"{currentTBItem.Name}: a-area{currentTBItem.area}; MouseDown{Core.MsDown(1)}");
+                if (currentTBItem.area && Core.MsDown(1)) {
+                    if (!HoldArea) {
+                        HoldArea = true;
+                        if (GridMode) {
+                            HoldX = (int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX;
+                            HoldY = (int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY;
+                        } else {
+                            HoldX = PosX;
+                            HoldY = PosY;
+                        }                        
+                    }
+                    if (GridMode) {
+                        HoldEX = (int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX;
+                        HoldEY = (int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY;
+                    } else {
+                        HoldEX = PosX;
+                        HoldEY = PosY;
+                    }
+
+                }
+            } else {
+                Debug.WriteLine("Holding check not performed, due to currentTBItem being null");
             }
 
             // Update Pulldown stuff
