@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.11
+// Version: 19.04.13
 // EndLic
+
 
 
 using System;
@@ -69,26 +70,39 @@ namespace KthuraEdit.Stages
         }
 
         public override void Draw() {
-            UI.BackFull();
-            var y = ScrollUp - StartY;
-            foreach(string line in Lines) {
-                if (y > -30)
-                    MonoFont.DrawText(line, 2, y);
-                y += 22;
+            try {
+                UI.BackFull();
+                var y = ScrollUp - StartY;
+                foreach (string line in Lines) {
+                    if (y > -30)
+                        MonoFont.DrawText(line, 2, y);
+                    y += 22;
+                }
+            } catch(Exception error) {
+                Debug.WriteLine($"Exception during the debug log rendering!\n{error.Message}\nTraceback:\n{error.StackTrace}\n\n"); 
             }
         }
 
         public override void Update() {
-            if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) {
-                if (TimeToCrash)
-                    Core.Quit();
-                else
-                    MainEdit.ComeToMe();
+            try {
+                if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) {
+                    Debug.Print("Leaving the debug screen");
+                    if (TimeToCrash)
+                        Core.Quit();
+                    else
+                        MainEdit.ComeToMe();
+                }
+            } catch (Exception error) {
+                Debug.WriteLine($"Exception during the debug log updating!\n{error.Message}\nTraceback:\n{error.StackTrace}\n\n");
             }
         }
 
-        static public void ComeToMe() => Core.GoStage(me);
+        static public void ComeToMe() {
+            Debug.Print("Coming to the Debug Screen");
+            Core.GoStage(me);
+        }
     }
 }
+
 
 
