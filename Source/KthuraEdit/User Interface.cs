@@ -28,6 +28,7 @@
 
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using NSKthura;
 using KthuraEdit.Stages;
@@ -153,6 +154,68 @@ namespace KthuraEdit
         static bool HoldArea = false;
         #endregion
 
+        #region TexMemory
+        // In order to ease things up, I've set this system up.
+        // In my own experience in which I used Kthura, you use most textures 90% of the time with the same settings
+        // But as you easily forget to set them all in order every time you call it, this system has been set up to make sure
+        // This cannot go wrong that easily.
+        static string TexMemorySettingsDir => ($"{Core.GlobalWorkSpace}/{Core.Project}/TexSettings").Replace("\\","/");
+        static string TexMemorySettingsFile => $"{TexMemorySettingsDir}/{Core.MapFile}.GINI";
+        static TGINI TexMemory;
+        static void SealTexMemory() {
+            var opf = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
+            var Tex = opf["Texture"];
+            TexMemory.D($"TEX[{Tex}].TAB", currentTBItem.Name);
+            foreach(string key in opf.Keys) {
+                var opfo = opf[key];
+                var opfv = opf[key].value;
+                if ((!opfo.AltijdNee) && key != "Texture") { // It makes no sense to collect data from a field that never has it due to always being disabled in this setting. It can only lead to conflicts!
+                    TexMemory.D($"TEX[{Tex}].{currentTBItem.Name}.{key}", opfv);
+                }
+            }
+            foreach (string key in opc.Keys) {
+                var opco = opc[key];
+                var opcv = opc[key].value;
+                if (!opco.AltijdNee ) { // It makes no sense to collect data from a field that never has it due to always being disabled in this setting. It can only lead to conflicts!
+                    TexMemory.D($"TEX[{Tex}].{currentTBItem.Name}.{key}", $"{opcv}");
+                }
+            }
+
+        }
+
+        static public void SetTexture(string Tex, bool calltab, bool calldata) {
+            // Call tab (always comes first)
+            var totab = currentTBItem.Name;
+            if (calltab) {
+                TexMemory.DefIfHave($"TEX[{Tex}].TAB", ref totab);
+                foreach (TBItem i in TBItems) if (i.Name == totab) currentTBItem = i;
+            }
+            var opf = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
+            // Set the texture (always comes in between)
+            opf["Texture"].value = Tex;
+            // Call data (always comes last)            
+            foreach (string key in opf.Keys) {
+                var opfo = opf[key];
+                var opfv = opf[key].value;
+                if ((!opfo.AltijdNee) && key != "Texture") { // It makes no sense to collect data from a field that never has it due to always being disabled in this setting. It can only lead to conflicts!
+                    TexMemory.DefIfHave($"TEX[{Tex}].{currentTBItem.Name}.{key}", ref opfv);
+                    opf[key].value = opfv;
+                }
+            }
+            foreach (string key in opc.Keys) {
+                var opco = opc[key];
+                var opcv = $"{opc[key].value}";
+                if (!opco.AltijdNee) { // It makes no sense to collect data from a field that never has it due to always being disabled in this setting. It can only lead to conflicts!
+                    TexMemory.DefIfHave($"TEX[{Tex}].{currentTBItem.Name}.{key}", ref opcv);
+                    opc[key].value = opcv.ToLower() == "true";
+                }
+            }
+
+        }
+        #endregion
+
         #region Status
         static TQMGText BottomLine;
         static TQMGText TextGridMode;
@@ -224,6 +287,7 @@ namespace KthuraEdit
             readonly internal string Name;
             public bool area =>AR!=null;
             readonly public AreaRelease AR;
+            
 
             internal TBItem(string fbutton,TBWork w,AreaRelease aAR) {
                 DBG.Log($"  = Init button {fbutton}");
@@ -245,7 +309,7 @@ namespace KthuraEdit
         }
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
-        static Dictionary<bool, TQMGImage> CheckboxImage = new Dictionary<bool, TQMGImage>();
+        static public Dictionary<bool, TQMGImage> CheckboxImage { get; private set; }  = new Dictionary<bool, TQMGImage>();
         static public bool InZoneTab => currentTBItem.Name == "Zones";
 
         static bool IkZegAltijdNee(object d = null) => false;
@@ -258,8 +322,10 @@ namespace KthuraEdit
             public int intvalue => qstr.ToInt(value);
             public int x = 0, y = 0;
             public int w = 0, h = 0;
+            readonly public string Name;
             bool _Enabled=true;
             object EnabledData;
+            public bool AltijdNee => GetEnabled == IkZegAltijdNee;
             public bool Enabled {
                 get {
                     if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
@@ -268,11 +334,12 @@ namespace KthuraEdit
                     if (GetEnabled == null) _Enabled = value; else DBG.Log("ERROR! Tried to changed the enabled state of an auto-enabled field");
                 }
             }
-            public tbfields(int sx,int sy, int sw, int sh, string otype, string defaultvalue, TBEnabled EnabledFunction = null)         {
+            public tbfields(string aName, int sx,int sy, int sw, int sh, string otype, string defaultvalue, TBEnabled EnabledFunction = null)         {
                 x = sx; y = sy; w = sw; h = sh;
                 value = defaultvalue;
                 GetEnabled = EnabledFunction;
                 dtype = otype;
+                Name = aName;
             }
         }
 
@@ -287,6 +354,7 @@ namespace KthuraEdit
             readonly TBEnabled GetEnabled;
             bool _Enabled = true;
             object EnabledData;
+            public bool AltijdNee => GetEnabled == IkZegAltijdNee;
             public bool Enabled {
                 get {
                     if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
@@ -328,8 +396,21 @@ namespace KthuraEdit
                     TQMG.Color(25, 0, 0);
                     if (curfield == field) curfield = null;
                 } else {
-                    if (curfield == null) curfield = field;
-                    if (Core.MsHit(1) && Core.ms.X > field.x && Core.ms.X < field.x + field.w && Core.ms.Y > field.y && Core.ms.Y < field.y + field.h) curfield = field;
+                    if (curfield == null && field.dtype!="string") curfield = field;
+                    if (Core.MsHit(1) && Core.ms.X > field.x && Core.ms.X < field.x + field.w && Core.ms.Y > field.y && Core.ms.Y < field.y + field.h) {
+                        if (field.dtype != "string")
+                            curfield = field;
+                        else {
+                            switch (field.Name) {
+                                case "Texture":
+                                    TexSelector.ComeToMe();
+                                    break;
+                                default:
+                                    DBG.Log($"ERROR! I don't know what to do with field {field.Name}");
+                                    break;
+                            }
+                        }
+                    }
                     if (curfield == field)
                         TQMG.Color(0, 255, 255);
                     else
@@ -402,71 +483,71 @@ namespace KthuraEdit
                     var cb = ObjectCheckBoxes[i.Name];
                     if (i.Name != "Modify") {
                         var form = "click"; if (i.Name == "Obstacles") form = "N/A";
-                        ct["Kind"] = new tbfields(x + 150, y-21, 150, 20, "string", i.Name, IkZegAltijdNee);
-                        ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
-                        ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
+                        ct["Kind"] = new tbfields("Kind",x + 150, y-21, 150, 20, "string", i.Name, IkZegAltijdNee);
+                        ct["X"] = new tbfields("X",x + 150, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
+                        ct["Y"] = new tbfields("Y",x + 230, y + 21, 70, 20, "int", "click", IkZegAltijdNee);
                         if (i.Name == "TiledArea") {
-                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "0",EnableIns);
-                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "0",EnableIns);
+                            ct["InsX"] = new tbfields("Ins",x + 150, y + 42, 70, 20, "int", "0",EnableIns);
+                            ct["InsY"] = new tbfields("Ins",x + 230, y + 42, 70, 20, "int", "0",EnableIns);
                             cb["AutoIns"] = new tbcheckbox(x + 110, y + 42);
                         } else {
-                            ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
-                            ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["InsX"] = new tbfields("Ins",x + 150, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["InsY"] = new tbfields("Ins",x + 230, y + 42, 70, 20, "int", "N/A", IkZegAltijdNee);
                         }
-                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", form, IkZegAltijdNee);
-                        ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", form, IkZegAltijdNee);
-                        ct["Labels"] = new tbfields(x + 150, y + 84, 150, 20, "string", "");
-                        ct["Dominance"] = new tbfields(x + 150, y + 105, 150, 20, "int", "20");
+                        ct["Width"] = new tbfields("W",x + 150, y + 63, 70, 20, "int", form, IkZegAltijdNee);
+                        ct["Height"] = new tbfields("H",x + 230, y + 63, 70, 20, "int", form, IkZegAltijdNee);
+                        ct["Labels"] = new tbfields("Lab",x + 150, y + 84, 150, 20, "string", "");
+                        ct["Dominance"] = new tbfields("Dom",x + 150, y + 105, 150, 20, "int", "20");
                         if (i.Name != "Zones") {
-                            ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "");
-                            ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "1000");
-                            ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "255");
-                            ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "255");
-                            ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "255");
-                            ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "-1");
-                            ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0");
+                            ct["Texture"] = new tbfields("Texture",x + 150, y, 150, 20, "string", "");
+                            ct["Alpha"] = new tbfields("",x + 150, y + 126, 150, 20, "int", "1000");
+                            ct["cR"] = new tbfields("",x + 150, y + 210, 45, 20, "int", "255");
+                            ct["cG"] = new tbfields("",x + 200, y + 210, 45, 20, "int", "255");
+                            ct["cB"] = new tbfields("",x + 250, y + 210, 45, 20, "int", "255");
+                            ct["AnimSpeed"] = new tbfields("",x + 150, y + 231, 150, 20, "int", "-1");
+                            ct["Frame"] = new tbfields("Frame",x + 150, y + 252, 150, 20, "int", "0");
                         } else {
-                            ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
-                            ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "N/A", IkZegAltijdNee);
-                            ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
-                            ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
-                            ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
-                            ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "N/A", IkZegAltijdNee);
-                            ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0", IkZegAltijdNee);
+                            ct["Texture"] = new tbfields("Texture",x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
+                            ct["Alpha"] = new tbfields("Alf",x + 150, y + 126, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["cR"] = new tbfields("R",x + 150, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["cG"] = new tbfields("G",x + 200, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["cB"] = new tbfields("B",x + 250, y + 210, 45, 20, "int", "Rnd", IkZegAltijdNee);
+                            ct["AnimSpeed"] = new tbfields("",x + 150, y + 231, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["Frame"] = new tbfields("F",x + 150, y + 252, 150, 20, "int", "0", IkZegAltijdNee);
                         }
                         if (i.Name == "Obstacles") {
-                            ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "1000");
-                            ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000");
-                            ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000");
+                            ct["RotDeg"] = new tbfields("RD",x + 150, y + 189, 150, 20, "int", "1000");
+                            ct["ScaleX"] = new tbfields("SX",x + 150, y + 273, 70, 20, "int", "1000");
+                            ct["ScaleY"] = new tbfields("SY",x + 230, y + 273, 70, 20, "int", "1000");
                         } else {
-                            ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "N/A", IkZegAltijdNee);
-                            ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
-                            ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
+                            ct["RotDeg"] = new tbfields("RD",x + 150, y + 189, 150, 20, "int", "N/A", IkZegAltijdNee);
+                            ct["ScaleX"] = new tbfields("SX",x + 150, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
+                            ct["ScaleY"] = new tbfields("SY",x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                         }
-                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
+                        ct["Tag"] = new tbfields("Tag",x + 150, y + 294, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168);
                     } else {
-                        ct["Kind"] = new tbfields(x + 150, y-21, 150, 20, "string", "", IkZegAltijdNee);
-                        ct["Texture"] = new tbfields(x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
-                        ct["X"] = new tbfields(x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
-                        ct["Y"] = new tbfields(x + 230, y + 21, 70, 20, "int", "", ModifyEnable);
-                        ct["InsX"] = new tbfields(x + 150, y + 42, 70, 20, "int", "", ModifyEnable);
-                        ct["InsY"] = new tbfields(x + 230, y + 42, 70, 20, "int", "", ModifyEnable);
-                        ct["Width"] = new tbfields(x + 150, y + 63, 70, 20, "int", "", ModifyEnable);
-                        ct["Height"] = new tbfields(x + 230, y + 63, 70, 20, "int", "", ModifyEnable);
-                        ct["Labels"] = new tbfields(x + 150, y + 84, 150, 20, "string", "", ModifyEnable);
-                        ct["Dominance"] = new tbfields(x + 150, y + 105, 150, 20, "int", "20", ModifyEnable);
-                        ct["Alpha"] = new tbfields(x + 150, y + 126, 150, 20, "int", "1000", ModifyEnable);
-                        ct["RotDeg"] = new tbfields(x + 150, y + 189, 150, 20, "int", "", ModifyEnable);
-                        ct["cR"] = new tbfields(x + 150, y + 210, 45, 20, "int", "255", ModifyEnable);
-                        ct["cG"] = new tbfields(x + 200, y + 210, 45, 20, "int", "255", ModifyEnable);
-                        ct["cB"] = new tbfields(x + 250, y + 210, 45, 20, "int", "255", ModifyEnable);
-                        ct["AnimSpeed"] = new tbfields(x + 150, y + 231, 150, 20, "int", "-1", ModifyEnable);
-                        ct["Frame"] = new tbfields(x + 150, y + 252, 150, 20, "int", "0", ModifyEnable);
-                        ct["ScaleX"] = new tbfields(x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
-                        ct["ScaleY"] = new tbfields(x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
-                        ct["Tag"] = new tbfields(x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
+                        ct["Kind"] = new tbfields("",x + 150, y-21, 150, 20, "string", "", IkZegAltijdNee);
+                        ct["Texture"] = new tbfields("",x + 150, y, 150, 20, "string", "", IkZegAltijdNee);
+                        ct["X"] = new tbfields("X",x + 150, y + 21, 70, 20, "int", "", ModifyEnable);
+                        ct["Y"] = new tbfields("Y",x + 230, y + 21, 70, 20, "int", "", ModifyEnable);
+                        ct["InsX"] = new tbfields("InsX",x + 150, y + 42, 70, 20, "int", "", ModifyEnable);
+                        ct["InsY"] = new tbfields("InsY",x + 230, y + 42, 70, 20, "int", "", ModifyEnable);
+                        ct["Width"] = new tbfields("W",x + 150, y + 63, 70, 20, "int", "", ModifyEnable);
+                        ct["Height"] = new tbfields("H",x + 230, y + 63, 70, 20, "int", "", ModifyEnable);
+                        ct["Labels"] = new tbfields("Labels",x + 150, y + 84, 150, 20, "string", "", ModifyEnable);
+                        ct["Dominance"] = new tbfields("Dominance",x + 150, y + 105, 150, 20, "int", "20", ModifyEnable);
+                        ct["Alpha"] = new tbfields("Alpha",x + 150, y + 126, 150, 20, "int", "1000", ModifyEnable);
+                        ct["RotDeg"] = new tbfields("RotDeg",x + 150, y + 189, 150, 20, "int", "", ModifyEnable);
+                        ct["cR"] = new tbfields("R",x + 150, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["cG"] = new tbfields("G",x + 200, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["cB"] = new tbfields("B",x + 250, y + 210, 45, 20, "int", "255", ModifyEnable);
+                        ct["AnimSpeed"] = new tbfields("AnimSpeed",x + 150, y + 231, 150, 20, "int", "-1", ModifyEnable);
+                        ct["Frame"] = new tbfields("Frame",x + 150, y + 252, 150, 20, "int", "0", ModifyEnable);
+                        ct["ScaleX"] = new tbfields("ScaleX",x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
+                        ct["ScaleY"] = new tbfields("ScaleY",x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
+                        ct["Tag"] = new tbfields("Tag",x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147, ModifyEnable);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168, ModifyEnable);
                     }
@@ -573,6 +654,14 @@ namespace KthuraEdit
         #region Start Call
         static UI() {
             InitToolBox();
+            if (File.Exists(TexMemorySettingsFile)) {
+                DBG.Log($"Loading TexMemory file: {TexMemorySettingsFile}");
+                TexMemory = GINI.ReadFromFile(TexMemorySettingsFile);
+            } else {
+                DBG.Log($"Creating TexMemory GINI base since {TexMemorySettingsFile} does not yet exist");
+                TexMemory = new TGINI();
+            }
+                
         }
         #endregion
 

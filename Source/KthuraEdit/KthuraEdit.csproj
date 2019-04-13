@@ -197,6 +197,7 @@
     <Compile Include="Stages\Abstract.cs" />
     <Compile Include="Stages\DBG.cs" />
     <Compile Include="Stages\MainEdit.cs" />
+    <Compile Include="Stages\TexSelector.cs" />
     <Compile Include="Stages\Yes.cs" />
     <Compile Include="User Interface.cs" />
   </ItemGroup>

@@ -213,7 +213,7 @@ namespace KthuraEdit
         #region Global configuration
         static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI");
         static TGINI GlobalConfig = GINI.ReadFromFile(ConfigFile);
-        static string GlobalWorkSpace => Dirry.AD(GlobalConfig.C($"WorkSpace.{Platform}"));
+        static public string GlobalWorkSpace => Dirry.AD(GlobalConfig.C($"WorkSpace.{Platform}"));
         static TJCRDIR TexJCR;
         #endregion
 
