@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.12
+// Version: 19.04.13
 // EndLic
+
 
 
 
@@ -245,6 +246,7 @@ namespace KthuraEdit
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
         static Dictionary<bool, TQMGImage> CheckboxImage = new Dictionary<bool, TQMGImage>();
+        static public bool InZoneTab => currentTBItem.Name == "Zones";
 
         static bool IkZegAltijdNee(object d = null) => false;
         static bool ModifyEnable(object d = null) => false; // This will change later, but for now, this must do.
@@ -490,7 +492,9 @@ namespace KthuraEdit
 
         #region AreaRelease
         static Random rnd = new Random();
-        static void AR_Tiled(int x1,int y1,int x2, int y2) { }
+        static void AR_Tiled(int x1,int y1,int x2, int y2) {
+            throw new Exception("HEY! I cannot yet draw a TiledArea, you moron!");
+        }
         static void AR_Zones(int x1, int y1, int x2, int y2) {
             var startx = x1;
             var starty = y1;
@@ -508,8 +512,9 @@ namespace KthuraEdit
             zone.B = rnd.Next(100, 255);
             var cnt = -1;
             var tag = "";
-            do { cnt++; tag = $"Zone ${cnt}"; } while (MapLayer.HasTag(tag));
+            do { cnt++; tag = $"Zone #{cnt}"; } while (MapLayer.HasTag(tag));
             zone.Tag = tag;
+            DBG.Log($"Added zone: {tag}");
         }
         #endregion
 
@@ -560,7 +565,7 @@ namespace KthuraEdit
             if (selectedlayer == "") return;
             DrawGrid();
             DrawOrigin();
-            // POINT: Map rendering itself
+            KthuraDraw.DrawMap(MapLayer, ScrollX, ScrollY, LayW, PDnH);
             DrawHold();
         }
         #endregion
@@ -626,6 +631,11 @@ namespace KthuraEdit
                     }
 
                 }
+                if (HoldArea && !Core.MsDown(1)) {
+                    currentTBItem.AR(HoldX, HoldY, HoldEX, HoldEY);
+                    HoldArea = false;
+                }
+
             } else {
                 Debug.WriteLine("Holding check not performed, due to currentTBItem being null");
             }
@@ -651,6 +661,7 @@ namespace KthuraEdit
         #endregion
     }
 }
+
 
 
 

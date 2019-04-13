@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.11
+// Version: 19.04.13
 // EndLic
+
 
 
 using Microsoft.Xna.Framework;
@@ -82,6 +83,7 @@ namespace KthuraEdit
             Core.Crash("Project from parameters not yet set");
 #endif
             Core.InitLua();
+            EditorSpecificDrawFunctions.init();
 
         }
 
@@ -132,5 +134,6 @@ namespace KthuraEdit
         }
     }
 }
+
 
 

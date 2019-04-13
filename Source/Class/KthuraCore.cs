@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 19.04.11
+// version: 19.04.13
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -20,6 +20,7 @@
 
 
 
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System;
@@ -34,6 +35,7 @@ namespace NSKthura {
         readonly public string kind;
         readonly public KthuraLayer Parent;
         int _x = 0, _y = 0;
+        public bool Visible = true;
         public int w=0, h=0;
         public int insertx = 0, inserty = 0;
         public int R=255, G=255, B=255;
@@ -180,6 +182,7 @@ namespace NSKthura {
             Parent = prnt;
             cnt = Parent.cnt;
             Parent.cnt++;
+            prnt.Objects.Add(this);
         }
     }
 
@@ -187,11 +190,12 @@ namespace NSKthura {
 
     class KthuraLayer {
         internal int cnt = 0; 
-        List<KthuraObject> Objects = new List<KthuraObject>(); // Really this is basically the true core of Kthura!
+        internal List<KthuraObject> Objects = new List<KthuraObject>(); // Really this is basically the true core of Kthura!
         Dictionary<string, KthuraObject> TagMap = new Dictionary<string, KthuraObject>();
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
-        List<KthuraObject> ObjectDrawOrder;
+        public List<KthuraObject> ObjectDrawOrder { get; private set; } = new List<KthuraObject>();
         Kthura Parent;
+        
         public int GridX = 32, GridY = 32;
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
@@ -373,5 +377,6 @@ namespace NSKthura {
     }
 
 }
+
 
 

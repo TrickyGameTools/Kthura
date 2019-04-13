@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.12
+// version: 19.04.13
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -19,6 +19,8 @@
 // EndLic
 
 
+using System;
+using TrickyUnits;
 
 namespace NSKthura{
 
@@ -34,10 +36,29 @@ namespace NSKthura{
         static public DelDrawZone DrawZone = delegate { }; // Normally zones should be ignored! Only editors should use this, and thus this delegate!
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
-        static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) { }
+        static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) {
+            if (layer.ObjectDrawOrder == null) layer.RemapDominance();
+            foreach(KthuraObject obj in layer.ObjectDrawOrder) {
+                if (obj.Visible) {
+                    if (true) { // This looks useless now, but this routine will be used later in optimalisation to see if an object is actually on screen, and if not, ignore it.
+                        switch (obj.kind) {
+                            case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
+                            default:
+                                if (qstr.Prefixed(obj.kind,"$")) {
+                                    // TODO: CSpots
+                                } else {
+                                    throw new Exception($"Unknown drawing object kind: {obj.kind}");
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+        }
         #endregion
     }
 }
+
 
 
 

@@ -187,6 +187,7 @@
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>builddate.cs</Link>
     </Compile>
+    <Compile Include="EditorSpecificDrawFunctions.cs" />
     <Compile Include="Lua_API.cs" />
     <Compile Include="Stages\LayerName.cs" />
     <Compile Include="Core.cs" />

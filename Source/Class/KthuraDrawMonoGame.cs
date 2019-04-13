@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDrawMonoGame.cs
 // MonoGame Driver for Kthura for C#
-// version: 19.04.11
+// version: 19.04.13
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -19,11 +19,17 @@
 // EndLic
 
 
+
 namespace NSKthura {
 
 	class KthuraDrawMonoGame:KthuraDraw{
-	}
+        public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 
 }
+
 
 
