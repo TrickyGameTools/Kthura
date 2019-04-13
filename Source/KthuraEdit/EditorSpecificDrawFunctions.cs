@@ -24,6 +24,7 @@
 // Version: 19.04.13
 // EndLic
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,4 +59,5 @@ namespace KthuraEdit
         }
     }
 }
+
 

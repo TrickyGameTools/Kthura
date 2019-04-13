@@ -18,6 +18,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
+
 using System.Collections.Generic;
 using TrickyUnits;
 
@@ -67,6 +68,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 
