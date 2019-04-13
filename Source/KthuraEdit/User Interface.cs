@@ -212,7 +212,6 @@ namespace KthuraEdit
                     opc[key].value = opcv.ToLower() == "true";
                 }
             }
-
         }
         #endregion
 
@@ -574,7 +573,41 @@ namespace KthuraEdit
         #region AreaRelease
         static Random rnd = new Random();
         static void AR_Tiled(int x1,int y1,int x2, int y2) {
-            throw new Exception("HEY! I cannot yet draw a TiledArea, you moron!");
+            var opm = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
+            var startx = x1;
+            var starty = y1;
+            var width = Math.Abs(x2 - x1);
+            var height = Math.Abs(y2 - y1);
+            if (x1 > x2) startx = x2;
+            if (y1 > y2) starty = y2;
+            if (opm["Texture"].value == "") return;
+            var Area = new KthuraObject("TiledArea", MapLayer);
+            Area.x = startx;
+            Area.y = starty;
+            Area.w = width;
+            Area.h = height;
+            Area.Texture = opm["Texture"].value;
+            Area.insertx = qstr.ToInt(opm["InsX"].value);
+            Area.inserty = qstr.ToInt(opm["InsY"].value);
+            Area.R = qstr.ToInt(opm["cR"].value);
+            Area.G = qstr.ToInt(opm["cG"].value);
+            Area.B = qstr.ToInt(opm["cB"].value);
+            Area.Dominance = qstr.ToInt(opm["Dominance"].value);
+            Area.Alpha1000 = qstr.ToInt(opm["Alpha"].value);
+            Area.AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value);
+            Area.AnimFrame = qstr.ToInt(opm["Frame"].value);
+            Area.Impassible = opc["Impassible"].value;
+            Area.ForcePassible = opc["ForcePassible"].value;
+            // insert modulos
+            if (opc["AutoIns"].value) {
+                int w = 0;
+                int h = 0;
+                KthuraDrawMonoGame.TexSizes(Area, ref w, ref h);
+                Area.insertx = Area.x % w;
+                Area.inserty = Area.y % h;
+            }
+            SealTexMemory();
         }
         static void AR_Zones(int x1, int y1, int x2, int y2) {
             var startx = x1;
@@ -584,6 +617,8 @@ namespace KthuraEdit
             if (x1 > x2) startx = x2;
             if (y1 > y2) starty = y2;
             var zone = new KthuraObject("Zone",MapLayer);
+            var opm = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
             zone.x = startx;
             zone.y = starty;
             zone.w = width;
@@ -591,11 +626,14 @@ namespace KthuraEdit
             zone.R = rnd.Next(100, 255);
             zone.G = rnd.Next(100, 255);
             zone.B = rnd.Next(100, 255);
+            zone.Dominance = qstr.ToInt(opm["Dominance"].value);
             var cnt = -1;
             var tag = "";
             do { cnt++; tag = $"Zone #{cnt}"; } while (MapLayer.HasTag(tag));
             zone.Tag = tag;
             DBG.Log($"Added zone: {tag}");
+            zone.Impassible = opc["Impassible"].value;
+            zone.ForcePassible = opc["ForcePassible"].value;
         }
         #endregion
 

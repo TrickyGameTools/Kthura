@@ -42,6 +42,9 @@ namespace NSKthura{
                 if (obj.Visible) {
                     if (true) { // This looks useless now, but this routine will be used later in optimalisation to see if an object is actually on screen, and if not, ignore it.
                         switch (obj.kind) {
+                            case "TiledArea":
+                                if (DrawDriver != null) DrawDriver.DrawTiledArea(obj, x, y, scrollx, scrolly);
+                                break;
                             case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
                             default:
                                 if (qstr.Prefixed(obj.kind,"$")) {

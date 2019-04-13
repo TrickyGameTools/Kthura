@@ -34,12 +34,15 @@ namespace NSKthura {
         int cnt = 0;
         readonly public string kind;
         readonly public KthuraLayer Parent;
+        public string Texture = "";
         int _x = 0, _y = 0;
         public bool Visible = true;
         public int w=0, h=0;
         public int insertx = 0, inserty = 0;
         public int R=255, G=255, B=255;
         public int ScaleX=1000, ScaleY=1000;
+        public int AnimSpeed = 0;
+        public int AnimFrame = 0;
         int _Dominance = 20;        
         public float TrueScaleX => (float)ScaleX / 1000;
         public float TrueScaleY => (float)ScaleY / 1000;
@@ -194,7 +197,7 @@ namespace NSKthura {
         Dictionary<string, KthuraObject> TagMap = new Dictionary<string, KthuraObject>();
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
         public List<KthuraObject> ObjectDrawOrder { get; private set; } = new List<KthuraObject>();
-        Kthura Parent;
+        readonly public Kthura Parent;
         
         public int GridX = 32, GridY = 32;
         public KthuraLayer(Kthura hufter) {

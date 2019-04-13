@@ -84,6 +84,7 @@ namespace KthuraEdit
 #endif
             Core.InitLua();
             EditorSpecificDrawFunctions.init();
+            NSKthura.KthuraDrawMonoGame.UseMe();
 
         }
 

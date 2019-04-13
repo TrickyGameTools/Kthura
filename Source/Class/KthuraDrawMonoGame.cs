@@ -18,14 +18,51 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
+using System.Collections.Generic;
+using TrickyUnits;
 
 
 namespace NSKthura {
 
 	class KthuraDrawMonoGame:KthuraDraw{
-        public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0)
-        {
-            throw new System.NotImplementedException();
+
+        static KthuraDrawMonoGame me = new KthuraDrawMonoGame();
+        static public void UseMe() => DrawDriver = me;
+        
+
+        Dictionary<string, TQMGImage> Textures = new Dictionary<string, TQMGImage>();
+        Kthura LastUsedMap;
+
+        TQMGImage GetTex(KthuraObject obj) {
+            var file = obj.Texture;
+            var kind = obj.kind;
+            var lay = obj.Parent;
+            var map = lay.Parent;
+            if (map != LastUsedMap) Textures.Clear(); // Only store texture per map. Will take too much RAM otherwise!
+            LastUsedMap = map;
+            var tag = $"{kind}::{file}";
+            if (!Textures.ContainsKey(tag)) {
+                var bt = map.TextureJCR.ReadFile(file);
+                Textures[tag] = TQMG.GetImage(bt);
+            }
+            return Textures[tag];
+        }
+
+        public static void TexSizes(KthuraObject obj, ref int w, ref int h) {
+            var tex = me.GetTex(obj);
+            w = tex.Width;
+            h = tex.Height;
+        }
+
+        public static int TexWidth(KthuraObject obj) { int w = 0, h = 0; TexSizes(obj, ref w, ref h); return w; }
+        public static int TexHeight(KthuraObject obj) { int w = 0, h = 0; TexSizes(obj, ref w, ref h); return h; }
+
+        void Ambtenaar() { }
+
+        public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            var tx = GetTex(obj);
+            TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+            if (tx != null) TQMG.Tile(tx, obj.insertx, obj.inserty, obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
         }
     }
 
