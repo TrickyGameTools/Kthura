@@ -43,8 +43,12 @@ namespace NSKthura {
             LastUsedMap = map;
             var tag = $"{kind}::{file}";
             if (!Textures.ContainsKey(tag)) {
-                var bt = map.TextureJCR.ReadFile(file);
-                Textures[tag] = TQMG.GetImage(bt);
+                if (qstr.ExtractExt(file.ToUpper()) == "JPBF") {
+                    Textures[tag] = TQMG.GetBundle(map.TextureJCR, "");
+                } else {
+                    var bt = map.TextureJCR.ReadFile(file);
+                    Textures[tag] = TQMG.GetImage(bt);
+                }
             }
             return Textures[tag];
         }

@@ -277,6 +277,7 @@ namespace KthuraEdit
         delegate void TBWork();
         delegate bool TBEnabled(object data = null);
         delegate void AreaRelease(int x1, int y1, int x2, int y2);
+        delegate void MapClick(int x, int y);
 
         class TBItem {
             internal static int initx { get; private set; } = ToolX;
@@ -287,9 +288,11 @@ namespace KthuraEdit
             readonly internal string Name;
             public bool area =>AR!=null;
             readonly public AreaRelease AR;
+            public bool mapclick => MC != null;
+            readonly public MapClick MC;
             
 
-            internal TBItem(string fbutton,TBWork w,AreaRelease aAR) {
+            internal TBItem(string fbutton,TBWork w,AreaRelease aAR,MapClick aMC) {
                 DBG.Log($"  = Init button {fbutton}");
                 Button[true] = TQMG.GetImage($"CTb_{fbutton}.png");
                 Button[false] = TQMG.GetImage($"Tab_{fbutton}.png");
@@ -305,6 +308,7 @@ namespace KthuraEdit
                 ObjectCheckBoxes[fbutton] = new Dictionary<string, tbcheckbox>();
                 Name = fbutton;
                 AR = aAR;
+                MC = aMC;
             }
         }
         static TBItem currentTBItem;
@@ -449,11 +453,11 @@ namespace KthuraEdit
 
             // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
-                new TBItem("TiledArea",ObjectParameters,AR_Tiled),
-                new TBItem("Obstacles",ObjectParameters,null),
-                new TBItem("Zones",ObjectParameters,AR_Zones),
-                new TBItem("Other",null,null),
-                new TBItem("Modify",ObjectParameters,null)
+                new TBItem("TiledArea",ObjectParameters,AR_Tiled,null),
+                new TBItem("Obstacles",ObjectParameters,null,MC_Obstacle),
+                new TBItem("Zones",ObjectParameters,AR_Zones,null),
+                new TBItem("Other",null,null,MC_CSpot),
+                new TBItem("Modify",ObjectParameters,null,MC_Modify)
             });
 
             // Labels in Object paramters
@@ -609,6 +613,7 @@ namespace KthuraEdit
                 Area.inserty = Area.y % h;
             }
             SealTexMemory();
+            DBG.Log($"Created TiledArea at ({Area.x},{Area.y}), size: {Area.w}x{Area.h}");
         }
         static void AR_Zones(int x1, int y1, int x2, int y2) {
             var startx = x1;
@@ -636,6 +641,12 @@ namespace KthuraEdit
             zone.Impassible = opc["Impassible"].value;
             zone.ForcePassible = opc["ForcePassible"].value;
         }
+        #endregion
+
+        #region MapClick
+        static void MC_Obstacle(int x,int y) { }
+        static void MC_CSpot(int x,int y) { }
+        static void MC_Modify(int x, int y) { }
         #endregion
 
         #region Draw Map
@@ -739,20 +750,22 @@ namespace KthuraEdit
                 HoldArea = false;
             else if (currentTBItem!=null) {
                 //Debug.Print($"{currentTBItem.Name}: a-area{currentTBItem.area}; MouseDown{Core.MsDown(1)}");
-                if (currentTBItem.area && Core.MsDown(1)) {
+                if (currentTBItem.mapclick) {
+                    currentTBItem.MC(PosX, PosY);
+                } else if (currentTBItem.area && Core.MsDown(1)) {
                     if (!HoldArea) {
                         HoldArea = true;
                         if (GridMode) {
-                            HoldX = (int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX;
-                            HoldY = (int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY;
+                            HoldX = ((int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX) + (ScrollX % Core.Map.Layers[selectedlayer].GridX);
+                            HoldY = ((int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY) + (ScrollY % Core.Map.Layers[selectedlayer].GridY);
                         } else {
                             HoldX = PosX;
                             HoldY = PosY;
-                        }                        
+                        }
                     }
                     if (GridMode) {
-                        HoldEX = (int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX;
-                        HoldEY = (int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY;
+                        HoldEX = ((int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX) + (ScrollX % Core.Map.Layers[selectedlayer].GridX);
+                        HoldEY = ((int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY) + (ScrollY % Core.Map.Layers[selectedlayer].GridY);
                     } else {
                         HoldEX = PosX;
                         HoldEY = PosY;
