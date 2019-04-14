@@ -153,6 +153,18 @@ namespace KthuraEdit
         static int PosY => ScrollY + Core.ms.Y - PDnH;
         static int HoldX = 0, HoldY = 0, HoldEX = 0, HoldEY = 0;
         static bool HoldArea = false;
+        static int gPosX {
+            get {
+                if (!GridMode) return PosX;
+                return ((int)Math.Floor((decimal)PosX / Core.Map.Layers[selectedlayer].GridX) * Core.Map.Layers[selectedlayer].GridX) + (ScrollX % Core.Map.Layers[selectedlayer].GridX);
+            }
+        }
+        static int gPosY {
+            get {
+                if (!GridMode) return PosX;
+                return ((int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY) + (ScrollY % Core.Map.Layers[selectedlayer].GridY);
+            }
+        }
         #endregion
 
         #region TexMemory
@@ -520,7 +532,7 @@ namespace KthuraEdit
                             ct["Frame"] = new tbfields("F",x + 150, y + 252, 150, 20, "int", "0", IkZegAltijdNee);
                         }
                         if (i.Name == "Obstacles") {
-                            ct["RotDeg"] = new tbfields("RD",x + 150, y + 189, 150, 20, "int", "1000");
+                            ct["RotDeg"] = new tbfields("RD",x + 150, y + 189, 150, 20, "int", "0");
                             ct["ScaleX"] = new tbfields("SX",x + 150, y + 273, 70, 20, "int", "1000");
                             ct["ScaleY"] = new tbfields("SY",x + 230, y + 273, 70, 20, "int", "1000");
                         } else {
@@ -644,7 +656,28 @@ namespace KthuraEdit
         #endregion
 
         #region MapClick
-        static void MC_Obstacle(int x,int y) { }
+        static void MC_Obstacle(int x,int y) {
+            var opm = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
+            if (opm["Texture"].value == "") return;
+            var obs = new KthuraObject("Obstacle", MapLayer);
+            obs.x = gPosX;
+            obs.y = gPosY;
+            obs.Texture = opm["Texture"].value;
+            obs.R = qstr.ToInt(opm["cR"].value);
+            obs.G = qstr.ToInt(opm["cG"].value);
+            obs.B = qstr.ToInt(opm["cB"].value);
+            obs.Dominance = qstr.ToInt(opm["Dominance"].value);
+            obs.Alpha1000 = qstr.ToInt(opm["Alpha"].value);
+            obs.AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value);
+            obs.AnimFrame = qstr.ToInt(opm["Frame"].value);
+            obs.Impassible = opc["Impassible"].value;
+            obs.ForcePassible = opc["ForcePassible"].value;
+            obs.ScaleX = qstr.ToInt(opm["ScaleX"].value);
+            obs.ScaleY = qstr.ToInt(opm["ScaleY"].value);
+            obs.RotationDegrees = qstr.ToInt(opm["RotDeg"].value); // Will automatically assign the "radian" value too.
+            DBG.Log($"Created Obstacle at ({obs.x},{obs.y})");
+        }
         static void MC_CSpot(int x,int y) { }
         static void MC_Modify(int x, int y) { }
         #endregion
@@ -724,7 +757,7 @@ namespace KthuraEdit
             DrawStatus();
         }
 
-        
+
 
         static public void UI_Update() {
             // Scroll
@@ -745,12 +778,27 @@ namespace KthuraEdit
                         break;
                 }
             }
+            // Fields in toolbox
+            var ch = TQMGKey.GetChar();
+            var key = TQMGKey.GetKey();
+            if (currentTBItem != null && curfield != null) {
+                if (ch >= 32 && ch < 127) {
+                    if (curfield.dtype == "int" && (ch < 48 || ch > 57) && (!(ch == '-' && curfield.value == ""))) {
+                        Debug.Print($"Ignore nun-number: {ch}");
+                    } else {
+                        curfield.value += ch;
+                        if (curfield.dtype == "int" && curfield.value.Length > 1 && curfield.value[0] == '0') curfield.value = qstr.Right(curfield.value, curfield.value.Length - 1);
+                    }
+                } else if (key==Keys.Back && curfield.value!="") {
+                    curfield.value = qstr.Left(curfield.value, curfield.value.Length - 1);
+                }
+            }
             // Mousedown/up
             if (Core.ms.X < LayW || Core.ms.X > ToolX || Core.ms.Y < PDnH || Core.ms.Y > ScrHeight - 25)
                 HoldArea = false;
             else if (currentTBItem!=null) {
                 //Debug.Print($"{currentTBItem.Name}: a-area{currentTBItem.area}; MouseDown{Core.MsDown(1)}");
-                if (currentTBItem.mapclick) {
+                if (currentTBItem.mapclick && Core.MsHit(1)) {
                     currentTBItem.MC(PosX, PosY);
                 } else if (currentTBItem.area && Core.MsDown(1)) {
                     if (!HoldArea) {

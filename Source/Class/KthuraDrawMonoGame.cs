@@ -27,10 +27,12 @@ namespace NSKthura {
 
 	class KthuraDrawMonoGame:KthuraDraw{
 
+        #region Chain me into Kthura
         static KthuraDrawMonoGame me = new KthuraDrawMonoGame();
         static public void UseMe() => DrawDriver = me;
-        
+        #endregion
 
+        #region Textures
         Dictionary<string, TQMGImage> Textures = new Dictionary<string, TQMGImage>();
         Kthura LastUsedMap;
 
@@ -44,11 +46,12 @@ namespace NSKthura {
             var tag = $"{kind}::{file}";
             if (!Textures.ContainsKey(tag)) {
                 if (qstr.ExtractExt(file.ToUpper()) == "JPBF") {
-                    Textures[tag] = TQMG.GetBundle(map.TextureJCR, "");
+                    Textures[tag] = TQMG.GetBundle(map.TextureJCR, $"{file}/");
                 } else {
                     var bt = map.TextureJCR.ReadFile(file);
                     Textures[tag] = TQMG.GetImage(bt);
                 }
+                Textures[tag].HotBottomCenter();
             }
             return Textures[tag];
         }
@@ -61,13 +64,32 @@ namespace NSKthura {
 
         public static int TexWidth(KthuraObject obj) { int w = 0, h = 0; TexSizes(obj, ref w, ref h); return w; }
         public static int TexHeight(KthuraObject obj) { int w = 0, h = 0; TexSizes(obj, ref w, ref h); return h; }
+        #endregion
 
         void Ambtenaar() { }
 
         public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             var tx = GetTex(obj);
             TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+            TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
             if (tx != null) TQMG.Tile(tx, obj.insertx, obj.inserty, obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
+            TQMG.SetAlpha(255);
+        }
+
+        public override void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            var tx = GetTex(obj);
+            if (tx != null) {
+                
+                TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+                TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+                //TQMG.RotateRAD((float)obj.RotationRadians);
+                TQMG.RotateDEG(obj.RotationDegrees);
+                TQMG.Scale(obj.ScaleX, obj.ScaleY);
+                tx.XDraw(obj.x + ix - scrollx, obj.y + iy - scrolly);
+                TQMG.Scale(1000, 1000);
+                TQMG.RotateRAD(0);
+                TQMG.SetAlpha(255);
+            }
         }
     }
 

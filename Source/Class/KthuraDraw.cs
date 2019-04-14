@@ -30,6 +30,7 @@ namespace NSKthura{
 	abstract class KthuraDraw{
         #region The Abstract part every Draw Driver must have!
         abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         #endregion
 
         #region Some static functions for Kthura's functionality in general
@@ -45,6 +46,9 @@ namespace NSKthura{
                         switch (obj.kind) {
                             case "TiledArea":
                                 if (DrawDriver != null) DrawDriver.DrawTiledArea(obj, x, y, scrollx, scrolly);
+                                break;
+                            case "Obstacle":
+                                if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
                             default:

@@ -116,69 +116,39 @@ namespace NSKthura {
         #region recalc values
 
         public int Alpha255=255;
-
         public int Alpha1000 {
-
             // Due to BlitzMax settings I had to use a 1=max scale, as I needed Kthura not to suffer from rouding errors, the 1000 scale has been set up.
-
             // Now MonoGame uses the (actual) 0-255 scale, but as Kthura maps do not cover that properly, this measure was taken.
-
             get {
-
                 float A = Alpha255;
-
                 return (int)((A / 255) * 1000);
-
             }
-
             set {
-
                 Alpha255 = (int)((value / 1000) * 255);
-
                 if (Alpha255 < 0) Alpha255 = 0;
-
                 if (Alpha255 > 255) Alpha255 = 0;
-
             }
-
         }
 
 
 
         double _rotrad = 0;
-
         int _rotdeg = 0;
-
-        double RotationRadians {
-
+        public double RotationRadians {
             set {
-
                 _rotrad = value;
-
                 _rotdeg = (int)(value * (180 / Math.PI));
-
             }
-
             get => _rotrad;
-
         }
 
-        int RotationDegrees {
-
+        public int RotationDegrees {
+            get => _rotdeg;
             set {
-
                 _rotdeg = value;
-
-                _rotrad = ((double)value * (180 / Math.PI));
-
+                _rotrad = (double)(((double)value) * (180 / Math.PI));
             }
-
         }
-
-        
-
-
-
         #endregion
 
         public KthuraObject(string objectkind, KthuraLayer prnt) {
