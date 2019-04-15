@@ -33,6 +33,7 @@ namespace NSKthura {
 
     class KthuraObject {        
         int cnt = 0;
+        readonly public Dictionary<string, string> MetaData = new Dictionary<string, string>();
         readonly public string kind;
         readonly public KthuraLayer Parent;
         public string Texture = "";
@@ -270,6 +271,7 @@ namespace NSKthura {
         static public bool automap = true;
         public TJCRDIR TextureJCR;
         public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
+        public SortedDictionary<string, string> MetaData = new SortedDictionary<string, string>();
 
         #endregion
 
