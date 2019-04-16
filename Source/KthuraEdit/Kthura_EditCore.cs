@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.13
+// Version: 19.04.16
 // EndLic
+
 
 
 
@@ -106,8 +107,10 @@ namespace KthuraEdit
         /// <param name="gameTime">Provides a snapshot of timing values.</param>        
         protected override void Update(GameTime gameTime)
         {
-            if (Quit)
+            if (Quit) {
+                Core.Save();
                 Exit();
+            }
 
             // TODO: Add your update logic here
             if (!UpdatedOnce) Debug.WriteLine("First Update call");
@@ -136,6 +139,7 @@ namespace KthuraEdit
         }
     }
 }
+
 
 
 
