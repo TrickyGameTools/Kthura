@@ -28,6 +28,7 @@
 
 
 
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,6 +84,7 @@ namespace KthuraEdit
         #region Error Handling
         public static void Crash(string Message) {
             DBG.Log($"ERROR!\n{Message}\n\nHit Escape to exit this program");
+            dontsave = true;
             DBG.TimeToCrash = true;
             DBG.ComeToMe();
         }
@@ -220,10 +222,13 @@ namespace KthuraEdit
         #endregion
 
         #region Save
+        static public bool dontsave = false;
         public static void Save() {
+            if (dontsave) return;
             var storage = ProjectConfig.C("Compression").Trim();
             if (storage == "") storage = "lzma";
             DBG.Log($"Saving {MapFile}, storage method: {storage}");
+
             try {
                 KthuraSave.Save(Map, $"{MapPath}/{MapFile}", storage);
             } catch (Exception e) {
@@ -266,7 +271,7 @@ namespace KthuraEdit
         public static TGINI ProjectConfig { get; private set; }
         #endregion
 
-        #region The action map
+        #region The actual map
         static public Kthura Map { get; private set; }
         private static string _map = "";
         public static string MapPath => Dirry.AD(ProjectConfig.C("MAPS"));
@@ -277,7 +282,13 @@ namespace KthuraEdit
                 _map = value;
                 if (File.Exists(FPMapFile)) {
                     DBG.Log($"Loading Map: {value}");
-                    Map = Kthura.Load(value,"",TexJCR);
+                    try {
+                        if (TexJCR == null) DBG.Log("HEY HEY HEY! Texture JCR is null! Should not be possible!");
+                        Map = Kthura.Load(FPMapFile, "", TexJCR);
+                    } catch (Exception e) {
+                        Crash($"Loading Kthura map failed!\n{e.Message}\n{JCR6.JERROR}");
+                        return;
+                    }
                 } else {
                     DBG.Log($"Creating Map: {value}");
                     Map = Kthura.Create(TexJCR);
@@ -289,6 +300,7 @@ namespace KthuraEdit
         #endregion
     }
 }
+
 
 
 

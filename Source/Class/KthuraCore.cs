@@ -23,10 +23,12 @@
 
 
 
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System;
 using UseJCR6;
+using TrickyUnits;
 
 
 
@@ -35,7 +37,7 @@ namespace NSKthura {
     class KthuraObject {        
         int cnt = 0;
         readonly public Dictionary<string, string> MetaData = new Dictionary<string, string>();
-        readonly public string kind;
+        public string kind { get; internal set; }
         readonly public KthuraLayer Parent;
         public string Texture = "";
         int _x = 0, _y = 0;
@@ -292,32 +294,181 @@ namespace NSKthura {
         public static Kthura Create(TJCRDIR TexJCR) {
 
             var ret = new Kthura();
-
             ret.TextureJCR = TexJCR;
-
             // Please note! Single layer maps, were already officially deprecated a few years before this project began in C#
-
             // And if BlitzMax didn't get into the state it's now, this C# version may actually never have been created (at least not by me)
-
             // It's only logical I will not support it any more in the C# version :P
-
             ret.Layers["_BASE"] = new KthuraLayer(ret);
-
-
-
             // All done
-
             return ret;
-
         }
 
-        public static Kthura Load(TJCRDIR sourcedir,string prefix,TJCRDIR TexJcr)  {
+        public static Kthura Load(TJCRDIR sourcedir, string prefix, TJCRDIR TexJcr) {
+
+            bool dochat = true;
+
+            void crash(string er) => throw new Exception($"KthuraLoad: {er}");
+            void assert(bool o,string er) {
+                if (!o) crash(er);
+            }
+            void chat(string cm) {
+                if (dochat) Debug.WriteLine($"KTHURA.LOAD.CHAT: {cm}");
+            }
+            
 
             // This is the TRUE load routine. All overloads eventually lead to this one! ;-P
-
-            throw new System.Exception("Kthura.Load: This routine is not yet available!");
-
+            var ret = new Kthura();
+            ret.MetaData = new SortedDictionary<string, string>();
+            ret.TextureJCR = TexJcr;
+            var m = sourcedir.LoadStringMap($"{prefix}Data");
+            foreach (string K in m.Keys)
+                ret.MetaData[K] = m[K];
+            var olines = sourcedir.ReadLines($"{prefix}Objects", true);
+            var readlayers = false;
+            bool tempautomap = automap; automap = false; // In order to fasten up the process this will be off temporarily. It can be turned on again, afterward!            
+            string curlayername="";
+            KthuraObject obj = null;
+            KthuraLayer curlayer = null;
+            // I should have done better than this, but what works that works!
+            var cnt = 0;
+            foreach (string rl in olines) {
+                var l = rl.Trim();
+                cnt++;
+                if ((!qstr.Prefixed(l, "--")) && (!qstr.Prefixed(l, "#")) && l!="") {
+                    if (l == "LAYERS")
+                        readlayers = true;
+                    else if (l == "__END")
+                        readlayers = false;
+                    else if (readlayers)
+                        ret.Layers[l] = new KthuraLayer(ret);
+                    else if (l == "NEW") {
+                        obj = new KthuraObject("?", ret.Layers[curlayername]);
+                        chat($"New object in {curlayername}");
+                    }  else {
+                        var pi = l.IndexOf('='); if (pi < 0) throw new Exception($"Syntax error: \"{l}\" in {cnt}");
+                        var key = l.Substring(0, pi).Trim();
+                        var value = l.Substring(pi + 1).Trim();
+                        string[] s;
+                        chat($"{key} = \"{value}\"");
+                        switch (key) {
+                            // Layer as a whole
+                            case "LAYER":
+                                obj = null;
+                                curlayername = value;
+                                curlayer = ret.Layers[value];
+                                break;
+                            case "GRID":
+                                if (curlayer == null) crash("GRID needs a layer!");
+                                s = value.Split('x');
+                                if (s.Length != 2) crash("GRID syntax error!");
+                                curlayer.GridX = qstr.ToInt(s[0].Trim());
+                                curlayer.GridY = qstr.ToInt(s[1].Trim());
+                                break;
+                            // Object specific
+                            case "KIND":
+                                assert(obj != null, "KIND: No Object");
+                                obj.kind = value;
+                                break;
+                            case "COORD":
+                                assert(obj != null, "COORD: No Object");
+                                s = value.Split(',');
+                                assert(s.Length == 2, "COORD syntax error!");
+                                obj.x = qstr.ToInt(s[0].Trim());
+                                obj.y = qstr.ToInt(s[1].Trim());
+                                chat($"Coordinates set({obj.x},{obj.y}) of {obj.kind}");
+                                break;
+                            case "INSERT":
+                                assert(obj != null, "INSERT: No Object");
+                                s = value.Split(',');
+                                assert(s.Length == 2, "INERT syntax error!");
+                                obj.insertx = qstr.ToInt(s[0].Trim()) * (-1);
+                                obj.inserty = qstr.ToInt(s[1].Trim()) * (-1);
+                                break;
+                            case "ROTATION":
+                                assert(obj != null, "ROTATION: No object");
+                                obj.RotationDegrees = qstr.ToInt(value);
+                                break;
+                            case "SIZE":
+                                assert(obj != null, "SIZE: No Object");
+                                s = value.Split('x');
+                                assert(s.Length == 2, "SIZE syntax error!");
+                                obj.w = qstr.ToInt(s[0].Trim());
+                                obj.h = qstr.ToInt(s[1].Trim());
+                                break;
+                            case "TAG":
+                                assert(obj != null, "TAG: No Object!");
+                                obj.Tag = value;
+                                break;
+                            case "LABELS":
+                                assert(obj != null, "LABELS: No Object!");
+                                obj.Labels = value;
+                                break;
+                            case "DOMINANCE":
+                                assert(obj != null, "DOMINANCE: No object");
+                                obj.Dominance = qstr.ToInt(value);
+                                break;
+                            case "TEXTURE":
+                                assert(obj != null, "TEXTURE: No object!");
+                                obj.Texture = value;
+                                break;
+                            case "CURRENTFRAME":
+                                assert(obj != null, "CURRENT FRAME: No object");
+                                obj.AnimFrame = qstr.ToInt(value);
+                                break;
+                            case "FRAMESPEED":
+                                assert(obj != null, "FRAME SPEED: No object");
+                                obj.AnimSpeed = qstr.ToInt(value);
+                                break;
+                            case "ALPHA":
+                                assert(obj != null, "ALPHA: No object");
+                                obj.Alpha1000 = (int)(qstr.ToDouble(value) * 1000);
+                                break;
+                            case "VISIBLE":
+                                assert(obj != null, "VISIBLE: No object");
+                                obj.Visible = qstr.ToInt(value) == 1;
+                                break;
+                            case "COLOR":
+                                assert(obj != null, "COLOR: No Object");
+                                s = value.Split(',');
+                                assert(s.Length == 3, "COLOR syntax error!");
+                                obj.R = qstr.ToInt(s[0].Trim());
+                                obj.G = qstr.ToInt(s[1].Trim());
+                                obj.B = qstr.ToInt(s[2].Trim());
+                                break;
+                            case "IMPASSIBLE":
+                                assert(obj != null, "IMPASSIBLE: No object");
+                                obj.Impassible = qstr.ToInt(value) == 1;
+                                break;
+                            case "FORCEPASSIBLE":
+                                assert(obj != null, "FORCE PASSIBLE: No object");
+                                obj.ForcePassible = qstr.ToInt(value) == 1;
+                                break;
+                            case "SCALE":
+                                assert(obj != null, "SCALE: No Object");
+                                s = value.Split(',');
+                                assert(s.Length == 2, "SCALE syntax error!");
+                                obj.ScaleX = qstr.ToInt(s[0].Trim());
+                                obj.ScaleY = qstr.ToInt(s[1].Trim());
+                                break;
+                            case "BLEND":
+                                if (qstr.ToInt(value) != 0) Debug.Print("Alternate Blends are only supported in the BlitzMax version of Kthura!");
+                                break;
+                            default:
+                                Debug.Print($"Unknown object key {key}");
+                                break;
+                        }
+                    }
+                }
+            }
+            automap = tempautomap;
+            foreach (KthuraLayer lay in ret.Layers.Values) lay.TotalRemap();
+            return ret;
         }
+
+
+            
+
+        
 
         public static Kthura Load(string sourcefile,string prefix, TJCRDIR TexJCR) {
 
@@ -354,6 +505,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 

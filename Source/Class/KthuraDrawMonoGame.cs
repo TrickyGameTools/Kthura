@@ -20,7 +20,9 @@
 
 
 
+
 using System.Collections.Generic;
+using System.Diagnostics;
 using TrickyUnits;
 
 
@@ -49,6 +51,7 @@ namespace NSKthura {
                 if (qstr.ExtractExt(file.ToUpper()) == "JPBF") {
                     Textures[tag] = TQMG.GetBundle(map.TextureJCR, $"{file}/");
                 } else {
+                    if (map.TextureJCR == null) Debug.WriteLine("TextureJCR is null???");
                     var bt = map.TextureJCR.ReadFile(file);
                     Textures[tag] = TQMG.GetImage(bt);
                 }
@@ -95,6 +98,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 

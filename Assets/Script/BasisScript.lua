@@ -18,8 +18,8 @@ function ASH(value)
 	if type(value)=="nil" then return nil
 	elseif type(value)=="boolean" then
 		if value then return "true" else return "false" end
-	elseif type(value)=="string" return value
-	elseif type(value)=="number" return ""..value -- Guarantees a string
+	elseif type(value)=="string" then return value
+	elseif type(value)=="number" then return ""..value -- Guarantees a string
 	else return "<<"..type(value)..">>" end
 end
 
