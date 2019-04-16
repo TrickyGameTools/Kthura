@@ -834,6 +834,8 @@ namespace KthuraEdit
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
+                // File Menu
+                case 1001: Core.Save(); break;
                 // Grid
                 case 2001: ShowGrid = !ShowGrid; break;
                 case 2002: GridMode = !GridMode; break;

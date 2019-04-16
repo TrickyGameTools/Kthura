@@ -218,6 +218,18 @@ namespace KthuraEdit
         static TJCRDIR TexJCR;
         #endregion
 
+        #region Save
+        public static void Save() {
+            var storage = ProjectConfig.C("Compression").Trim();
+            if (storage == "") storage = "lzma";
+            DBG.Log($"Saving {MapFile}, storage method: {storage}");
+            try {
+                KthuraSave.Save(Map, $"{MapPath}/{MapFile}", storage);
+            } catch (Exception e) {
+                DBG.Log($"ERROR Saving failed!\n{e.Message}\n{JCR6.JERROR}");
+            }
+        }
+        #endregion
 
         #region Project Data
         private static string _prj = ""; // "Real" variable. PSST! This is very very secret!
