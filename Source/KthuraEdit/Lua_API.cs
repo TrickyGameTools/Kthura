@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using KthuraEdit.Stages;
 using NSKthura;
 using TrickyUnits;
@@ -56,6 +56,19 @@ namespace KthuraEdit
                 ret = $"{qstr.md5($"{prefix}{time}{cnt}")}";
             } while (Core.Map.Layers[UI.selectedlayer].HasTag(ret,true));
             return ret;
+        }
+
+        public string GetScriptToUse(string file) {
+            var pad = new List<string>();
+            pad.Add($"{Core.GlobalWorkSpace}/{Core.Project}/");
+            foreach (string p in Core.ProjectConfig.List("ScriptPath")) pad.Add(Dirry.AD(p));
+            foreach (string p in pad) {
+                var probeer = $"{p}/{file}";
+                if (File.Exists(probeer)) {
+                    return QuickStream.LoadString(probeer);
+                }
+            }
+            return $"error('Use request failed. {file} has not been found!";
         }
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.

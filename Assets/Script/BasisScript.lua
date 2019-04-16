@@ -96,6 +96,10 @@ function GenerateKey(prefix)
    assert(ret and ret~="","GenerateKey("..ASH(prefix).."): Failed!")
 end   
 
+function Use(file)
+	local script = Kthura:GetScriptToUse(file)
+	return load(script,file)
+end
 
 
 -- Destroy import function for safety reasons
