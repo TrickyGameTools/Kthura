@@ -227,6 +227,15 @@ namespace KthuraEdit
                 }
             }
         }
+
+        static public void SaveTexMemory() {            
+            if (!Directory.Exists(TexMemorySettingsDir)) {
+                DBG.Log($"Creating dir: {TexMemorySettingsDir}");
+                Directory.CreateDirectory(TexMemorySettingsDir);
+            }
+            DBG.Log($"Saving: {TexMemorySettingsFile}");
+            TexMemory.SaveSource(TexMemorySettingsFile);
+        }
         #endregion
 
         #region Status

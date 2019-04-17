@@ -27,7 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Xna.Framework.Input;
 using TrickyUnits;
 using UseJCR6;
 
@@ -59,7 +59,15 @@ namespace KthuraEdit.Stages
         }
 
         public override void Update() {
-            if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) MainEdit.ComeToMe();
+            bool goDown = false;
+            bool goUp = false;
+            // Keyboad
+            if (TQMGKey.Hit(Keys.Escape)) MainEdit.ComeToMe();
+            if (TQMGKey.Held(Keys.Down)) goDown = true;
+            if (TQMGKey.Held(Keys.Up)) goUp = true;
+            // mouse
+            if (goDown && ScrollY < MaxScroll) ScrollY += 3;
+            if (goUp && ScrollY > 0) ScrollY -= 3;
         }
         #endregion
 
@@ -71,6 +79,7 @@ namespace KthuraEdit.Stages
         TQMGImage LoadedTex = UI.back;
         string chosen="";
         int ScrollY = 0;
+        int MaxScroll => (Textures.Count * 25) - (UI.ScrHeight - 50);
         int W => (int)(UI.ScrWidth * .75);
         TQMGText tGoToTab = UI.font20.Text("Go to last used object kind");
         TQMGText tTabData = UI.font20.Text("Retreive last used object data");
@@ -131,7 +140,7 @@ namespace KthuraEdit.Stages
 
         void ListTextures() {
             foreach(TexItem TI in Textures) {                
-                if (Core.ms.X < W && Core.ms.Y > TI.y && Core.ms.Y < TI.y + 22) {
+                if (Core.ms.X < W && Core.ms.Y+ScrollY > TI.y && Core.ms.Y+ScrollY < TI.y + 22) {
                     if (chosen != TI.name) time2reload = 250;
                     chosen = TI.name;
                     if (Core.MsHit(1)) {
@@ -141,7 +150,7 @@ namespace KthuraEdit.Stages
                 }
                 TQMG.Color(0, 255, 255);
                 if (TI.name == chosen) {
-                    TQMG.DrawRectangle(0, TI.y, W, 21);
+                    TQMG.DrawRectangle(0, TI.y-ScrollY, W, 21);
                     TQMG.Color(0, 0, 0);
                 }
                 TI.text.Draw(5, TI.y - ScrollY);

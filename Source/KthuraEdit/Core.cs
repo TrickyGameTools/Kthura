@@ -234,6 +234,7 @@ namespace KthuraEdit
             } catch (Exception e) {
                 DBG.Log($"ERROR Saving failed!\n{e.Message}\n{JCR6.JERROR}");
             }
+            UI.SaveTexMemory();
         }
         #endregion
 
