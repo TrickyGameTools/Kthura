@@ -97,8 +97,14 @@ function GenerateKey(prefix)
 end   
 
 function Use(file)
+	assert(type(file)=="string", "I expected a string for a file name! Not a "..type(file).."!")
+	print("Using "..file)
 	local script = Kthura:GetScriptToUse(file)
 	return load(script,file)
+end
+
+function EditorBuild()
+	return Kthura.Build
 end
 
 
