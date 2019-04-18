@@ -14,6 +14,8 @@ local table = table
 local os    = os
 local math  = math
 
+function NOTHING() end -- You'd be amazed how handy this will be!
+
 function ASH(value)
 	if type(value)=="nil" then return nil
 	elseif type(value)=="boolean" then
