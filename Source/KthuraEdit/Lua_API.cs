@@ -72,6 +72,10 @@ namespace KthuraEdit
             return $"error('Use request failed. {file} has not been found!";
         }
 
+        public string LayerName => UI.selectedlayer;
+
+        public void Remap() => UI.MapLayer.TotalRemap();
+
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME;
     }

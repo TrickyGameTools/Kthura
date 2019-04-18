@@ -109,6 +109,14 @@ function EditorBuild()
 	return Kthura.Build
 end
 
+function SelectedLayer()
+	return Kthura.LayerName
+end
+
+function Remap()
+	Kthura:Remap()
+end
+
 
 -- Destroy import function for safety reasons
 import = function() end
