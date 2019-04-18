@@ -186,12 +186,12 @@ namespace KthuraEdit
         static public TQMGFont font64 = TQMG.GetFont("Fonts/nasa21.64.jfbf");
         #endregion
         #region Postions
-        const int LayW = 100;
-        const int PDnH = 25;
+        public const int LayW = 100;
+        public const int PDnH = 25;
         static int ToolW => 300 + (back.Width % 100);
         static int ToolX => ScrWidth - ToolW;
-        static int ScrollX = 0;
-        static int ScrollY = 0;
+        static public int ScrollX = 0;
+        static public int ScrollY = 0;
         static int PosX => ScrollX + Core.ms.X - LayW;
         static int PosY => ScrollY + Core.ms.Y - PDnH;
         static int HoldX = 0, HoldY = 0, HoldEX = 0, HoldEY = 0;

@@ -117,6 +117,12 @@ function Remap()
 	Kthura:Remap()
 end
 
+function Marker(radius,x,y)
+	assert(type(radius)=="number","radius must be a number!")
+	assert(type(x)=="number","x must be a number!")
+	assert(type(y)=="number","y must be a number!")	
+	assert(Kthura:Marker(radius,x,y),("Marker(%d,%d,%d): Marker expects a radius which is an integer number from 4 till 500 which can be divided by 4"):format(radius,x,y))
+end
 
 -- Destroy import function for safety reasons
 import = function() end

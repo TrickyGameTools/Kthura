@@ -35,8 +35,16 @@ using KthuraEdit.Stages;
 using NSKthura;
 using TrickyUnits;
 
-namespace KthuraEdit
-{
+namespace KthuraEdit {
+
+    static class Lua_XStuff {
+        static Dictionary<int, TQMGImage> Markers = new Dictionary<int, TQMGImage>();
+        static public TQMGImage Marker (int i) {
+            if (i < 4 || i > 500 || i % 4 != 0) return null;
+            if (!Markers.ContainsKey(i)) Markers[i] = TQMG.GetImage($"Makers/{i}.png");
+            return Markers[i];
+        }
+    }
 
     // This class will not really been used by the Kthura editor itself
     // But merely serve in order to 
@@ -75,6 +83,13 @@ namespace KthuraEdit
         public string LayerName => UI.selectedlayer;
 
         public void Remap() => UI.MapLayer.TotalRemap();
+
+        public bool Marker(int radius,int x, int y) {
+            var m = Lua_XStuff.Marker(radius);
+            if (m == null) return false;
+            m.Draw(UI.LayW+x - UI.ScrollX, UI.PDnH+ y - UI.ScrollY);
+            return true;
+        }
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME;
