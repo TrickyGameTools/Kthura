@@ -138,6 +138,21 @@ function Color(r,g,b)
 	Kthura:Color(r,g,b)
 end
 
+Pivot_Init = NOTHING()
+Pivot_Retag = NOTHING()
+Pivot_Remove = NOTHING()
+
+function Pivot_Create(ME)
+    ME.Tag = GenerateKey(sprintf("Pivot_%s_",SelectedLayer())
+end
+
+function Pivot_Show(ME)
+    Color(0xff,0xff,0xff)
+    Marker(8,ME.x,ME.y)
+end
+
+
+
 -- Destroy import function for safety reasons
 import = function() end
 print("  = Lua script loaded succesfully")
