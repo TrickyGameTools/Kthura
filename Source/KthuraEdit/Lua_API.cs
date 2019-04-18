@@ -91,6 +91,10 @@ namespace KthuraEdit {
             return true;
         }
 
+        public void Color(byte r, byte g, byte b) => TQMG.Color(r, g, b);
+        public bool IsByte(int n) => (n >= 0 && n <= 255);
+
+
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME;
     }
