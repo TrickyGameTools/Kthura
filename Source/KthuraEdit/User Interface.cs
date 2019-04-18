@@ -901,6 +901,21 @@ namespace KthuraEdit {
         }
         #endregion
 
+        #region Quick PullDown Debug Link functions
+        static void CountObjects() {
+            DBG.Log($"Counting objects on layer: {selectedlayer}");
+            SortedDictionary<string, int> counts = new SortedDictionary<string, int>();
+            foreach(KthuraObject o in MapLayer.Objects) {
+                if (!counts.ContainsKey(o.kind)) counts[o.kind] = 0;
+                counts[o.kind]++;
+            }
+            foreach (string k in counts.Keys) DBG.Log($"- {k}:{counts[k]}");
+            DBG.Log($"Grand total: {MapLayer.Objects.Count}");
+            DBG.Log("Hit Escape to get back to the editor");
+            DBG.ComeToMe();
+        }
+        #endregion
+
         #region int main() :P
         static public void DrawScreen() {
             DrawMap();            
@@ -995,6 +1010,7 @@ namespace KthuraEdit {
                 case 2002: GridMode = !GridMode; break;
                 // Debug
                 case 3001: DBG.ComeToMe(); break;
+                case 3003: CountObjects(); break;
                 // Layers
                 case 4001: LayerName.ComeToMe(); break;
                 case 4002: Yes.ComeToMe($"Do you really want to remove layer \"{selectedlayer}\"?", DeleteLayer, selectedlayer); break;

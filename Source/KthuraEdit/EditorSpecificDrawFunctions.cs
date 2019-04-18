@@ -57,13 +57,15 @@ namespace KthuraEdit
 
         static void DrawPivot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             Lua_XStuff.ME = obj;
-            Core.Lua("Pivot_Show(Kthura.ME)");
+            Core.Lua($"{obj.kind}_Show(Kthura.ME)",true);
         }
+
 
 
         public static void init() {
             KthuraDraw.DrawZone = DrawZone;
             KthuraDraw.DrawPivot = DrawPivot;
+            KthuraDraw.DrawExit = DrawPivot;                
         }
     }
 }

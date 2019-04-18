@@ -146,8 +146,13 @@ end
 function Ask(question,sort)
 	assert(Kthura.CallBackStage=="INIT","The Ask() function may ONLY be called during the 'INIT' call back stage")
 	assert(type(question)=="string","Ask requires a string for a parameter, not a "..type(question))
-	Kthura:Ask(question)
+   Kthura:Ask(question)
+   Kthura:Debug("Object script asks about: "..question)
 	if (sort) then Kthura:AskSort() end
+end
+
+function HasTag(tag)
+   return Kthura:HasTag(tag)
 end
 
 -- Pivot callback
@@ -167,6 +172,30 @@ function Pivot_Show(ME)
     Marker(8,ME.x,ME.y)
 end
 
+-- Exit callback
+Exit_Retag=NOTHING
+Exit_Remove=NOTHING
+function Exit_Init()
+   Ask("Wind")
+   Ask("Tag",true)
+end
+
+function Exit_Create(ME,qdata)
+   if qdata.Tag==nil or qdata.Tag=="" or HasTag(qdata.Tag) then
+      print("No tag available or duplicate tag. Generating new one!")
+      local gkey = GenerateKey(sprintf("Exit_%s_",SelectedLayer()))
+      Kthura:Debug("Key generated "..gkey)
+      qdata.Tag=gkey
+   end
+   ME.Tag=qdata.Tag;
+   --ME.Data["Wind"]=ME.Wind
+   print("Exit created: "..ME.Tag)
+end
+
+function Exit_Show(ME)
+   Color(0xb4,0xff,0x00)
+   Marker(8,ME.x,ME.y)
+end
 
 
 -- Destroy import function for safety reasons

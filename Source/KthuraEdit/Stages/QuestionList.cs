@@ -25,6 +25,7 @@
 // EndLic
 
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using KthuraEdit;
@@ -38,11 +39,11 @@ namespace KthuraEdit.Stages
         #region static links
         static QuestionList me = new QuestionList();
         static public void ComeToMe(string caption, string[] questions, params UISchedule[] scedfunc) {
+            Debug.WriteLine($"Question List ComeToMeRequest with {questions.Length} field(s)");
             foreach (UISchedule UIS in scedfunc)
                 UI.Schedule(UIS, me.QA);
             if (questions.Length>0)    
                 me.Start(caption,questions);
-
         }
         #endregion
 
@@ -57,7 +58,7 @@ namespace KthuraEdit.Stages
         TQMGText Caption;
         List<TQA> ShowQuestions;
         void Start(string acaption ,string[] questions) {
-            int y = 10;
+            int y = 40;
             QA.Clear();
             Caption = UI.font32.Text(acaption);
             ShowQuestions = new List<TQA>();
@@ -67,12 +68,21 @@ namespace KthuraEdit.Stages
                     y = y,
                     capttext = UI.font20.Text(Q)
                 };
+                y += 25;
                 ShowQuestions.Add(TQ);
+                QA[Q] = "";
             }
+            Core.GoStage(me);
         }
 
         public override void Draw() {
-            
+            UI.BackFull();
+            TQMG.Color(255, 180, 0);
+            Caption.Draw(UI.ScrWidth / 2, 5, TQMG_TextAlign.Center);
+            foreach (TQA TQ in ShowQuestions) {
+                TQMG.Color(255, 255, 255);
+                TQ.capttext.Draw(10, TQ.y);
+            }
         }
 
         public override void Update() {

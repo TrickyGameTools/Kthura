@@ -217,9 +217,9 @@ namespace KthuraEdit
                 DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots may not work properly now!");
             }
         }
-        static public void Lua(string command) {
+        static public void Lua(string command, bool silent=false) {
             try {
-                Debug.Print($"Executing Lua command: {command}");
+                if (!silent) Debug.Print($"Executing Lua command: {command}");
                 Script.DoString(command);
             } catch (Exception LEx) {
                 DBG.Log($"Lua Error: {LEx}");

@@ -65,7 +65,7 @@ namespace KthuraEdit {
         public void KthuraPrint(string content) => DBG.Log(content);
 
         public void Ask(string question) => Lua_XStuff.Ask.Add(question);
-        public void AskSort(string question) => Lua_XStuff.Ask.Sort();
+        public void AskSort() => Lua_XStuff.Ask.Sort();
         
 
         public string Build => BuildDate.sBuildDate;
@@ -74,7 +74,8 @@ namespace KthuraEdit {
         public string GenKey(string prefix) {
             var time = "";
             var cnt = -1;
-            var ret = "";            
+            var ret = "";
+            UI.MapLayer.RemapTags(); // It appears dupe tags can be created otherwise... :-/
             do {
                 time = DateTime.Now.ToString();
                 cnt++;
@@ -111,6 +112,11 @@ namespace KthuraEdit {
         public bool IsByte(int n) => (n >= 0 && n <= 255);
 
         public void Debug(string m) => System.Diagnostics.Debug.WriteLine(m);
+
+        public bool HasTag(string tag) {
+            UI.MapLayer.RemapTags();
+            return UI.MapLayer.HasTag(tag);
+        }
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME=>Lua_XStuff.ME;
