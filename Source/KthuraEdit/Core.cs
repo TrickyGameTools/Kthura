@@ -216,6 +216,15 @@ namespace KthuraEdit
                 DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots may not work properly now!");
             }
         }
+        static public void Lua(string command) {
+            try {
+                Debug.Print($"Executing Lua command: {command}");
+                Script.DoString(command);
+            } catch (Exception LEx) {
+                DBG.Log($"Lua Error: {LEx}");
+            }
+
+        }
         #endregion
 
         #region Global configuration

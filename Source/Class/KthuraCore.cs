@@ -293,8 +293,10 @@ namespace NSKthura {
         public static Kthura Create() => Create(DefaultTextureJCR);
         public static Kthura Create(TJCRDIR TexJCR) {
 
-            var ret = new Kthura();
-            ret.TextureJCR = TexJCR;
+            var ret = new Kthura
+            {
+                TextureJCR = TexJCR
+            };
             // Please note! Single layer maps, were already officially deprecated a few years before this project began in C#
             // And if BlitzMax didn't get into the state it's now, this C# version may actually never have been created (at least not by me)
             // It's only logical I will not support it any more in the C# version :P
@@ -314,12 +316,14 @@ namespace NSKthura {
             void chat(string cm) {
                 if (dochat) Debug.WriteLine($"KTHURA.LOAD.CHAT: {cm}");
             }
-            
+
 
             // This is the TRUE load routine. All overloads eventually lead to this one! ;-P
-            var ret = new Kthura();
-            ret.MetaData = new SortedDictionary<string, string>();
-            ret.TextureJCR = TexJcr;
+            var ret = new Kthura
+            {
+                MetaData = new SortedDictionary<string, string>(),
+                TextureJCR = TexJcr
+            };
             var m = sourcedir.LoadStringMap($"{prefix}Data");
             foreach (string K in m.Keys)
                 ret.MetaData[K] = m[K];

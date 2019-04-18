@@ -33,14 +33,17 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using NSKthura;
 using KthuraEdit.Stages;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using TrickyUnits;
 
-namespace KthuraEdit
-{
+namespace KthuraEdit  { 
+
+    delegate void UISchedule(object data);
+
     static class UI {
 
         #region PullDownMenus
@@ -520,7 +523,7 @@ namespace KthuraEdit
                 new TBItem("TiledArea",ObjectParameters,AR_Tiled,null),
                 new TBItem("Obstacles",ObjectParameters,null,MC_Obstacle),
                 new TBItem("Zones",ObjectParameters,AR_Zones,null),
-                new TBItem("Other",null,null,MC_CSpot),
+                new TBItem("Other",Other,null,MC_CSpot),
                 new TBItem("Modify",ObjectParameters,null,MC_Modify)
             });
 
@@ -623,6 +626,46 @@ namespace KthuraEdit
             }
         }
 
+        static SortedDictionary<string,TQMGText> OtherStuff;
+        static string chosencspot = "";
+        static void InitOther() {
+            DBG.Log("Init: Other Tab");
+            OtherStuff = new SortedDictionary<string, TQMGText>();
+            OtherStuff["Exit"] = font20.Text("Exit");
+            OtherStuff["Pivot"] = font20.Text("Pivot");
+            foreach (string cspot in Core.ProjectConfig.List("CSpots")) {
+                var allowregex = new Regex(@"^[a-zA-Z0-9_]+$");
+                if (cspot[0] != '$')
+                    DBG.Log($"ERROR! CSpot {cspot} not prefixed with a '$'");
+                else if (!allowregex.IsMatch(cspot.Substring(1)))
+                    DBG.Log($"ERROR! CSpot {cspot} has illegal characters in its name");
+                else if (cspot.Length < 4)
+                    DBG.Log($"ERROR! CSpot must have at least 3 characters after the $ ({cspot})");
+                else {
+                    DBG.Log($"Adding CSpot: {cspot}");
+                    OtherStuff[cspot] = font20.Text(cspot);
+                }
+            }
+            
+        }
+
+        static void Other() {
+            var y = TBItem.inity + 60 + 21;
+            if (OtherStuff == null) InitOther();
+            foreach(string cspot in OtherStuff.Keys) {
+                var txt = OtherStuff[cspot];
+                TQMG.Color(0, 255, 255);
+                if (Core.ms.X > ToolX && Core.ms.Y > y && Core.ms.Y < y + 25 && Core.MsHit(1))
+                    chosencspot = cspot;
+                if (chosencspot==cspot) {
+                    TQMG.DrawRectangle(ToolX, y, ToolW, 24);
+                    TQMG.Color(0, 0, 0);
+                }
+                txt.Draw(ToolX + 3, y);
+                y += 25;
+            }
+        }
+
         static public void DrawToolBox() {
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, ToolX, 0, ToolW, ScrHeight, 0);
@@ -651,23 +694,25 @@ namespace KthuraEdit
             if (x1 > x2) startx = x2;
             if (y1 > y2) starty = y2;
             if (opm["Texture"].value == "") return;
-            var Area = new KthuraObject("TiledArea", MapLayer);
-            Area.x = startx;
-            Area.y = starty;
-            Area.w = width;
-            Area.h = height;
-            Area.Texture = opm["Texture"].value;
-            Area.insertx = qstr.ToInt(opm["InsX"].value);
-            Area.inserty = qstr.ToInt(opm["InsY"].value);
-            Area.R = qstr.ToInt(opm["cR"].value);
-            Area.G = qstr.ToInt(opm["cG"].value);
-            Area.B = qstr.ToInt(opm["cB"].value);
-            Area.Dominance = qstr.ToInt(opm["Dominance"].value);
-            Area.Alpha1000 = qstr.ToInt(opm["Alpha"].value);
-            Area.AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value);
-            Area.AnimFrame = qstr.ToInt(opm["Frame"].value);
-            Area.Impassible = opc["Impassible"].value;
-            Area.ForcePassible = opc["ForcePassible"].value;
+            var Area = new KthuraObject("TiledArea", MapLayer)
+            {
+                x = startx,
+                y = starty,
+                w = width,
+                h = height,
+                Texture = opm["Texture"].value,
+                insertx = qstr.ToInt(opm["InsX"].value),
+                inserty = qstr.ToInt(opm["InsY"].value),
+                R = qstr.ToInt(opm["cR"].value),
+                G = qstr.ToInt(opm["cG"].value),
+                B = qstr.ToInt(opm["cB"].value),
+                Dominance = qstr.ToInt(opm["Dominance"].value),
+                Alpha1000 = qstr.ToInt(opm["Alpha"].value),
+                AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value),
+                AnimFrame = qstr.ToInt(opm["Frame"].value),
+                Impassible = opc["Impassible"].value,
+                ForcePassible = opc["ForcePassible"].value
+            };
             // insert modulos
             if (opc["AutoIns"].value) {
                 int w = 0;
@@ -712,25 +757,38 @@ namespace KthuraEdit
             var opm = ObjectParamFields[currentTBItem.Name];
             var opc = ObjectCheckBoxes[currentTBItem.Name];
             if (opm["Texture"].value == "") return;
-            var obs = new KthuraObject("Obstacle", MapLayer);
-            obs.x = gPosX;
-            obs.y = gPosY;
-            obs.Texture = opm["Texture"].value;
-            obs.R = qstr.ToInt(opm["cR"].value);
-            obs.G = qstr.ToInt(opm["cG"].value);
-            obs.B = qstr.ToInt(opm["cB"].value);
-            obs.Dominance = qstr.ToInt(opm["Dominance"].value);
-            obs.Alpha1000 = qstr.ToInt(opm["Alpha"].value);
-            obs.AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value);
-            obs.AnimFrame = qstr.ToInt(opm["Frame"].value);
-            obs.Impassible = opc["Impassible"].value;
-            obs.ForcePassible = opc["ForcePassible"].value;
-            obs.ScaleX = qstr.ToInt(opm["ScaleX"].value);
-            obs.ScaleY = qstr.ToInt(opm["ScaleY"].value);
-            obs.RotationDegrees = qstr.ToInt(opm["RotDeg"].value); // Will automatically assign the "radian" value too.
+            var obs = new KthuraObject("Obstacle", MapLayer)
+            {
+                x = gPosX,
+                y = gPosY,
+                Texture = opm["Texture"].value,
+                R = qstr.ToInt(opm["cR"].value),
+                G = qstr.ToInt(opm["cG"].value),
+                B = qstr.ToInt(opm["cB"].value),
+                Dominance = qstr.ToInt(opm["Dominance"].value),
+                Alpha1000 = qstr.ToInt(opm["Alpha"].value),
+                AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value),
+                AnimFrame = qstr.ToInt(opm["Frame"].value),
+                Impassible = opc["Impassible"].value,
+                ForcePassible = opc["ForcePassible"].value,
+                ScaleX = qstr.ToInt(opm["ScaleX"].value),
+                ScaleY = qstr.ToInt(opm["ScaleY"].value),
+                RotationDegrees = qstr.ToInt(opm["RotDeg"].value) // Will automatically assign the "radian" value too.
+            };
             DBG.Log($"Created Obstacle at ({obs.x},{obs.y})");
         }
-        static void MC_CSpot(int x,int y) { }
+        static void MC_CSpot(int x,int y) {
+            if (chosencspot == "") return;
+            var cst = chosencspot.Replace("$", "CSpot_");
+            Lua_XStuff.callbackstage = "INIT";
+            Core.Lua($"{cst}_Init()");
+            QuestionList.ComeToMe($"Data for creating {chosencspot}",Lua_XStuff.Ask.ToArray(),CSpot_Place);
+        }
+
+        static void CSpot_Place(object data) {
+            var answers = (Dictionary<string, string>)data;
+        }
+
         static void MC_Modify(int x, int y) { }
         #endregion
 
@@ -800,6 +858,29 @@ namespace KthuraEdit
         }
         #endregion
 
+        #region Schedule Manager
+        struct MiniSchedule {
+            internal UISchedule func;
+            internal object param;
+        }
+        static List<MiniSchedule> SchedFuncs = new List<MiniSchedule>();
+        static public void Schedule(UISchedule func, object param) {
+            var s = new MiniSchedule
+            {
+                func = func,
+                param = param
+            };
+            SchedFuncs.Add(s);
+        }
+        static void SchedulePop() {
+            if (SchedFuncs.Count > 1) {
+                var sf = SchedFuncs.ToArray()[0];
+                sf.func(sf.param);
+                SchedFuncs.RemoveAt(0);
+            }
+        }
+        #endregion
+
         #region int main() :P
         static public void DrawScreen() {
             DrawMap();            
@@ -812,6 +893,8 @@ namespace KthuraEdit
 
 
         static public void UI_Update() {
+            // Schedule pop
+            SchedulePop();
             // Scroll
             if (Core.kb.IsKeyDown(Keys.LeftControl) || Core.kb.IsKeyDown(Keys.RightControl)) {
                 var k = TQMGKey.GetKey();

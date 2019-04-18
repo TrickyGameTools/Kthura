@@ -14,8 +14,10 @@ local table = table
 local os    = os
 local math  = math
 
+-- Sorry :P
 local sprintf = string.format
 
+-- A few internal things
 function NOTHING() end -- You'd be amazed how handy this will be!
 
 function ASH(value)
@@ -45,6 +47,7 @@ function print(a,b,c,d,e,f)
 end
 local print=print -- locals are faster than globals
 
+-- Just some quicker functions
 function each(a)
    assert(type(a)=="table","HEY! 'each' requires a table. Not a "..type(a).."!");
    local acopy={}
@@ -94,6 +97,7 @@ function spairs(a,func)
    end
 end   
 
+-- API link functions
 function GenerateKey(prefix)
    assert(type(prefix)=="string", "GenerateKey("..ASH(prefix).."): I only accept strings for a prefix and a "..type(prefix))
    local ret = Kthura:GenKey(prefix)
@@ -138,12 +142,20 @@ function Color(r,g,b)
 	Kthura:Color(r,g,b)
 end
 
-Pivot_Init = NOTHING()
-Pivot_Retag = NOTHING()
-Pivot_Remove = NOTHING()
+function Ask(question,sort)
+	assert(Kthura.CallBackStage=="INIT","The Ask() function may ONLY be called during the 'INIT' call back stage")
+	assert(type(question)=="string","Ask requires a string for a parameter, not a "..type(question))
+	Kthura:Ask(question)
+	if (sort) Kthura:AskSort()
+end
+
+-- Pivot callback
+Pivot_Init = NOTHING
+Pivot_Retag = NOTHING
+Pivot_Remove = NOTHING
 
 function Pivot_Create(ME)
-    ME.Tag = GenerateKey(sprintf("Pivot_%s_",SelectedLayer())
+    ME.Tag = GenerateKey(sprintf("Pivot_%s_",SelectedLayer()))
 end
 
 function Pivot_Show(ME)

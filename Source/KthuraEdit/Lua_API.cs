@@ -38,12 +38,16 @@ using TrickyUnits;
 namespace KthuraEdit {
 
     static class Lua_XStuff {
+        static public string callbackstage = "";
         static Dictionary<int, TQMGImage> Markers = new Dictionary<int, TQMGImage>();
         static public TQMGImage Marker (int i) {
             if (i < 4 || i > 500 || i % 4 != 0) return null;
             if (!Markers.ContainsKey(i)) Markers[i] = TQMG.GetImage($"Makers/{i}.png");
             return Markers[i];
         }
+
+        static public List<string> Ask = new List<string>();
+        static public void ResetAsk() => Ask.Clear();
     }
 
     // This class will not really been used by the Kthura editor itself
@@ -53,7 +57,12 @@ namespace KthuraEdit {
         // Should Replace Lua's own print command
         public void KthuraPrint(string content) => DBG.Log(content);
 
+        public void Ask(string question) => Lua_XStuff.Ask.Add(question);
+        public void AskSort(string question) => Lua_XStuff.Ask.Sort();
+        
+
         public string Build => BuildDate.sBuildDate;
+        public string CallBackStage => Lua_XStuff.callbackstage;
 
         public string GenKey(string prefix="") {
             var time = "";
