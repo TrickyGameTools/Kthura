@@ -42,7 +42,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using TrickyUnits;
 
-namespace KthuraEdit  { 
+namespace KthuraEdit {
 
     delegate void UISchedule(object data);
 
@@ -54,7 +54,7 @@ namespace KthuraEdit  {
         static public bool PDOpen => PDOpenMenu != null; //{ get; private set; } = false;
         static PullDownHeader PDOpenMenu = null;
         static PullDownItem PDOpenItem = null;
-       
+
         class PullDownItem {
             public string CaptString;
             public TQMGText CaptText;
@@ -70,7 +70,7 @@ namespace KthuraEdit  {
                 QKey = QuickKey;
                 PDKeyToEvent[QuickKey] = evCode;
                 QKeyText = font20.Text($"Ctrl-{QuickKey}");
-                Debug.WriteLine($"  = Created Item: {caption}");                
+                Debug.WriteLine($"  = Created Item: {caption}");
             }
         }
         class PullDownHeader {
@@ -122,14 +122,14 @@ namespace KthuraEdit  {
             if (PullDownMenus == null) PullDownMenus = InitPullDownMenus();
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, 0, 0, ScrWidth, 25);
-            
+
             var x = 20;
             foreach (PullDownHeader h in PullDownMenus) {
                 TQMG.Color(0, 255, 255);
                 if (Core.ms.Y < PDnH && Core.MsHit(1, true) && Core.ms.X > x - 5 && Core.ms.X < x + h.CaptText.Width + 5) PDOpenMenu = h;
                 var thisisit = h == PDOpenMenu;
                 if (thisisit) {
-                    TQMG.DrawRectangle(x - 5, 0,  h.CaptText.Width+10, PDnH);
+                    TQMG.DrawRectangle(x - 5, 0, h.CaptText.Width + 10, PDnH);
                     TQMG.Color(0, 0, 0);
                 }
                 h.CaptText.Draw(x, 3);
@@ -137,12 +137,12 @@ namespace KthuraEdit  {
                     TQMG.Color(18, 0, 25);
                     TQMG.DrawRectangle(x - 5, PDnH + 1, h.Width + 5, h.Items.Count * 25);
                     TQMG.Color(0, 255, 255);
-                    TQMG.DrawLineRect(x - 5, PDnH + 1,h.Width+5,h.Items.Count*25);
+                    TQMG.DrawLineRect(x - 5, PDnH + 1, h.Width + 5, h.Items.Count * 25);
                     var y = PDnH + 3;
                     foreach (PullDownItem i in h.Items) {
                         TQMG.Color(0, 255, 255);
                         if (Core.ms.X > x && Core.ms.X < x + h.Width && Core.ms.Y > y && Core.ms.Y < y + 24) {
-                            TQMG.DrawRectangle(x - 2, y, h.Width , 24);
+                            TQMG.DrawRectangle(x - 2, y, h.Width, 24);
                             TQMG.Color(0, 0, 0);
                             PDOpenItem = i;
                             if (Core.MsHit(1, true)) {
@@ -153,11 +153,11 @@ namespace KthuraEdit  {
                             }
                         }
                         i.CaptText.Draw(x, y);
-                        i.QKeyText.Draw(x + h.Width-2, y, TQMG_TextAlign.Right);                        
+                        i.QKeyText.Draw(x + h.Width - 2, y, TQMG_TextAlign.Right);
                         y += 24;
                     }
                     if (Core.ms.Y > PDnH && (Core.ms.Y > y || Core.ms.X < x - 10 || Core.ms.X > x + h.Width + 10) && Core.MsHit(1, true)) { PDOpenMenu = null; Core.DontMouse = true; }
-                    if (TQMGKey.Hit(Keys.Escape)) PDOpenMenu = null;                    
+                    if (TQMGKey.Hit(Keys.Escape)) PDOpenMenu = null;
                 }
                 x += h.CaptText.Width + 10;
             }
@@ -213,6 +213,8 @@ namespace KthuraEdit  {
                 return ((int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY) + (ScrollY % Core.Map.Layers[selectedlayer].GridY);
             }
         }
+        static int ogPosX { get { if (!GridMode) return PosX; return gPosX + (MapLayer.GridX / 2); } }
+        static int ogPosY { get { if (!GridMode) return PosY; return gPosY + (MapLayer.GridX); } }
         #endregion
 
         #region TexMemory
@@ -761,8 +763,8 @@ namespace KthuraEdit  {
             if (opm["Texture"].value == "") return;
             var obs = new KthuraObject("Obstacle", MapLayer)
             {
-                x = gPosX,
-                y = gPosY,
+                x = ogPosX,
+                y = ogPosY,
                 Texture = opm["Texture"].value,
                 R = qstr.ToInt(opm["cR"].value),
                 G = qstr.ToInt(opm["cG"].value),
@@ -784,8 +786,8 @@ namespace KthuraEdit  {
             var cst = chosencspot.Replace("$", "CSPOT_");
             Lua_XStuff.callbackstage = "INIT";
             Core.Lua($"{cst}_Init()");
-            Lua_XStuff.WantX = gPosX;
-            Lua_XStuff.WantY = gPosY;
+            Lua_XStuff.WantX = ogPosX;
+            Lua_XStuff.WantY = ogPosY;
             QuestionList.ComeToMe($"Data for creating {chosencspot}",Lua_XStuff.Ask.ToArray(),CSpot_Place);
         }
 
