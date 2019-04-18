@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.16
+// Version: 19.04.18
 // EndLic
+
 
 
 
@@ -54,12 +55,19 @@ namespace KthuraEdit
             t.Draw(obj.x + ix - scrollx, obj.y + iy - scrolly);
         }
 
+        static void DrawPivot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            Lua_XStuff.ME = obj;
+            Core.Lua("Pivot_Show(Kthura.ME)");
+        }
+
 
         public static void init() {
             KthuraDraw.DrawZone = DrawZone;
+            KthuraDraw.DrawPivot = DrawPivot;
         }
     }
 }
+
 
 
 

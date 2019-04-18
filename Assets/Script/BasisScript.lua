@@ -21,7 +21,7 @@ local sprintf = string.format
 function NOTHING() end -- You'd be amazed how handy this will be!
 
 function ASH(value)
-	if type(value)=="nil" then return nil
+	if type(value)=="nil" then return "nil"
 	elseif type(value)=="boolean" then
 		if value then return "true" else return "false" end
 	elseif type(value)=="string" then return value
@@ -102,6 +102,7 @@ function GenerateKey(prefix)
    assert(type(prefix)=="string", "GenerateKey("..ASH(prefix).."): I only accept strings for a prefix and a "..type(prefix))
    local ret = Kthura:GenKey(prefix)
    assert(ret and ret~="","GenerateKey("..ASH(prefix).."): Failed!")
+   return ret
 end   
 
 function Use(file)
@@ -146,7 +147,7 @@ function Ask(question,sort)
 	assert(Kthura.CallBackStage=="INIT","The Ask() function may ONLY be called during the 'INIT' call back stage")
 	assert(type(question)=="string","Ask requires a string for a parameter, not a "..type(question))
 	Kthura:Ask(question)
-	if (sort) Kthura:AskSort()
+	if (sort) then Kthura:AskSort() end
 end
 
 -- Pivot callback
@@ -154,8 +155,11 @@ Pivot_Init = NOTHING
 Pivot_Retag = NOTHING
 Pivot_Remove = NOTHING
 
-function Pivot_Create(ME)
-    ME.Tag = GenerateKey(sprintf("Pivot_%s_",SelectedLayer()))
+function Pivot_Create(ME,qdata)
+   local gkey = GenerateKey(sprintf("Pivot_%s_",SelectedLayer()))
+   Kthura:Debug("Key generated "..gkey)
+   ME.Tag = gkey
+   print("Pivot created: "..ME.Tag)
 end
 
 function Pivot_Show(ME)
@@ -168,3 +172,4 @@ end
 -- Destroy import function for safety reasons
 import = function() end
 print("  = Lua script loaded succesfully")
+

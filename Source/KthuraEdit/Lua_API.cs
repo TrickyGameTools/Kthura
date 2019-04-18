@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.17
+// Version: 19.04.18
 // EndLic
+
 
 
 
@@ -42,12 +43,18 @@ namespace KthuraEdit {
         static Dictionary<int, TQMGImage> Markers = new Dictionary<int, TQMGImage>();
         static public TQMGImage Marker (int i) {
             if (i < 4 || i > 500 || i % 4 != 0) return null;
-            if (!Markers.ContainsKey(i)) Markers[i] = TQMG.GetImage($"Makers/{i}.png");
+            if (!Markers.ContainsKey(i)) {
+                Markers[i] = TQMG.GetImage($"Markers/{i}.png");
+                Markers[i].HotCenter();
+                DBG.Log($"Loaded marker #{i}");
+            }
             return Markers[i];
         }
 
         static public List<string> Ask = new List<string>();
         static public void ResetAsk() => Ask.Clear();
+        static public KthuraObject ME;
+        static public int WantX = 0, WantY = 0;
     }
 
     // This class will not really been used by the Kthura editor itself
@@ -64,7 +71,7 @@ namespace KthuraEdit {
         public string Build => BuildDate.sBuildDate;
         public string CallBackStage => Lua_XStuff.callbackstage;
 
-        public string GenKey(string prefix="") {
+        public string GenKey(string prefix) {
             var time = "";
             var cnt = -1;
             var ret = "";            
@@ -73,7 +80,7 @@ namespace KthuraEdit {
                 cnt++;
                 ret = $"{qstr.md5($"{prefix}{time}{cnt}")}";
             } while (Core.Map.Layers[UI.selectedlayer].HasTag(ret,true));
-            return ret;
+            return $"{prefix}{ret}";
         }
 
         public string GetScriptToUse(string file) {
@@ -96,18 +103,20 @@ namespace KthuraEdit {
         public bool Marker(int radius,int x, int y) {
             var m = Lua_XStuff.Marker(radius);
             if (m == null) return false;
-            m.Draw(UI.LayW+x - UI.ScrollX, UI.PDnH+ y - UI.ScrollY);
+            m.XDraw(UI.LayW+x - UI.ScrollX, UI.PDnH+ y - UI.ScrollY);
             return true;
         }
 
         public void Color(byte r, byte g, byte b) => TQMG.Color(r, g, b);
         public bool IsByte(int n) => (n >= 0 && n <= 255);
 
+        public void Debug(string m) => System.Diagnostics.Debug.WriteLine(m);
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
-        public KthuraObject ME;
+        public KthuraObject ME=>Lua_XStuff.ME;
     }
 }
+
 
 
 

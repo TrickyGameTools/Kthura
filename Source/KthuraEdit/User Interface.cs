@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.17
+// Version: 19.04.18
 // EndLic
+
 
 
 
@@ -34,6 +35,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Text;
 using NSKthura;
 using KthuraEdit.Stages;
 using System.Diagnostics;
@@ -207,7 +209,7 @@ namespace KthuraEdit  {
         }
         static int gPosY {
             get {
-                if (!GridMode) return PosX;
+                if (!GridMode) return PosY;
                 return ((int)Math.Floor((decimal)PosY / Core.Map.Layers[selectedlayer].GridY) * Core.Map.Layers[selectedlayer].GridY) + (ScrollY % Core.Map.Layers[selectedlayer].GridY);
             }
         }
@@ -779,14 +781,28 @@ namespace KthuraEdit  {
         }
         static void MC_CSpot(int x,int y) {
             if (chosencspot == "") return;
-            var cst = chosencspot.Replace("$", "CSpot_");
+            var cst = chosencspot.Replace("$", "CSPOT_");
             Lua_XStuff.callbackstage = "INIT";
             Core.Lua($"{cst}_Init()");
+            Lua_XStuff.WantX = gPosX;
+            Lua_XStuff.WantY = gPosY;
             QuestionList.ComeToMe($"Data for creating {chosencspot}",Lua_XStuff.Ask.ToArray(),CSpot_Place);
         }
 
         static void CSpot_Place(object data) {
+            var cst = chosencspot.Replace("$", "CSPOT_");
             var answers = (Dictionary<string, string>)data;
+            Lua_XStuff.callbackstage = "CREATE";
+            var bs = new StringBuilder(1);
+            bs.Append("local KTHURAQDATA = {}\n");
+            foreach (string k in answers.Keys)
+                bs.Append($"KTHURAQDATA[\"{k}\"] = \"{answers[k]}\"\n");
+            Lua_XStuff.ME = new KthuraObject(chosencspot, MapLayer);
+            Lua_XStuff.ME.x = Lua_XStuff.WantX;
+            Lua_XStuff.ME.y = Lua_XStuff.WantY;
+            bs.Append($"{cst}_Create(Kthura.ME,KTHURAQDATA)\n");
+            bs.Append("KTHURAQDATA = nil\n");
+            Core.Lua(bs.ToString());
         }
 
         static void MC_Modify(int x, int y) { }
@@ -871,12 +887,14 @@ namespace KthuraEdit  {
                 param = param
             };
             SchedFuncs.Add(s);
+            Debug.Print("Function scheduled");
         }
         static void SchedulePop() {
-            if (SchedFuncs.Count > 1) {
+            if (SchedFuncs.Count >= 1) {
                 var sf = SchedFuncs.ToArray()[0];
                 sf.func(sf.param);
                 SchedFuncs.RemoveAt(0);
+                Debug.Print("Function popped");
             }
         }
         #endregion
@@ -987,6 +1005,7 @@ namespace KthuraEdit  {
         #endregion
     }
 }
+
 
 
 

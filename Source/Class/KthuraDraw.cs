@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.16
+// version: 19.04.18
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -21,14 +21,16 @@
 
 
 
+
 using System;
 using TrickyUnits;
 
 namespace NSKthura{
 
     delegate void DelDrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+    delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
 
-	abstract class KthuraDraw{
+    abstract class KthuraDraw {
         #region The Abstract part every Draw Driver must have!
         abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
@@ -37,6 +39,8 @@ namespace NSKthura{
         #region Some static functions for Kthura's functionality in general
         static public KthuraDraw DrawDriver = null;
         static public DelDrawZone DrawZone = delegate { }; // Normally zones should be ignored! Only editors should use this, and thus this delegate!
+        static public DelDrawPoint DrawPivot = null; // Only needed in editors
+        static public DelDrawPoint DrawExit = null;
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
         static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) {
@@ -52,6 +56,10 @@ namespace NSKthura{
                                 if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
+                            case "Pivot":
+                                DrawPivot?.Invoke(obj, x, y, scrollx, scrolly); break;
+                            case "Exit":
+                                DrawExit?.Invoke(obj, x, y, scrollx, scrolly); break;
                             default:
                                 if (qstr.Prefixed(obj.kind,"$")) {
                                     // TODO: CSpots
@@ -67,6 +75,7 @@ namespace NSKthura{
         #endregion
     }
 }
+
 
 
 
