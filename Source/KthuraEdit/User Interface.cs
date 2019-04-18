@@ -46,10 +46,14 @@ namespace KthuraEdit
         #region PullDownMenus
         static List<PullDownHeader> PullDownMenus;
         static Dictionary<Keys, int> PDKeyToEvent = new Dictionary<Keys, int>();
-        static bool PDOpen = false;
+        static public bool PDOpen => PDOpenMenu != null; //{ get; private set; } = false;
+        static PullDownHeader PDOpenMenu = null;
+        static PullDownItem PDOpenItem = null;
+       
         class PullDownItem {
             public string CaptString;
             public TQMGText CaptText;
+            public TQMGText QKeyText;
             public int EventCode;
             public Keys QKey;
             public PullDownHeader Parent;
@@ -60,13 +64,16 @@ namespace KthuraEdit
                 EventCode = evCode;
                 QKey = QuickKey;
                 PDKeyToEvent[QuickKey] = evCode;
-                Debug.WriteLine($"  = Created Item: {caption}");
+                QKeyText = font20.Text($"Ctrl-{QuickKey}");
+                Debug.WriteLine($"  = Created Item: {caption}");                
             }
         }
         class PullDownHeader {
             public string CaptString;
             public TQMGText CaptText;
             public List<PullDownItem> Items;
+            public int mtxwidth { get; private set; } = 0;
+            public int Width => mtxwidth + 150;
             public PullDownHeader(string Caption, params PullDownItem[] aItems) {
                 Debug.WriteLine($"- Created Menu: {Caption}");
                 CaptString = Caption;
@@ -75,6 +82,7 @@ namespace KthuraEdit
                 foreach (PullDownItem item in aItems) {
                     item.Parent = this;
                     Items.Add(item);
+                    if (item.CaptText.Width > mtxwidth) mtxwidth = item.CaptText.Width;
                 }
             }
         }
@@ -109,10 +117,43 @@ namespace KthuraEdit
             if (PullDownMenus == null) PullDownMenus = InitPullDownMenus();
             TQMG.Color(255, 255, 255);
             TQMG.SimpleTile(back, 0, 0, ScrWidth, 25);
-            TQMG.Color(0, 255, 255);
+            
             var x = 20;
             foreach (PullDownHeader h in PullDownMenus) {
+                TQMG.Color(0, 255, 255);
+                if (Core.ms.Y < PDnH && Core.MsHit(1, true) && Core.ms.X > x - 5 && Core.ms.X < x + h.CaptText.Width + 5) PDOpenMenu = h;
+                var thisisit = h == PDOpenMenu;
+                if (thisisit) {
+                    TQMG.DrawRectangle(x - 5, 0,  h.CaptText.Width+10, PDnH);
+                    TQMG.Color(0, 0, 0);
+                }
                 h.CaptText.Draw(x, 3);
+                if (thisisit) {
+                    TQMG.Color(18, 0, 25);
+                    TQMG.DrawRectangle(x - 5, PDnH + 1, h.Width + 5, h.Items.Count * 25);
+                    TQMG.Color(0, 255, 255);
+                    TQMG.DrawLineRect(x - 5, PDnH + 1,h.Width+5,h.Items.Count*25);
+                    var y = PDnH + 3;
+                    foreach (PullDownItem i in h.Items) {
+                        TQMG.Color(0, 255, 255);
+                        if (Core.ms.X > x && Core.ms.X < x + h.Width && Core.ms.Y > y && Core.ms.Y < y + 24) {
+                            TQMG.DrawRectangle(x - 2, y, h.Width , 24);
+                            TQMG.Color(0, 0, 0);
+                            PDOpenItem = i;
+                            if (Core.MsHit(1, true)) {
+                                PDEvent = i.EventCode;
+                                Core.DontMouse = true;
+                                PDOpenItem = null;
+                                PDOpenMenu = null;
+                            }
+                        }
+                        i.CaptText.Draw(x, y);
+                        i.QKeyText.Draw(x + h.Width-2, y, TQMG_TextAlign.Right);                        
+                        y += 24;
+                    }
+                    if (Core.ms.Y > PDnH && (Core.ms.Y > y || Core.ms.X < x - 10 || Core.ms.X > x + h.Width + 10) && Core.MsHit(1, true)) { PDOpenMenu = null; Core.DontMouse = true; }
+                    if (TQMGKey.Hit(Keys.Escape)) PDOpenMenu = null;                    
+                }
                 x += h.CaptText.Width + 10;
             }
         }
@@ -841,7 +882,6 @@ namespace KthuraEdit
             }
 
             // Update Pulldown stuff
-            PDEvent = 0;
             PullDownQuickKeys();
             //Debug.WriteLine(PDEvent);
             switch (PDEvent) {
@@ -859,6 +899,7 @@ namespace KthuraEdit
                 // Quit
                 case 9999: Core.Quit(); break;
             }
+            PDEvent = 0;
         }
         #endregion
     }

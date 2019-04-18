@@ -111,7 +111,8 @@ namespace KthuraEdit
         }
         static public bool DontMouse = false;
         static public void ShowMouse() { TQMG.Color(255, 255, 255); MousePointer.Draw(ms.X, ms.Y); }
-        static public bool MsHit(byte b) {
+        static public bool MsHit(byte b,bool PDOkay=false) {
+            if (!PDOkay && UI.PDOpen) return false;
             switch (b) {
                 case 1:
                     return (!DontMouse) && oldms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
@@ -121,7 +122,9 @@ namespace KthuraEdit
                     throw new Exception($"Core.MsHit: Unknown mouse button required: {b}");
             }
         }
-        static public bool MsDown(byte b) {
+
+        static public bool MsDown(byte b, bool PDOkay=false) {
+            if (!PDOkay && UI.PDOpen) return false;
             switch (b) {
                 case 1:
                     return (!DontMouse) && ms.LeftButton == ButtonState.Pressed;
