@@ -109,6 +109,21 @@ namespace KthuraEdit.Stages
                 var ch = TQMGKey.GetChar();
                 if (ch >= 32 && ch < 127 && UI.font20.TextWidth(QA[curfield]) < 340) QA[curfield] += ch;
                 if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Back) && QA[curfield] != "") QA[curfield] = qstr.Left(QA[curfield], QA[curfield].Length - 1);
+                if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Tab)) {
+                    var gotofield = "";
+                    var firstfield = "";
+                    var lastfield = "";
+                    foreach (TQA TQ in ShowQuestions) {
+                        if (firstfield == "") firstfield = TQ.caption;
+                        if (lastfield == curfield) gotofield = TQ.caption;
+                        lastfield = TQ.caption;
+                    }
+                    if (gotofield == "") {
+                        if (firstfield != "")
+                            curfield = firstfield;
+                    } else
+                        curfield = gotofield;
+                }
             }
         }
         #endregion
