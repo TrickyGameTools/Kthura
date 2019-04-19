@@ -33,6 +33,7 @@
 
 
 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -918,6 +919,15 @@ namespace KthuraEdit {
             DBG.Log("Hit Escape to get back to the editor");
             DBG.ComeToMe();
         }
+
+        static void TagMap() {
+            DBG.Log("== TagMap ==");
+            MapLayer.RemapTags();
+            foreach (string k in MapLayer.Tags)
+                DBG.Log($"{MapLayer.FromTag(k)} {k}");
+            DBG.Log("Hit Escape to get back to the editor");
+            DBG.ComeToMe();
+        }
         #endregion
 
         #region Meta
@@ -1048,6 +1058,7 @@ namespace KthuraEdit {
                 // Debug
                 case 3001: DBG.ComeToMe(); break;
                 case 3003: CountObjects(); break;
+                case 3005: TagMap(); break;
                 // Layers
                 case 4001: LayerName.ComeToMe(); break;
                 case 4002: Yes.ComeToMe($"Do you really want to remove layer \"{selectedlayer}\"?", DeleteLayer, selectedlayer); break;
@@ -1060,6 +1071,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

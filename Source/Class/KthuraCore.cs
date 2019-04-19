@@ -27,6 +27,7 @@
 
 
 
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using System;
@@ -186,6 +187,14 @@ namespace NSKthura {
             return TagMap.ContainsKey(Tag);
         }
 
+        #region Tagfunctions
+        public KthuraObject FromTag(string tag)        {
+            if (!TagMap.ContainsKey(tag)) return null;
+            return TagMap[tag];
+        }
+
+        public Dictionary<string, KthuraObject>.KeyCollection Tags => TagMap.Keys;
+        #endregion
 
 
         #region Remap
@@ -512,6 +521,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 
