@@ -34,6 +34,7 @@
 
 
 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -928,6 +929,14 @@ namespace KthuraEdit {
             DBG.Log("Hit Escape to get back to the editor");
             DBG.ComeToMe();
         }
+
+        static void GoToPos(object o) {
+            var pos = (Dictionary<string, string>)o;
+            var X = qstr.ToInt(pos["X"]);
+            var Y = qstr.ToInt(pos["Y"]);
+            ScrollX = X;
+            ScrollY = Y;
+        }
         #endregion
 
         #region Meta
@@ -1059,6 +1068,9 @@ namespace KthuraEdit {
                 case 3001: DBG.ComeToMe(); break;
                 case 3003: CountObjects(); break;
                 case 3005: TagMap(); break;
+                case 3006:
+                    QuestionList.ComeToMe("Please enter the new cam position:", new string[] { "X", "Y" }, GoToPos);
+                    break;
                 // Layers
                 case 4001: LayerName.ComeToMe(); break;
                 case 4002: Yes.ComeToMe($"Do you really want to remove layer \"{selectedlayer}\"?", DeleteLayer, selectedlayer); break;
@@ -1071,6 +1083,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 
