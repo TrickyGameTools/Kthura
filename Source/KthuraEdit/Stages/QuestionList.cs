@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.18
+// Version: 19.04.19
 // EndLic
+
 
 using System;
 using System.Diagnostics;
@@ -57,6 +58,7 @@ namespace KthuraEdit.Stages
         Dictionary<string, string> QA = new Dictionary<string, string>();
         TQMGText Caption;
         List<TQA> ShowQuestions;
+        string curfield = "";
         void Start(string acaption ,string[] questions) {
             int y = 40;
             QA.Clear();
@@ -76,21 +78,42 @@ namespace KthuraEdit.Stages
         }
 
         public override void Draw() {
+            var cursor = " ";
             UI.BackFull();
             TQMG.Color(255, 180, 0);
             Caption.Draw(UI.ScrWidth / 2, 5, TQMG_TextAlign.Center);
             foreach (TQA TQ in ShowQuestions) {
                 TQMG.Color(255, 255, 255);
                 TQ.capttext.Draw(10, TQ.y);
+                if (curfield == "") curfield = TQ.caption;
+                if (curfield == TQ.caption) {
+                    var nu = DateTime.Now.Second;
+                    if (nu % 2 == 0) cursor = "_";
+                    TQMG.Color(0, 255, 255);
+                    TQMG.DrawRectangle(300, TQ.y, UI.ScrWidth - 350, 23);
+                    TQMG.Color(0, 0, 0);
+                    UI.font20.DrawText($"{QA[TQ.caption]}{cursor}", 302, TQ.y);
+                } else {
+                    TQMG.Color(0, 25, 25);
+                    TQMG.DrawRectangle(300, TQ.y, UI.ScrWidth - 350, 23);
+                    TQMG.Color(0, 255, 255);
+                    UI.font20.DrawText($"{QA[TQ.caption]}", 302, TQ.y);
+                    if (Core.MsHit(1) && (Core.ms.Y > TQ.y && Core.ms.Y < TQ.y + 24)) curfield = TQ.caption;
+                }
             }
         }
 
         public override void Update() {
             if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) MainEdit.ComeToMe();
-            
+            if (curfield!="") {
+                var ch = TQMGKey.GetChar();
+                if (ch >= 32 && ch < 127 && UI.font20.TextWidth(QA[curfield]) < 340) QA[curfield] += ch;
+                if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Back) && QA[curfield] != "") QA[curfield] = qstr.Left(QA[curfield], QA[curfield].Length - 1);
+            }
         }
         #endregion
 
     }
 }
+
 

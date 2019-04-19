@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.18
+// version: 19.04.19
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 
 
 
@@ -41,6 +42,7 @@ namespace NSKthura{
         static public DelDrawZone DrawZone = delegate { }; // Normally zones should be ignored! Only editors should use this, and thus this delegate!
         static public DelDrawPoint DrawPivot = null; // Only needed in editors
         static public DelDrawPoint DrawExit = null;
+        static public DelDrawPoint DrawCSpot = null;
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
         static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) {
@@ -62,7 +64,7 @@ namespace NSKthura{
                                 DrawExit?.Invoke(obj, x, y, scrollx, scrolly); break;
                             default:
                                 if (qstr.Prefixed(obj.kind,"$")) {
-                                    // TODO: CSpots
+                                    DrawCSpot?.Invoke(obj, x, y, scrollx, scrolly); break;
                                 } else {
                                     throw new Exception($"Unknown drawing object kind: {obj.kind}");
                                 }
@@ -75,6 +77,7 @@ namespace NSKthura{
         #endregion
     }
 }
+
 
 
 

@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.18
+// Version: 19.04.19
 // EndLic
+
 
 
 
@@ -40,9 +41,9 @@ namespace KthuraEdit
     /// <summary>
     /// The KthuraDraw classes has some stuff it won't draw by itself, simply they should always be invisible, however in some particular cases it is desireable that they are seen, like in this editor, and hence this class to set that all in order. ;)
     /// </summary>
-    class EditorSpecificDrawFunctions  {
+    class EditorSpecificDrawFunctions {
 
-        static void DrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0)  {
+        static void DrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             if (!UI.InZoneTab) return;
             TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
             TQMG.SetAlpha(1);
@@ -56,19 +57,28 @@ namespace KthuraEdit
         }
 
         static void DrawPivot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            Lua_XStuff.callbackstage = "SHOW";
             Lua_XStuff.ME = obj;
-            Core.Lua($"{obj.kind}_Show(Kthura.ME)",true);
+            Core.Lua($"{obj.kind}_Show(Kthura.ME)", true);
         }
+
+        static void DrawCSpot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            Lua_XStuff.callbackstage = "SHOW";
+            Lua_XStuff.ME = obj;
+            Core.Lua($";({obj.kind.Replace("$","CSPOT_")}_Show or NOTHING)(Kthura.ME)", true);
+       }
 
 
 
         public static void init() {
             KthuraDraw.DrawZone = DrawZone;
             KthuraDraw.DrawPivot = DrawPivot;
-            KthuraDraw.DrawExit = DrawPivot;                
+            KthuraDraw.DrawExit = DrawPivot;
+            KthuraDraw.DrawCSpot = DrawCSpot;
         }
     }
 }
+
 
 
 

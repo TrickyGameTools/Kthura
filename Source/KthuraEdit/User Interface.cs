@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.18
+// Version: 19.04.19
 // EndLic
+
 
 
 
@@ -785,6 +786,7 @@ namespace KthuraEdit {
             if (chosencspot == "") return;
             var cst = chosencspot.Replace("$", "CSPOT_");
             Lua_XStuff.callbackstage = "INIT";
+            Lua_XStuff.Ask.Clear();
             Core.Lua($"{cst}_Init()");
             Lua_XStuff.WantX = ogPosX;
             Lua_XStuff.WantY = ogPosY;
@@ -1023,6 +1025,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

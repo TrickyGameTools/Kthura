@@ -188,7 +188,7 @@ function Exit_Create(ME,qdata)
       qdata.Tag=gkey
    end
    ME.Tag=qdata.Tag;
-   --ME.Data["Wind"]=ME.Wind
+   ME.MetaData["Wind"]=ME.Wind
    print("Exit created: "..ME.Tag)
 end
 
