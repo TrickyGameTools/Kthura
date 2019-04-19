@@ -25,6 +25,7 @@
 // EndLic
 
 
+
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -65,14 +66,22 @@ namespace KthuraEdit.Stages
             Caption = UI.font32.Text(acaption);
             ShowQuestions = new List<TQA>();
             foreach (string Q in questions) {
+                var Question = Q;
+                var eq = Q.IndexOf('=');
+
+                if (eq >= 0) {
+                    Question = Q.Substring(0, eq);
+                    QA[Question] = Q.Substring(eq + 1);
+                } else
+                    QA[Question] = "";
                 var TQ = new TQA {
-                    caption = Q,
+                    caption = Question,
                     y = y,
-                    capttext = UI.font20.Text(Q)
+                    capttext = UI.font20.Text(Question)
                 };
                 y += 25;
                 ShowQuestions.Add(TQ);
-                QA[Q] = "";
+                
             }
             Core.GoStage(me);
         }
@@ -130,5 +139,6 @@ namespace KthuraEdit.Stages
 
     }
 }
+
 
 

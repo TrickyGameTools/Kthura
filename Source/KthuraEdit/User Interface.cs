@@ -32,6 +32,7 @@
 
 
 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -96,6 +97,7 @@ namespace KthuraEdit {
             var ret = new List<PullDownHeader>();
             ret.Add(new PullDownHeader("General",
                 new PullDownItem("Save", 1001, Keys.S),
+                new PullDownItem("Meta Data",1002, Keys.M),
                 new PullDownItem("Quit", 9999, Keys.Q)
                 ));
             ret.Add(new PullDownHeader("Grid",
@@ -918,6 +920,38 @@ namespace KthuraEdit {
         }
         #endregion
 
+        #region Meta
+        static void Meta() {
+            var outlist = new List<string>();
+            
+            foreach(string l in Core.ProjectConfig.List("GeneralData")) {
+                var eq = l.IndexOf("=");
+                var q = l; // question
+                var d = ""; // default value
+                if (eq>=0) {
+                    q = l.Substring(0, eq);
+                    d = l.Substring(eq + 1);
+                }
+                if (Core.Map.MetaData.ContainsKey(q))
+                    outlist.Add($"{q}={Core.Map.MetaData[q]}");
+                else
+                    outlist.Add($"{q}={d}");
+            }
+            if (outlist.Count == 0)
+                DBG.Log("No fields for Meta Data Edit!");
+            else
+                QuestionList.ComeToMe("Enter Meta Data for this map", outlist.ToArray(), MetaUpdate);                    
+        }
+
+        static void MetaUpdate(object a) {
+            var d = (Dictionary<string, string>)a;
+            foreach(string k in d.Keys) {
+                Core.Map.MetaData[k] = d[k];
+            }
+            DBG.Log("Meta updated");
+        }
+        #endregion
+
         #region int main() :P
         static public void DrawScreen() {
             DrawMap();            
@@ -1007,6 +1041,7 @@ namespace KthuraEdit {
             switch (PDEvent) {
                 // File Menu
                 case 1001: Core.Save(); break;
+                case 1002: Meta(); break;
                 // Grid
                 case 2001: ShowGrid = !ShowGrid; break;
                 case 2002: GridMode = !GridMode; break;
@@ -1025,6 +1060,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 
