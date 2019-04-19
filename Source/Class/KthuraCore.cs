@@ -213,7 +213,7 @@ namespace NSKthura {
             foreach (KthuraObject o in Objects)
                 DominanceMap[o.DomMapVal] = o;
             ObjectDrawOrder.Clear();
-            foreach (KthuraObject o in DominanceMap.Values) ObjectDrawOrder.Insert(0, o);
+            foreach (KthuraObject o in DominanceMap.Values) ObjectDrawOrder.Add(o); //.Insert(0, o);
         }
 
 
