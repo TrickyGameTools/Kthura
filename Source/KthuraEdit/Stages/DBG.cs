@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using TrickyUnits;
+using Microsoft.Xna.Framework.Input;
 
 namespace KthuraEdit.Stages
 {
@@ -42,7 +43,7 @@ namespace KthuraEdit.Stages
         static DBG me = new DBG();
         static public bool TimeToCrash = false;
         TQMGFont MonoFont = TQMG.GetFont("Fonts/Monof55.20.jfbf");
-        int LinesOnScreen => TQMG.ScrWidth / 16;
+        int LinesOnScreen => TQMG.ScrHeight / 22;
         int StartY {
             get {
                 if (Lines.Count < LinesOnScreen) return 0;
@@ -96,6 +97,8 @@ namespace KthuraEdit.Stages
             } catch (Exception error) {
                 Debug.WriteLine($"Exception during the debug log updating!\n{error.Message}\nTraceback:\n{error.StackTrace}\n\n");
             }
+            if (TQMGKey.Held(Keys.Down) && ScrollUp > 0) ScrollUp -= 2;
+            if (TQMGKey.Held(Keys.Up) && ScrollUp < StartY) ScrollUp += 2;
         }
 
         static public void ComeToMe() {
