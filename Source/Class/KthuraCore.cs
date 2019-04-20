@@ -321,8 +321,8 @@ namespace NSKthura {
                             }
                             break;
                         case "Obstacle":
-                            TX = (int)Math.Floor((decimal)X / GW);
-                            TY = (int)Math.Floor((decimal)(Y - 1) / GH);
+                            TX = (int)Math.Floor((decimal)(X / GW));
+                            TY = (int)Math.Floor((decimal)((Y - 1) / GH));
                             BlockMap[TX, TY] = true;
                             if (KthuraDraw.DrawDriver.HasTexture(O))
                                 iw = KthuraDraw.DrawDriver.ObjectWidth(O);
@@ -360,10 +360,10 @@ namespace NSKthura {
                     H = O.h - 1; if (H < 0) H = 0;
                     switch (O.kind) {
                         case "TiledArea": case "Zone":
-                            TX = (int)Math.Floor((decimal)X / GW);
-                            TY = (int)Math.Floor((decimal)Y / GH);
-                            TW = (int)Math.Ceiling((decimal)(X + W) / GW);
-                            TH = (int)Math.Ceiling((decimal)(Y + H) / GH);
+                            TX = (int)Math.Floor((decimal)(X / GW));
+                            TY = (int)Math.Floor((decimal)(Y / GH));
+                            TW = (int)Math.Ceiling((decimal)((X + W) / GW));
+                            TH = (int)Math.Ceiling((decimal)((Y + H) / GH));
                             //Print "DEBUG: Blockmapping area ("+TX+","+TY+") to ("+TW+","+TH+")"
                             for (AX = TX; AX <= TW; AX++) {
                                 for (AY = TY; AY <= TH; AY++) {
