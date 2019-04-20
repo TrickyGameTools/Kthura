@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.13
+// Version: 19.04.20
 // EndLic
+
 
 
 
@@ -75,7 +76,7 @@ namespace KthuraEdit.Stages
                 var y = ScrollUp - StartY;
                 foreach (string line in Lines) {
                     if (y > -30)
-                        MonoFont.DrawText(line, 2, y);
+                        MonoFont.DrawText(line, 2, y,TQMG_TextAlign.Left,true);
                     y += 22;
                 }
             } catch(Exception error) {
@@ -103,6 +104,7 @@ namespace KthuraEdit.Stages
         }
     }
 }
+
 
 
 
