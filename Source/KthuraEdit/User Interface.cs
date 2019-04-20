@@ -36,6 +36,7 @@
 
 
 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -331,8 +332,8 @@ namespace KthuraEdit {
                     TQMG.Color(0, 0, 0);
                 }
                 font16.DrawMax(layname, 2, y, LayW - 4);
-                if (Core.ms.X < LayW && Core.ms.Y > y && Core.ms.Y < y + 16 && Core.MsHit(1)) selectedlayer = layname;
-                if (selectedlayer == "") selectedlayer = layname;
+                if (Core.ms.X < LayW && Core.ms.Y > y && Core.ms.Y < y + 16 && Core.MsHit(1)) { selectedlayer = layname; M_SelectedObject = null; }
+                if (selectedlayer == "") { selectedlayer = layname; M_SelectedObject = null; }
                 y += 18;
             }
         }
@@ -392,9 +393,57 @@ namespace KthuraEdit {
         static List<TBItem> TBItems;
         static public Dictionary<bool, TQMGImage> CheckboxImage { get; private set; }  = new Dictionary<bool, TQMGImage>();
         static public bool InZoneTab => currentTBItem.Name == "Zones";
+        static public bool ModifyShowZone => currentTBItem.Name == "Modify" && ObjectCheckBoxes["Modify"]["ShowZones"].value ;
 
         static bool IkZegAltijdNee(object d = null) => false;
-        static bool ModifyEnable(object d = null) => false; // This will change later, but for now, this must do.
+        static bool ModifyEnable(object d = null) {
+            if (M_SelectedObject == null) return false;
+            var kind = M_SelectedObject.kind;
+            if (kind[0] == '$') kind = "Pivot";
+            if (d.GetType().Equals(typeof(tbfields))) {
+                var f = (tbfields)d;
+                switch (f.Name) {
+                    case "X":
+                    case "Y":
+                    case "Labels":
+                    case "Dominance":
+                    case "Tag":
+                    case "cR":
+                    case "cG":
+                    case "cB":
+                    case "R":
+                    case "G":
+                    case "B":
+                        return true;
+                    case "Width":
+                    case "Height":
+                    case "W":
+                    case "H":
+                        return kind == "TiledArea" || kind == "Zone";
+                    case "InsX":
+                    case "InsY":
+                        return kind == "TiledArea";
+                    case "Alpha":
+                    case "AnimSpeed":
+                    case "Frame":
+                        return kind == "TiledArea" || kind == "Pic" || kind == "Obstacle";
+                    case "RotDeg":
+                    case "ScaleX":
+                    case "ScaleY":
+                        return kind == "Obstacle";
+                    default:
+                        Debug.WriteLine($"Warning! Unkown field name {f.Name} for kind {kind}");
+                        break;
+
+                }
+
+            } else if (d.GetType().Equals(typeof(tbcheckbox))) {
+                return kind != "Exit" && kind != "Pivot";
+            } else {
+                throw new Exception($"Unknown datafield to work with {d.GetType()}");
+            }
+            return false; // Should be unreachable!
+        }
 
         class tbfields {
             readonly TBEnabled GetEnabled;
@@ -405,11 +454,11 @@ namespace KthuraEdit {
             public int w = 0, h = 0;
             readonly public string Name;
             bool _Enabled=true;
-            object EnabledData;
+            //object EnabledData;
             public bool AltijdNee => GetEnabled == IkZegAltijdNee;
             public bool Enabled {
                 get {
-                    if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
+                    if (GetEnabled != null) return GetEnabled(this); else return _Enabled;
                 }
                 set {
                     if (GetEnabled == null) _Enabled = value; else DBG.Log("ERROR! Tried to changed the enabled state of an auto-enabled field");
@@ -434,11 +483,12 @@ namespace KthuraEdit {
         class tbcheckbox {
             readonly TBEnabled GetEnabled;
             bool _Enabled = true;
-            object EnabledData;
+            //object EnabledData;
+            public string Name;
             public bool AltijdNee => GetEnabled == IkZegAltijdNee;
             public bool Enabled {
                 get {
-                    if (GetEnabled != null) return GetEnabled(EnabledData); else return _Enabled;
+                    if (GetEnabled != null) return GetEnabled(this); else return _Enabled;
                 }
                 set {
                     if (GetEnabled == null) _Enabled = value; else DBG.Log("ERROR! Tried to changed the enabled state of an auto-enabled field");
@@ -486,6 +536,20 @@ namespace KthuraEdit {
                                 case "Texture":
                                     TexSelector.ComeToMe();
                                     break;
+                                case "Tag":
+                                    QuestionList.ComeToMe("Enter tag",new string[]{"Tag"},CatchTag);
+                                    break;
+                                case "Labels":
+                                    var mq = 9;
+                                    var q = new string[mq]; for (int i = 0; i < mq; i++) q[i] = $"Label #{i+1}";                                    
+                                    if (currentTBItem.Name=="Modify") {
+                                        var lab = M_SelectedObject.Labels.Split(',');
+                                        for (int i = 0; i < lab.Length; i++) {
+                                            if (i >= mq) q[mq-1] += $",{lab[i]}"; else q[i] += $"={lab[i]}";
+                                        }
+                                        QuestionList.ComeToMe("Labels Editor", q, CatchLabels);
+                                    }
+                                    break;
                                 default:
                                     DBG.Log($"ERROR! I don't know what to do with field {field.Name}");
                                     break;
@@ -511,7 +575,10 @@ namespace KthuraEdit {
                     TQMG.Color(255, 0, 0);
                 else {
                     TQMG.Color(0, 255, 255);
-                    if (Core.MsHit(1) && Core.ms.X >= chkbox.x && Core.ms.X <= chkbox.x + 20 && Core.ms.Y >= chkbox.y && Core.ms.Y <= chkbox.y + 20) chkbox.Toggle();
+                    if (Core.MsHit(1) && Core.ms.X >= chkbox.x && Core.ms.X <= chkbox.x + 20 && Core.ms.Y >= chkbox.y && Core.ms.Y <= chkbox.y + 20) {
+                        chkbox.Toggle();
+                        if (currentTBItem.Name == "Modify") ModifyField(chkbox);
+                    }
                 }
                 CheckboxImage[chkbox.value].Draw(chkbox.x, chkbox.y);
             }
@@ -631,8 +698,13 @@ namespace KthuraEdit {
                         ct["Tag"] = new tbfields("Tag",x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147, ModifyEnable);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168, ModifyEnable);
+                        cb["ShowZones"] = new tbcheckbox(x + 150, y + 400, delegate { return true; });
+                        cb["ShowZones"].value = true;
+                        cb["ShowZones"].Name = "ShowZones";
                     }
-                }
+                    if (cb.ContainsKey("Impassible")) cb["Impassible"].Name = "Impassible";
+                    if (cb.ContainsKey("ForcePassible")) cb["ForcePassible"].Name = "ForcePassible";
+                }                
             }
         }
 
@@ -762,6 +834,123 @@ namespace KthuraEdit {
         }
         #endregion
 
+        #region Modify
+        static KthuraObject _M_SelectedObject = null;
+        static KthuraObject M_SelectedObject        {
+            get => _M_SelectedObject;
+            set {
+                _M_SelectedObject = value;
+                if (value == null) return;
+                var Fields = ObjectParamFields[currentTBItem.Name];
+                var Checkboxes = ObjectCheckBoxes[currentTBItem.Name];
+                Fields["Kind"].value = value.kind;
+                Fields["Texture"].value = value.Texture;
+                Fields["X"].value = value.x.ToString();
+                Fields["Y"].value = value.y.ToString();
+                Fields["InsX"].value = value.insertx.ToString();
+                Fields["InsY"].value = value.inserty.ToString();
+                Fields["Width"].value = value.w.ToString();
+                Fields["Height"].value = value.h.ToString();
+                Fields["Labels"].value = value.Labels;
+                Fields["Dominance"].value = value.Dominance.ToString();
+                Fields["Alpha"].value = value.Alpha1000.ToString();
+                Fields["RotDeg"].value = value.RotationDegrees.ToString();
+                Fields["cR"].value = value.R.ToString();
+                Fields["cG"].value = value.G.ToString();
+                Fields["cB"].value = value.B.ToString();
+                Fields["Tag"].value = value.Tag;
+                Checkboxes["Impassible"].value = value.Impassible;
+                Checkboxes["ForcePassible"].value = value.ForcePassible;
+            }
+
+        }
+
+        static void ModifyField(object f) {
+            var strval = "";
+            var intval = 0;
+            var bolval = false;
+            var fldtype = f.GetType();
+            var fieldname = "";
+            if (fldtype.Equals(typeof(tbfields))) {
+                fieldname = ((tbfields)f).Name;
+                strval = ((tbfields)f).value;
+                intval = qstr.ToInt(strval);
+            } else if (fldtype.Equals(typeof(tbcheckbox))) {
+                fieldname = ((tbcheckbox)f).Name;
+                bolval = ((tbcheckbox)f).value;
+            } else {
+                throw new Exception($"Unknown Modifyfield type {fldtype}");
+            }
+            switch (fieldname) {
+                case "ShowZones":
+                    return;
+                case "Kind":
+                case "Texture":
+                    throw new Exception($"{fieldname} may never be changed! Is your version of Kthura hacked?");
+                case "X":
+                    M_SelectedObject.x = intval; break;
+                case "Y":
+                    M_SelectedObject.y = intval; break;
+                case "InsX":
+                    M_SelectedObject.insertx = intval; break;
+                case "InsY":
+                    M_SelectedObject.inserty = intval; break;
+                case "W": case "Width":
+                    M_SelectedObject.w = intval; break;
+                case "H": case "Height":
+                    M_SelectedObject.h = intval; break;
+                case "Labels":
+                    M_SelectedObject.Labels = strval; break;
+                case "Dominance":
+                    M_SelectedObject.Dominance = intval; break;
+                case "Alpha":
+                    M_SelectedObject.Alpha1000 = intval; break;
+                case "RotDeg":
+                    M_SelectedObject.RotationDegrees = intval; break;
+                case "cR": case "R":
+                    M_SelectedObject.R = intval; break;
+                case "cG": case "G":
+                    M_SelectedObject.G = intval; break;
+                case "cB": case "B":
+                    M_SelectedObject.B = intval; break;
+                case "Tag":
+                    M_SelectedObject.Tag = strval; break;
+                case "Impassible":
+                    M_SelectedObject.Impassible = bolval; break;
+                case "ForcePassible":
+                    M_SelectedObject.ForcePassible = bolval; break;
+                default:
+                    Debug.WriteLine($"WARNING! I do not know field name {fieldname}");
+                    break;
+            }
+        }
+
+        static void CatchTag(object d) {
+            var tag = ((Dictionary<string, string>)d)["Tag"];
+            if (MapLayer.HasTag(tag, true)) {
+                Console.Beep();
+                DBG.Log($"There's already an other object tagged {tag}");
+                return;
+            }
+            ObjectParamFields["Modify"]["Tag"].value = tag;
+            ModifyField(ObjectParamFields["Modify"]["Tag"]);
+        }
+        static void CatchLabels(object d) {
+            var labels = ((Dictionary<string, string>)d);
+            var r = "";
+            foreach(string k in labels.Keys) {
+                var v = labels[k];
+                var s = v.Split(',');
+                foreach(string label in s) {
+                    if (r != "") r += ",";
+                    r += label;
+                }
+            }
+            ObjectParamFields[currentTBItem.Name]["Labels"].value = r;
+            if (currentTBItem.Name=="Modify") ModifyField(ObjectParamFields["Modify"]["Labels"]);
+        }
+        #endregion
+
         #region MapClick
         static void MC_Obstacle(int x,int y) {
             var opm = ObjectParamFields[currentTBItem.Name];
@@ -814,7 +1003,27 @@ namespace KthuraEdit {
             Core.Lua(bs.ToString());
         }
 
-        static void MC_Modify(int x, int y) { }
+        static void MC_Modify(int x, int y) {
+            var ms = new MouseState(Core.ms.X + ScrollX - LayW, Core.ms.Y + ScrollY - PDnH,0,ButtonState.Pressed,ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            M_SelectedObject = null;
+            foreach(KthuraObject obj in MapLayer.ObjectDrawOrder) {
+                var kind = obj.kind; if (kind[0] == '$') kind = "Pivot";
+                switch (kind) {
+                    case "TiledArea": case "Zone":
+                        if (ms.X>=obj.x && ms.Y>obj.y && ms.X<=obj.x+obj.w && ms.Y <= obj.y + obj.h) 
+                            M_SelectedObject = obj;
+                        break;
+                    case "Obstacle":
+                        if (ms.Y<=obj.y && ms.Y>=obj.y-KthuraDraw.DrawDriver.ObjectHeight(obj) && ms.X>=obj.x-(KthuraDraw.DrawDriver.ObjectWidth(obj)/2) && ms.X <= obj.x + (KthuraDraw.DrawDriver.ObjectWidth(obj) / 2)) 
+                            M_SelectedObject = obj;
+                        break;
+                    case "Exit": case "Pivot":
+                        if (ms.X>=obj.x-8 && ms.X<=obj.x+8 && ms.Y>=obj.y-8 && ms.Y <= obj.y + 8) 
+                            M_SelectedObject = obj;
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region Draw Map
@@ -860,12 +1069,40 @@ namespace KthuraEdit {
             TQMG.SetAlpha(255);
         }
 
+        static void DrawModifyObject() {
+            if (currentTBItem.Name != "Modify") return;
+            if (M_SelectedObject == null) return;
+            var d = (DateTime.Now.Millisecond * 36)/100; //Second * 6;
+            var r = d * (Math.PI / 180);
+            var c = (int)(Math.Sin(r) * 255); if (c < 0) c = c * (-1);
+            var cb = (byte)c;
+            var x = M_SelectedObject.x - ScrollX + LayW;
+            var y = M_SelectedObject.y - ScrollY + PDnH;
+            var kind = M_SelectedObject.kind; if (kind[0] == '$') kind = "Pivot";
+            var KD = KthuraDraw.DrawDriver;
+            TQMG.Color(cb, cb, (byte)(((byte)255)-cb));
+            switch (kind) {
+                case "TiledArea":
+                case "Zone":
+                    TQMG.DrawLineRect(x, y, M_SelectedObject.w, M_SelectedObject.h);
+                    break;
+                case "Pivot":
+                case "Exit":
+                    TQMG.DrawLineRect(x - 8, y - 8, 16, 16);
+                    break;
+                case "Obstacle":
+                    TQMG.DrawLineRect(x - (KD.ObjectWidth(M_SelectedObject) / 2), y - KD.ObjectHeight(M_SelectedObject),  KD.ObjectWidth(M_SelectedObject) , KD.ObjectHeight(M_SelectedObject));
+                    break;
+            }
+        }
+
         static public void DrawMap() {
             if (selectedlayer == "") return;
             DrawGrid();
             DrawOrigin();
             KthuraDraw.DrawMap(MapLayer, ScrollX, ScrollY, LayW, PDnH);
             DrawHold();
+            DrawModifyObject();
         }
         #endregion
 
@@ -926,7 +1163,7 @@ namespace KthuraEdit {
             DBG.Log("== TagMap ==");
             MapLayer.RemapTags();
             foreach (string k in MapLayer.Tags)
-                DBG.Log($"{MapLayer.FromTag(k)} {k}");
+                DBG.Log($"{MapLayer.FromTag(k).kind} {k}");
             DBG.Log("Hit Escape to get back to the editor");
             DBG.ComeToMe();
         }
@@ -1029,10 +1266,14 @@ namespace KthuraEdit {
                         Debug.Print($"Ignore nun-number: {ch}");
                     } else {
                         curfield.value += ch;
-                        if (curfield.dtype == "int" && curfield.value.Length > 1 && curfield.value[0] == '0') curfield.value = qstr.Right(curfield.value, curfield.value.Length - 1);
+                        if (curfield.dtype == "int" && curfield.value.Length > 1 && curfield.value[0] == '0') {
+                            curfield.value = qstr.Right(curfield.value, curfield.value.Length - 1);
+                        }
+                        if (currentTBItem.Name == "Modify") ModifyField(curfield);
                     }
                 } else if (key==Keys.Back && curfield.value!="") {
                     curfield.value = qstr.Left(curfield.value, curfield.value.Length - 1);
+                    if (currentTBItem.Name=="Modify") ModifyField(curfield);
                 }
             }
             // Mousedown/up
@@ -1101,6 +1342,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

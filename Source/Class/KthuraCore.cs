@@ -18,8 +18,9 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
+
 // For Debugging in Editor ONLY!
-#define DEBUGLOGCHAT
+#undef DEBUGLOGCHAT
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -678,6 +679,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 

@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.19
+// Version: 19.04.20
 // EndLic
+
 
 
 
@@ -44,16 +45,17 @@ namespace KthuraEdit
     class EditorSpecificDrawFunctions {
 
         static void DrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
-            if (!UI.InZoneTab) return;
-            TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
-            TQMG.SetAlpha(1);
-            TQMG.DrawRectangle(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
-            TQMG.SetAlpha(255);
-            TQMG.Color(0, 0, 0);
-            var t = UI.font16.Text(obj.Tag);
-            for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) t.Draw(x + obj.x + ix - scrollx, y + obj.y + iy - scrolly);
-            TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
-            t.Draw(obj.x + ix - scrollx, obj.y + iy - scrolly);
+            if (UI.ModifyShowZone || UI.InZoneTab) {
+                TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+                TQMG.SetAlpha(1);
+                TQMG.DrawRectangle(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
+                TQMG.SetAlpha(255);
+                TQMG.Color(0, 0, 0);
+                var t = UI.font16.Text(obj.Tag);
+                for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) t.Draw(x + obj.x + ix - scrollx, y + obj.y + iy - scrolly);
+                TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+                t.Draw(obj.x + ix - scrollx, obj.y + iy - scrolly);
+            }
         }
 
         static void DrawPivot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
@@ -78,6 +80,7 @@ namespace KthuraEdit
         }
     }
 }
+
 
 
 
