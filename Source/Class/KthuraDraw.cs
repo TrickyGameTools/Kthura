@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.19
+// version: 19.04.20
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -23,6 +23,7 @@
 
 
 
+
 using System;
 using TrickyUnits;
 
@@ -35,6 +36,9 @@ namespace NSKthura{
         #region The Abstract part every Draw Driver must have!
         abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        abstract public int ObjectWidth(KthuraObject obj);
+        abstract public int ObjectHeight(KthuraObject obj);
+        abstract public bool HasTexture(KthuraObject obj);
         #endregion
 
         #region Some static functions for Kthura's functionality in general
@@ -77,6 +81,7 @@ namespace NSKthura{
         #endregion
     }
 }
+
 
 
 

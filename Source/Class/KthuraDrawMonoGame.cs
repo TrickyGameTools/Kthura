@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDrawMonoGame.cs
 // MonoGame Driver for Kthura for C#
-// version: 19.04.16
+// version: 19.04.20
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 
 
 
@@ -72,6 +73,7 @@ namespace NSKthura {
 
         void Ambtenaar() { }
 
+        #region override
         public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             var tx = GetTex(obj);
             TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
@@ -95,9 +97,47 @@ namespace NSKthura {
                 TQMG.SetAlpha(255);
             }
         }
+
+        public override int ObjectHeight(KthuraObject obj) {
+            TQMGImage tex;
+            switch (obj.kind) {
+                case "Zone":
+                case "TiledArea":
+                    return obj.h;
+                case "Obstacle":
+                case "Pic":
+                    tex = GetTex(obj);
+                    return tex.Height;
+                default:
+                    return 0;
+            }
+        }
+
+        public override int ObjectWidth(KthuraObject obj) {
+            TQMGImage tex;
+            switch (obj.kind) {
+                case "Zone":
+                case "TiledArea":
+                    return obj.w;
+                case "Obstacle":
+                case "Pic":
+                    tex = GetTex(obj);
+                    return tex.Width;
+                default:
+                    return 0;
+            }
+        }
+
+        public override bool HasTexture(KthuraObject obj) {
+            var tag = $"{obj.kind}::{obj.Texture}";
+            return Textures.ContainsKey(tag);
+        }
+
+        #endregion
     }
 
 }
+
 
 
 

@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.19
+// Version: 19.04.20
 // EndLic
+
 
 
 
@@ -937,6 +938,22 @@ namespace KthuraEdit {
             ScrollX = X;
             ScrollY = Y;
         }
+
+        static void ShowBlockMap() {
+            DBG.Log($"Blockmap layer: {selectedlayer};   {MapLayer.BlockMapWidth}x{MapLayer.BlockMapHeight}");
+            for (int y = 0; y <= MapLayer.BlockMapHeight; y++) {
+                var l = new StringBuilder(MapLayer.BlockMapWidth);
+                for (int x = 0; x <= MapLayer.BlockMapWidth; x++) {
+                    if (MapLayer.PureBlock(x, y))
+                        l.Append("X");
+                    else
+                        l.Append("_");
+                }
+                DBG.Log($"{y.ToString("D4")}: {l.ToString()}");
+            }
+            DBG.Log("Hit Escape to get back to the editor");
+            DBG.ComeToMe();
+        }
         #endregion
 
         #region Meta
@@ -1066,6 +1083,7 @@ namespace KthuraEdit {
                 case 2002: GridMode = !GridMode; break;
                 // Debug
                 case 3001: DBG.ComeToMe(); break;
+                case 3002: ShowBlockMap(); break;
                 case 3003: CountObjects(); break;
                 case 3005: TagMap(); break;
                 case 3006:
@@ -1083,6 +1101,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 19.04.19
+// version: 19.04.20
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -18,15 +18,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
-
-
-
-
-
-
-
-
-
+// For Debugging in Editor ONLY!
+#define DEBUGLOGCHAT
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -177,7 +170,14 @@ namespace NSKthura {
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
         public List<KthuraObject> ObjectDrawOrder { get; private set; } = new List<KthuraObject>();
         readonly public Kthura Parent;
-        
+        int BlockMapBoundW = 100;
+        int BlockMapBoundH = 100;
+        bool[,] BlockMap;
+        public int BlockMapWidth => BlockMap.GetLength(0);
+        public int BlockMapHeight => BlockMap.GetLength(1);
+
+
+
         public int GridX = 32, GridY = 32;
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
@@ -252,7 +252,159 @@ namespace NSKthura {
         /// <summary>
         /// Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
         /// </summary>
-        public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */}
+        public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */
+                                      // KthuraObject O;
+            var GW = GridX;
+            var GH = GridY;
+            int X, Y, W, H; //BX, BY,
+            int TX, TY, AX, AY, TW, TH;
+            int BoundX=0, BoundY=0;
+            int iw, tiw, ih, tih;
+            // Let's first get the bounderies
+            foreach (KthuraObject O in Objects) {
+                X = O.x; if (X < 0) X = 0;
+                Y = O.y; if (Y < 0) Y = 0;
+                W = O.w - 1; if (W < 0) W = 0;
+                H = O.h - 1; if (H < 0) H = 0;
+                switch (O.kind) {
+                    case "TiledArea":
+                    case "Zone":
+                        TX = (int)Math.Ceiling((decimal)((X + W) / GW));
+                        TY = (int)Math.Ceiling((decimal)((Y + H) / GH));
+                        if (TX > BoundX) BoundX = TX;
+                        if (TY > BoundY) BoundY = TY;
+                        break;
+                    case "Obstacle":
+                        TX = (int)Math.Floor((decimal)(X / GW));
+                        TY = (int)Math.Floor((decimal)(Y / GH));
+                        if (TX > BoundX) BoundX = TX;
+                        if (TY > BoundY) BoundY = TY;
+                        break;
+                    case "Pic":
+                        TX = (int)Math.Floor((decimal)X / GW);
+                        TY = (int)Math.Floor((decimal)Y / GW);
+                        if (TX > BoundX) BoundX = TX;
+                        if (TY > BoundY) BoundY = TY;
+                        break;
+                }
+            }
+            BlockMapBoundW = BoundX;
+            BlockMapBoundH = BoundY;
+            BlockMap = new bool[BoundX + 1, BoundY + 1];
+            // And now for the REAL work.		
+            foreach (KthuraObject O in Objects) {
+                if (O.Impassible) {
+                    X = O.x; if (X < 0) X = 0;
+                    Y = O.y; if (Y < 0) Y = 0;
+                    W = O.w - 1; if (W < 0) W = 0;
+                    H = O.h - 1; if (H < 0) H = 0;
+                    switch (O.kind) {
+                        case "TiledArea":
+                        case "Zone":
+                            Kthura.EDITTORLOG($"Working on Impassible {O.kind} {O.Tag}");
+                            TX = (int)Math.Floor((decimal)X / GW);
+                            TY = (int)Math.Floor((decimal)Y / GH);
+                            TW = (int)Math.Ceiling((decimal)((X + W) / GW));
+                            TH = (int)Math.Ceiling((decimal)((Y + H) / GH));
+                            //Print "DEBUG: Blockmapping area ("+TX+","+TY+") to ("+TW+","+TH+")"
+                            for (AX = TX; AX <= TW; AX++) {
+                                for (AY = TY; AY <= TH; AY++) {
+                                    //for (AX = TX; AX < TW; AX++) {
+                                    //    for (AY = TY; AY < TH; AY++) {
+                                    try {
+                                        Kthura.EDITTORLOG($"Blocking {AX},{AY}");
+                                        BlockMap[AX, AY] = true;
+                                    } catch {
+                                        throw new Exception($"BlockMap[{AX},{AY}]: Out of bounds ({BlockMap.GetLength(0)}x{BlockMap.GetLength(1)})");
+                                    }
+                                }
+                            }
+                            break;
+                        case "Obstacle":
+                            TX = (int)Math.Floor((decimal)X / GW);
+                            TY = (int)Math.Floor((decimal)(Y - 1) / GH);
+                            BlockMap[TX, TY] = true;
+                            if (KthuraDraw.DrawDriver.HasTexture(O))
+                                iw = KthuraDraw.DrawDriver.ObjectWidth(O);
+                            else
+                                iw = 0;
+                            tiw = (int)Math.Ceiling((decimal)iw / GW) - 1;
+
+                            for (AX = TX - (tiw); AX <= TX + (tiw); AX++) {
+                                if (AX >= 0 && AX <= BoundX && TY <= BoundY && TY >= 0) BlockMap[AX, TY] = true;
+                            }
+                            break;
+                        case "Pic":
+                            TX = (int)Math.Floor((decimal)X / GW);
+                            TY = (int)Math.Floor((decimal)Y / GH);
+                            BlockMap[TX, TY] = true;
+                            if (KthuraDraw.DrawDriver.HasTexture(O)) {
+                                iw = KthuraDraw.DrawDriver.ObjectWidth(O); //ImageWidth(o.textureimage)
+                                tiw =(int)Math.Ceiling((decimal)iw / GW);
+                                ih = KthuraDraw.DrawDriver.ObjectHeight(O); //ImageHeight(o.textureimage)
+                                tih = (int)Math.Ceiling((decimal)ih / GH);
+                                for (AX = TX; AX < TX + (tiw); AX++) for (AY = TY; AY < TY + tih; AY++) {
+                                        if (AX >= 0 && AX <= BoundX && AY <= BoundY && AY >= 0) BlockMap[AX, AY] = true;
+                                    }
+                            }
+                            break;
+                    }
+                }
+            }
+            // And this will force a way open if applicable	
+            foreach (KthuraObject O in Objects) {
+                if (O.ForcePassible) {
+                    X = O.x; if (X < 0) X = 0;
+                    Y = O.y; if (Y < 0) Y = 0;
+                    W = O.w - 1; if (W < 0) W = 0;
+                    H = O.h - 1; if (H < 0) H = 0;
+                    switch (O.kind) {
+                        case "TiledArea": case "Zone":
+                            TX = (int)Math.Floor((decimal)X / GW);
+                            TY = (int)Math.Floor((decimal)Y / GH);
+                            TW = (int)Math.Ceiling((decimal)(X + W) / GW);
+                            TH = (int)Math.Ceiling((decimal)(Y + H) / GH);
+                            //Print "DEBUG: Blockmapping area ("+TX+","+TY+") to ("+TW+","+TH+")"
+                            for (AX = TX; AX <= TW; AX++) {
+                                for (AY = TY; AY <= TH; AY++) {
+                                    BlockMap[AX, AY] = false;
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+
+
+        public bool Block(int X,int Y) {
+            //Kthura.EDITTORLOG($"Block({X},{Y})");
+            int GW = GridX;
+            int GH = GridY;
+            int TX = (int)Math.Floor((decimal)X / GW);
+            int TY = (int)Math.Floor((decimal)Y / GH);
+            int BX = BlockMapBoundW;
+            int BY = BlockMapBoundH;
+            if (TX < 0) return true;
+            if (TY < 0) return true;
+            if (TX > BX) return true;
+            if (TY > BY) return true;
+            //Kthura.EDITTORLOG($"Not stuck in boundaries, so let's return {BlockMap[TX,TY]}");
+            return BlockMap[TX, TY];
+        }
+
+        public bool PureBlock(int x,int y) {
+            int BX = BlockMapBoundW;
+            int BY = BlockMapBoundH;
+            if (x < 0) return true;
+            if (y < 0) return true;
+            if (x > BX) return true;
+            if (y > BY) return true;
+            //Kthura.EDITTORLOG($"Not stuck in boundaries, so let's return {BlockMap[TX,TY]}");
+            return BlockMap[x, y];
+        }
+
 
         public void TotalRemap() {
             RemapDominance();
@@ -276,9 +428,14 @@ namespace NSKthura {
         /// This delegate function can put messages on the debug console of Visual Studio. Kthura can use it to find errors in its own system or in your maps. If you want another way to make Kthura do that, hey write your own function and put it in this delegate.
         /// </summary>
         static public KthuraLog Log = delegate (string m) { Debug.Print(m); };
-        #endregion
+        static internal void EDITTORLOG(string m) {
+#if DEBUGLOGCHAT
+            KthuraEdit.Stages.DBG.Log(m);
+#endif
+        }
+#endregion
 
-        #region Data specific to the map!
+#region Data specific to the map!
         /// <summary>
         /// When set to true, values requiring remapping (such as Tags, Lables, Dominance, BlockMapValues and (believe it or not) the y coordinate) will immediately cause that to happen.
         /// Please note that that if you have a lot of modifications to do, this will take away performance, so then you can best turn it off, do your modifications and remap everything later.
@@ -288,9 +445,9 @@ namespace NSKthura {
         public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
         public SortedDictionary<string, string> MetaData = new SortedDictionary<string, string>();
 
-        #endregion
+#endregion
 
-        #region Control Methods
+#region Control Methods
         public void CreateLayer(string name) {
             if (Layers.ContainsKey(name)) {
                 Debug.Print($"Kthura map already has a layer named {name}. Please pick a different name!");
@@ -298,9 +455,9 @@ namespace NSKthura {
             }
             Layers[name] = new KthuraLayer(this);
         }
-        #endregion
+#endregion
 
-        #region New Map constructors
+#region New Map constructors
         private Kthura() { } // I won't allow "New". A bit dangerous. So some static functions act as "constructors".
         public static Kthura Create() => Create(DefaultTextureJCR);
         public static Kthura Create(TJCRDIR TexJCR) {
@@ -512,15 +669,16 @@ namespace NSKthura {
 
         }
 
-        #endregion
+#endregion
 
-        #region Core functions as statics (since C# requires classes even when you don't need them).
+#region Core functions as statics (since C# requires classes even when you don't need them).
         static TJCRDIR DefaultTextureJCR = null;
         static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;        
-        #endregion
+#endregion
     }
 
 }
+
 
 
 
