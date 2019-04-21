@@ -24,6 +24,7 @@
 // Version: 19.04.21
 // EndLic
 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -279,6 +280,9 @@ namespace KthuraEdit {
                 DBG.Log($"Creating dir: {TexMemorySettingsDir}");
                 Directory.CreateDirectory(TexMemorySettingsDir);
             }
+            TexMemory.D("CAMX", ScrollX.ToString());
+            TexMemory.D("CAMY", ScrollY.ToString());
+            TexMemory.D("LAYR", selectedlayer);
             DBG.Log($"Saving: {TexMemorySettingsFile}");
             TexMemory.SaveSource(TexMemorySettingsFile);
         }
@@ -382,8 +386,8 @@ namespace KthuraEdit {
         static TBItem currentTBItem;
         static List<TBItem> TBItems;
         static public Dictionary<bool, TQMGImage> CheckboxImage { get; private set; }  = new Dictionary<bool, TQMGImage>();
-        static public bool InZoneTab => currentTBItem.Name == "Zones";
-        static public bool ModifyShowZone => currentTBItem.Name == "Modify" && ObjectCheckBoxes["Modify"]["ShowZones"].value ;
+        static public bool InZoneTab => currentTBItem != null && currentTBItem.Name == "Zones";
+        static public bool ModifyShowZone => currentTBItem!=null && currentTBItem.Name == "Modify" && ObjectCheckBoxes["Modify"]["ShowZones"].value ;
 
         static bool IkZegAltijdNee(object d = null) => false;
         static bool ModifyEnable(object d = null) {
@@ -1063,6 +1067,7 @@ namespace KthuraEdit {
         }
 
         static void DrawHold() {
+            if (currentTBItem == null) return;
             if (!currentTBItem.area) return;
             if (!HoldArea) return;
             var s = DateTime.Now.Second;
@@ -1077,6 +1082,7 @@ namespace KthuraEdit {
         }
 
         static void DrawModifyObject() {
+            if (currentTBItem == null) return;
             if (currentTBItem.Name != "Modify") return;
             if (M_SelectedObject == null) return;
             var d = (DateTime.Now.Millisecond * 36)/100; //Second * 6;
@@ -1119,6 +1125,9 @@ namespace KthuraEdit {
             if (File.Exists(TexMemorySettingsFile)) {
                 DBG.Log($"Loading TexMemory file: {TexMemorySettingsFile}");
                 TexMemory = GINI.ReadFromFile(TexMemorySettingsFile);
+                ScrollX = qstr.ToInt(TexMemory.C("CAMX"));
+                ScrollY = qstr.ToInt(TexMemory.C("CAMY"));
+                selectedlayer = TexMemory.C("LAYR");
             } else {
                 DBG.Log($"Creating TexMemory GINI base since {TexMemorySettingsFile} does not yet exist");
                 TexMemory = new TGINI();
@@ -1386,6 +1395,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

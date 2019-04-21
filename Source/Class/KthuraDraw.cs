@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.20
+// version: 19.04.21
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 using System;
 using TrickyUnits;
 
@@ -75,6 +76,7 @@ namespace NSKthura{
         #endregion
     }
 }
+
 
 
 
