@@ -119,7 +119,9 @@ namespace KthuraEdit {
                 new PullDownItem("Count Objects", 3003, Keys.T),
                 new PullDownItem("Scan and remove \"Rotten\" objects", 3004, Keys.F2),
                 new PullDownItem("List Object Tags", 3005, Keys.Z),
-                new PullDownItem("Go To Screen Postion", 3006, Keys.F3)
+                new PullDownItem("Go To Screen Postion", 3006, Keys.F3),
+                new PullDownItem("Fix UnderOrigin",3007,Keys.U),
+                new PullDownItem("Close to Origin",3008,Keys.Insert)
                 ));
 
             return ret;
