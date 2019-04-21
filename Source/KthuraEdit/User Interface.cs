@@ -235,7 +235,8 @@ namespace KthuraEdit {
         static void SealTexMemory() {
             var opf = ObjectParamFields[currentTBItem.Name];
             var opc = ObjectCheckBoxes[currentTBItem.Name];
-            var Tex = opf["Texture"];
+            var Tex = opf["Texture"].value;
+            Debug.WriteLine("Sealing TexMemory");
             TexMemory.D($"TEX[{Tex}].TAB", currentTBItem.Name);
             foreach(string key in opf.Keys) {
                 var opfo = opf[key];
