@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.19
+// Version: 19.04.21
 // EndLic
+
 
 
 
@@ -116,7 +117,7 @@ namespace KthuraEdit.Stages
             if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Escape)) MainEdit.ComeToMe();
             if (curfield!="") {
                 var ch = TQMGKey.GetChar();
-                if (ch >= 32 && ch < 127 && UI.font20.TextWidth(QA[curfield]) < 340) QA[curfield] += ch;
+                if (ch >= 32 && ch < 127 && UI.font20.TextWidth(QA[curfield]) < UI.ScrWidth-360) QA[curfield] += ch;
                 if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Back) && QA[curfield] != "") QA[curfield] = qstr.Left(QA[curfield], QA[curfield].Length - 1);
                 if (TQMGKey.Hit(Microsoft.Xna.Framework.Input.Keys.Tab)) {
                     var gotofield = "";
@@ -139,6 +140,7 @@ namespace KthuraEdit.Stages
 
     }
 }
+
 
 
 
