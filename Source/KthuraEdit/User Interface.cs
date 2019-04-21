@@ -24,20 +24,6 @@
 // Version: 19.04.21
 // EndLic
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -627,7 +613,8 @@ namespace KthuraEdit {
                 new tblabels(x,y+231,"Anim Speed:"),
                 new tblabels(x,y+252,"Frame:"),
                 new tblabels(x,y+273,"Scale:"),
-                new tblabels(x,y+294,"Tag:")
+                new tblabels(x,y+294,"Visible:"),
+                new tblabels(x,y+315,"Tag:")
             });
             foreach(TBItem i in TBItems) {
                 if (i.Name != "Other") {
@@ -676,7 +663,12 @@ namespace KthuraEdit {
                             ct["ScaleX"] = new tbfields("SX",x + 150, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                             ct["ScaleY"] = new tbfields("SY",x + 230, y + 273, 70, 20, "int", "1000", IkZegAltijdNee);
                         }
-                        ct["Tag"] = new tbfields("Tag",x + 150, y + 294, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
+                        ct["Tag"] = new tbfields("Tag",x + 150, y + 315, 150, 20, "string", "Tag => modify",IkZegAltijdNee);
+                        if (i.Name != "Zones" && i.Name != "Other")
+                            cb["Visible"] = new tbcheckbox(x + 150, y + 294);
+                        else 
+                            cb["Visible"] = new tbcheckbox(x + 150, y + 294, IkZegAltijdNee);
+                        cb["Visible"].value = true;                        
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168);
                     } else {
@@ -699,12 +691,14 @@ namespace KthuraEdit {
                         ct["Frame"] = new tbfields("Frame",x + 150, y + 252, 150, 20, "int", "0", ModifyEnable);
                         ct["ScaleX"] = new tbfields("ScaleX",x + 150, y + 273, 70, 20, "int", "1000", ModifyEnable);
                         ct["ScaleY"] = new tbfields("ScaleY",x + 230, y + 273, 70, 20, "int", "1000", ModifyEnable);
-                        ct["Tag"] = new tbfields("Tag",x + 150, y + 294, 150, 20, "string", "", ModifyEnable);
+                        ct["Tag"] = new tbfields("Tag",x + 150, y + 315, 150, 20, "string", "", ModifyEnable);
                         cb["Impassible"] = new tbcheckbox(x + 150, y + 147, ModifyEnable);
                         cb["ForcePassible"] = new tbcheckbox(x + 150, y + 168, ModifyEnable);
                         cb["ShowZones"] = new tbcheckbox(x + 150, y + 400, delegate { return true; });
                         cb["ShowZones"].value = true;
                         cb["ShowZones"].Name = "ShowZones";
+                        cb["Visible"] = new tbcheckbox(x + 150, y + 294,ModifyEnable);
+                        cb["Visible"].Name = "Visible";
                     }
                     if (cb.ContainsKey("Impassible")) cb["Impassible"].Name = "Impassible";
                     if (cb.ContainsKey("ForcePassible")) cb["ForcePassible"].Name = "ForcePassible";
@@ -797,8 +791,10 @@ namespace KthuraEdit {
                 AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value),
                 AnimFrame = qstr.ToInt(opm["Frame"].value),
                 Impassible = opc["Impassible"].value,
-                ForcePassible = opc["ForcePassible"].value
+                ForcePassible = opc["ForcePassible"].value,
+                Visible = opc["Visible"].value
             };
+            if (!Area.Visible) Console.Beep();
             // insert modulos
             if (opc["AutoIns"].value) {
                 int w = 0;
@@ -865,6 +861,7 @@ namespace KthuraEdit {
                 Fields["Tag"].value = value.Tag;
                 Checkboxes["Impassible"].value = value.Impassible;
                 Checkboxes["ForcePassible"].value = value.ForcePassible;
+                Checkboxes["Visible"].value = value.Visible;
             }
 
         }
@@ -923,6 +920,10 @@ namespace KthuraEdit {
                     M_SelectedObject.Impassible = bolval; break;
                 case "ForcePassible":
                     M_SelectedObject.ForcePassible = bolval; break;
+                case "Visible":
+                    M_SelectedObject.Visible = bolval;
+                    if (!bolval) Console.Beep();
+                    break;
                 default:
                     Debug.WriteLine($"WARNING! I do not know field name {fieldname}");
                     break;
@@ -976,8 +977,10 @@ namespace KthuraEdit {
                 ForcePassible = opc["ForcePassible"].value,
                 ScaleX = qstr.ToInt(opm["ScaleX"].value),
                 ScaleY = qstr.ToInt(opm["ScaleY"].value),
+                Visible = opc["Visible"].value,
                 RotationDegrees = qstr.ToInt(opm["RotDeg"].value) // Will automatically assign the "radian" value too.
             };
+            if (!obs.Visible) Console.Beep();
             DBG.Log($"Created Obstacle at ({obs.x},{obs.y})");
         }
         static void MC_CSpot(int x,int y) {

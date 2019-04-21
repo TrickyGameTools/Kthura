@@ -87,6 +87,7 @@ namespace KthuraEdit
             Core.InitLua();
             EditorSpecificDrawFunctions.init();
             NSKthura.KthuraDrawMonoGame.UseMe();
+            NSKthura.KthuraDraw.IgnoreVisibility = true;
 
         }
 

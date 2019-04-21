@@ -17,13 +17,6 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
-
-
-
-
-
-
-
 using System;
 using TrickyUnits;
 
@@ -47,12 +40,13 @@ namespace NSKthura{
         static public DelDrawPoint DrawPivot = null; // Only needed in editors
         static public DelDrawPoint DrawExit = null;
         static public DelDrawPoint DrawCSpot = null;
+        static public bool IgnoreVisibility = false; // If set to true, invisible objects will still be shown.
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
         static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) {
             if (layer.ObjectDrawOrder == null) layer.RemapDominance();
             foreach(KthuraObject obj in layer.ObjectDrawOrder) {
-                if (obj.Visible) {
+                if (obj.Visible || IgnoreVisibility) {
                     if (true) { // This looks useless now, but this routine will be used later in optimalisation to see if an object is actually on screen, and if not, ignore it.
                         switch (obj.kind) {
                             case "TiledArea":
