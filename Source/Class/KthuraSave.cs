@@ -53,7 +53,7 @@ namespace NSKthura {
                 foreach (KthuraObject obj in layer.Objects) {
                     var vis = 0;
                     if (obj.Visible) vis = 1;
-                    ret.Append($"\tNEW\n\t\tKIND = {obj.kind}\n\t\tCOORD = {obj.x},{obj.y}\n\t\tINSERT = {obj.insertx * (-1)},{obj.inserty * (-1)}\n\t\tROTATION = {obj.RotationDegrees}\n\t\tSIZE = {obj.w}x{obj.h}\n\t\tTAG = {obj.Tag}\n\t\tLABELS = {obj.Labels}\n\t\tDOMINANCE = {obj.Dominance}\n\t\tTEXTURE = {obj.Texture}\n\t\tCURRENTFRAME = {obj.AnimFrame}\n\t\tFRAMESPEED = {obj.AnimSpeed}\n\t\tALPHA = {obj.Alpha1000 / 1000}\n\t\tVISIBLE = {vis}\n\t\tCOLOR = {obj.R}, {obj.G},{obj.B}\n\t\tIMPASSIBLE = {bl2bt[obj.Impassible]}\n\t\tFORCEPASSIBLE = {bl2bt[obj.ForcePassible]}\n\t\tSCALE = {obj.ScaleX},{obj.ScaleY}\n\t\tBLEND = 0\n");
+                    ret.Append($"\tNEW\n\t\tKIND = {obj.kind}\n\t\tCOORD = {obj.x},{obj.y}\n\t\tINSERT = {obj.insertx * (-1)},{obj.inserty * (-1)}\n\t\tROTATION = {obj.RotationDegrees}\n\t\tSIZE = {obj.w}x{obj.h}\n\t\tTAG = {obj.Tag}\n\t\tLABELS = {obj.Labels}\n\t\tDOMINANCE = {obj.Dominance}\n\t\tTEXTURE = {obj.Texture}\n\t\tCURRENTFRAME = {obj.AnimFrame}\n\t\tFRAMESPEED = {obj.AnimSpeed}\n\t\tALPHA = {(float)obj.Alpha1000 / 1000}\n\t\tVISIBLE = {vis}\n\t\tCOLOR = {obj.R}, {obj.G},{obj.B}\n\t\tIMPASSIBLE = {bl2bt[obj.Impassible]}\n\t\tFORCEPASSIBLE = {bl2bt[obj.ForcePassible]}\n\t\tSCALE = {obj.ScaleX},{obj.ScaleY}\n\t\tBLEND = 0\n");
                     foreach (string k in obj.MetaData.Keys) ret.Append($"\t\t\tDATA.{k} = {obj.MetaData[k]}\n");
                 }
             }

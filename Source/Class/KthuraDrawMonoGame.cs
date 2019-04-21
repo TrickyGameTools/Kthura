@@ -77,7 +77,8 @@ namespace NSKthura {
         public override void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             var tx = GetTex(obj);
             TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
-            TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+            //TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+            TQMG.SetAlpha((byte)obj.Alpha255);
             if (tx != null) TQMG.Tile(tx, obj.insertx, obj.inserty, obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
             TQMG.SetAlpha(255);
         }
@@ -87,7 +88,8 @@ namespace NSKthura {
             if (tx != null) {
                 
                 TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
-                TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+                //TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+                TQMG.SetAlpha((byte)obj.Alpha255);
                 //TQMG.RotateRAD((float)obj.RotationRadians);
                 TQMG.RotateDEG(obj.RotationDegrees);
                 TQMG.Scale(obj.ScaleX, obj.ScaleY);

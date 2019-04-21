@@ -117,18 +117,35 @@ namespace NSKthura {
 
         #region recalc values
 
-        public int Alpha255=255;
+        int _alpha1000 = 0;
+        int _alpha255 = 0;
+        public int Alpha255 {
+            get => _alpha255;
+            set {
+                _alpha255 = value;
+                if (_alpha255 < 0) _alpha255 = 0;
+                if (_alpha255 > 255) _alpha255 = 255;
+                _alpha1000 = (int)((float)(((float)value / (float)255) * (float)1000));
+                if (_alpha1000 < 0) _alpha1000 = 0;
+                if (_alpha1000 > 1000) _alpha1000 = 1000;
+                Debug.WriteLine($"Alpha255 set. 1000={Alpha1000}; 255={Alpha255};");
+            }
+        }        
         public int Alpha1000 {
             // Due to BlitzMax settings I had to use a 1=max scale, as I needed Kthura not to suffer from rouding errors, the 1000 scale has been set up.
             // Now MonoGame uses the (actual) 0-255 scale, but as Kthura maps do not cover that properly, this measure was taken.
-            get {
+            get => _alpha1000; /*{
                 float A = Alpha255;
-                return (int)((A / 255) * 1000);
-            }
+                return (int)(((float)A / 255) * 1000);
+            }*/
             set {
-                Alpha255 = (int)((value / 1000) * 255);
-                if (Alpha255 < 0) Alpha255 = 0;
-                if (Alpha255 > 255) Alpha255 = 0;
+                _alpha1000 = value;
+                if (_alpha1000 < 0) _alpha1000 = 0;
+                if (_alpha1000 > 1000) _alpha1000 = 1000;
+                _alpha255 = (int)((float)(((float)value / 1000) * 255));
+                if (_alpha255 < 0) _alpha255 = 0;
+                if (_alpha255 > 255) _alpha255 = 255;
+                Debug.WriteLine($"Alpha1000 set. 1000={Alpha1000}; 255={Alpha255};");
             }
         }
 
