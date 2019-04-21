@@ -1195,6 +1195,41 @@ namespace KthuraEdit {
             DBG.Log("Hit Escape to get back to the editor");
             DBG.ComeToMe();
         }
+
+        static void UnOrigin()        {
+            DBG.Log("UnOrigin Request done!");
+            int mx = 0, my = 0;
+            foreach (KthuraObject o in MapLayer.Objects) {
+                if (mx > o.x) mx = o.x;
+                if (my > o.y) my = o.y;
+            }
+            if (mx == 0 && my == 0) { DBG.Log("Nothing underorigin, so let's get outta here!"); return; }
+            DBG.Log($"UnderOrigin Objects found. {Math.Abs(mx)} x-dist UnderOrigin, and {Math.Abs(my)} y=dist UnderOrigin. Let's fix that!");
+            foreach (KthuraObject o in MapLayer.Objects) {
+                o.x -= mx;
+                o.y -= my;
+                // Please note, since mx and my always contain a negative number, you get --, which will always generate a + in mathematics.
+            }
+        }
+
+        static void OptimizeToOrigin() {
+            UnOrigin();
+            DBG.Log("OptimizeOrigin Request done!");
+            int mx = -1, my = -1;
+            foreach (KthuraObject o in MapLayer.Objects) {
+                if (mx > o.x || mx<0) mx = o.x;
+                if (my > o.y || my<0) my = o.y;
+            }
+            if (mx < 0) mx = 0;
+            if (my < 0) my = 0;
+            if (mx == 0 && my == 0) { DBG.Log("Nothing wrong, so let's get outta here!"); return; }
+            DBG.Log($"Origin WhiteSpace found. {Math.Abs(mx)} x-dist from Origin, and {Math.Abs(my)} y=dist from Origin. Let's fix that!");
+            foreach (KthuraObject o in MapLayer.Objects) {
+                o.x -= mx;
+                o.y -= my;
+            }
+
+        }
         #endregion
 
         #region Meta
@@ -1275,15 +1310,15 @@ namespace KthuraEdit {
                         }
                         if (currentTBItem.Name == "Modify") ModifyField(curfield);
                     }
-                } else if (key==Keys.Back && curfield.value!="") {
+                } else if (key == Keys.Back && curfield.value != "") {
                     curfield.value = qstr.Left(curfield.value, curfield.value.Length - 1);
-                    if (currentTBItem.Name=="Modify") ModifyField(curfield);
+                    if (currentTBItem.Name == "Modify") ModifyField(curfield);
                 }
             }
             // Mousedown/up
             if (Core.ms.X < LayW || Core.ms.X > ToolX || Core.ms.Y < PDnH || Core.ms.Y > ScrHeight - 25)
                 HoldArea = false;
-            else if (currentTBItem!=null) {
+            else if (currentTBItem != null) {
                 //Debug.Print($"{currentTBItem.Name}: a-area{currentTBItem.area}; MouseDown{Core.MsDown(1)}");
                 if (currentTBItem.mapclick && Core.MsHit(1)) {
                     currentTBItem.MC(PosX, PosY);
@@ -1334,6 +1369,8 @@ namespace KthuraEdit {
                 case 3006:
                     QuestionList.ComeToMe("Please enter the new cam position:", new string[] { "X", "Y" }, GoToPos);
                     break;
+                case 3007: UnOrigin(); break;
+                case 3008: OptimizeToOrigin(); break;
                 // Layers
                 case 4001: LayerName.ComeToMe(); break;
                 case 4002: Yes.ComeToMe($"Do you really want to remove layer \"{selectedlayer}\"?", DeleteLayer, selectedlayer); break;
