@@ -109,7 +109,7 @@ namespace KthuraEdit
             ms = Mouse.GetState();
             joy = Joystick.GetState(0);
             TQMGKey.Start(kb);
-            DontMouse = DontMouse && ms.LeftButton == ButtonState.Released && ms.RightButton == ButtonState.Released;
+            DontMouse = DontMouse && (ms.LeftButton == ButtonState.Pressed || ms.RightButton == ButtonState.Pressed);
         }
         static public bool DontMouse = false;
         static public void ShowMouse() { TQMG.Color(255, 255, 255); MousePointer.Draw(ms.X, ms.Y); }
@@ -127,6 +127,7 @@ namespace KthuraEdit
 
         static public bool MsDown(byte b, bool PDOkay=false) {
             if (!PDOkay && UI.PDOpen) return false;
+            if (DontMouse) return false; // Force things a bit here....
             switch (b) {
                 case 1:
                     return (!DontMouse) && ms.LeftButton == ButtonState.Pressed;
