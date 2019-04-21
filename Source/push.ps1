@@ -1,5 +1,5 @@
 # GitHub
-git push orin master 
+git push origin master 
 # BitBucket
 git push emmer master
 
