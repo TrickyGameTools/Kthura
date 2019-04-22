@@ -544,6 +544,28 @@ namespace KthuraEdit {
                                         QuestionList.ComeToMe("Labels Editor", q, CatchLabels);
                                     }
                                     break;
+                                case "NewData":
+                                    QuestionList.ComeToMe("Please add a new data field", new string[] { "FieldName", "Value" }, delegate (object o) {
+                                        var data = (Dictionary<string, string>)o;
+                                        if (data["FieldName"].IndexOf('=')>=0) { DBG.Log("ERROR! Illegal character in field name!"); Console.Beep(3700, 1500); return; }
+                                        if (M_SelectedObject.MetaData.ContainsKey(data["FieldName"])) { DBG.Log("ERROR! That field already exists/"); Console.Beep(3700, 1500); return; }
+                                        M_SelectedObject.MetaData[data["FieldName"]] = data["Value"];
+                                    });
+                                    break;
+                                case "ModData": {
+                                        var fl = new List<string>();
+                                        foreach(string k in M_SelectedObject.MetaData.Keys) {
+                                            fl.Add($"{k}={M_SelectedObject.MetaData[k]}");
+                                        }
+                                        fl.Sort();
+                                        QuestionList.ComeToMe("Please modify the data and hit Escape with done", fl.ToArray(), delegate (object o) {
+                                            var data = (Dictionary<string, string>)o;
+                                            foreach(string k in data.Keys) {
+                                                M_SelectedObject.MetaData[k] = data[k];
+                                            }
+                                        });
+                                    }
+                                    break;
                                 default:
                                     DBG.Log($"ERROR! I don't know what to do with field {field.Name}");
                                     break;
@@ -578,6 +600,7 @@ namespace KthuraEdit {
             }
         }
         static bool EnableIns(object o = null) => !ObjectCheckBoxes["TiledArea"]["AutoIns"].value;
+        static bool EnHaveObj(object o = null) => M_SelectedObject != null;
 
         static void InitToolBox() {
             DBG.Log("- Setting up toolbox");
@@ -703,6 +726,8 @@ namespace KthuraEdit {
                         cb["ShowZones"].Name = "ShowZones";
                         cb["Visible"] = new tbcheckbox(x + 150, y + 294,ModifyEnable);
                         cb["Visible"].Name = "Visible";
+                        ct["NewData"] = new tbfields("NewData", x, ScrHeight - 100, 200, 20, "string", "New Data Field", EnHaveObj);
+                        ct["ModData"] = new tbfields("ModData", x, ScrHeight - 75, 200, 20, "string", "Modify Data", delegate { return M_SelectedObject != null && M_SelectedObject.MetaData.Count > 0; });
                     }
                     if (cb.ContainsKey("Impassible")) cb["Impassible"].Name = "Impassible";
                     if (cb.ContainsKey("ForcePassible")) cb["ForcePassible"].Name = "ForcePassible";

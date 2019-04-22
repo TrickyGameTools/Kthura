@@ -645,6 +645,10 @@ namespace NSKthura {
                                 if (qstr.ToInt(value) != 0) Debug.Print("Alternate Blends are only supported in the BlitzMax version of Kthura!");
                                 break;
                             default:
+                                if (qstr.Prefixed(key, "DATA.")) {
+                                    var _Key = key.Substring(5).Trim();
+                                    obj.MetaData[_Key] = value.Trim();
+                                }
                                 Debug.Print($"Unknown object key {key}");
                                 break;
                         }
