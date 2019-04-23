@@ -31,9 +31,9 @@ using TrickyUnits;
 
 
 
-namespace NSKthura { 
+namespace NSKthura {
 
-    class KthuraObject {        
+    class KthuraObject {
         int cnt = 0;
         readonly public Dictionary<string, string> MetaData = new Dictionary<string, string>();
         public string kind { get; internal set; }
@@ -41,20 +41,21 @@ namespace NSKthura {
         public string Texture = "";
         int _x = 0, _y = 0;
         public bool Visible = true;
-        public int w=0, h=0;
+        public int w = 0, h = 0;
         public int insertx = 0, inserty = 0;
-        public int R=255, G=255, B=255;
-        public int ScaleX=1000, ScaleY=1000;
+        public int R = 255, G = 255, B = 255;
+        public int ScaleX = 1000, ScaleY = 1000;
         public int AnimSpeed = 0;
         public int AnimFrame = 0;
-        int _Dominance = 20;        
+        int _Dominance = 20;
         public float TrueScaleX => (float)ScaleX / 1000;
         public float TrueScaleY => (float)ScaleY / 1000;
         string _Labels = "";
         string _Tag = "";
         bool _impassible = false;
         bool _forcepassible = false;
-        public string Tag { get => _Tag; set {
+        public string Tag {
+            get => _Tag; set {
                 _Tag = value;
                 if (Kthura.automap) Parent.RemapTags();
             }
@@ -131,7 +132,7 @@ namespace NSKthura {
                 if (_alpha1000 > 1000) _alpha1000 = 1000;
                 Debug.WriteLine($"Alpha255 set. 1000={Alpha1000}; 255={Alpha255};");
             }
-        }        
+        }
         public int Alpha1000 {
             // Due to BlitzMax settings I had to use a 1=max scale, as I needed Kthura not to suffer from rouding errors, the 1000 scale has been set up.
             // Now MonoGame uses the (actual) 0-255 scale, but as Kthura maps do not cover that properly, this measure was taken.
@@ -183,7 +184,7 @@ namespace NSKthura {
 
 
     class KthuraLayer {
-        internal int cnt = 0; 
+        internal int cnt = 0;
         internal List<KthuraObject> Objects = new List<KthuraObject>(); // Really this is basically the true core of Kthura!
         Dictionary<string, KthuraObject> TagMap = new Dictionary<string, KthuraObject>();
         Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
@@ -201,13 +202,13 @@ namespace NSKthura {
         public KthuraLayer(Kthura hufter) {
             Parent = hufter ?? throw new Exception("What the....... do you think you're doing???");
         }
-        public bool HasTag(string Tag,bool AlwaysRemapFirst = false) {
+        public bool HasTag(string Tag, bool AlwaysRemapFirst = false) {
             if (AlwaysRemapFirst) RemapTags();
             return TagMap.ContainsKey(Tag);
         }
 
         #region Tagfunctions
-        public KthuraObject FromTag(string tag)        {
+        public KthuraObject FromTag(string tag) {
             if (!TagMap.ContainsKey(tag)) return null;
             return TagMap[tag];
         }
@@ -222,11 +223,11 @@ namespace NSKthura {
         /// </summary>
         public void RemapTags() {
             TagMap.Clear();
-            foreach(KthuraObject o in Objects) {
+            foreach (KthuraObject o in Objects) {
                 if (o.Tag != "") {
                     var ok = true;
                     if (o.Tag != o.Tag.Trim()) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": invalid tag!"); }
-                    if (TagMap.ContainsKey(o.Tag) && o!=TagMap[o.Tag]) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": duplicate tag!"); }
+                    if (TagMap.ContainsKey(o.Tag) && o != TagMap[o.Tag]) { ok = false; Kthura.Log($"RemapTags: \"{o.Tag}\": duplicate tag!"); }
                     if (ok) TagMap[o.Tag] = o;
                 }
             }
@@ -277,7 +278,7 @@ namespace NSKthura {
             var GH = GridY;
             int X, Y, W, H; //BX, BY,
             int TX, TY, AX, AY, TW, TH;
-            int BoundX=0, BoundY=0;
+            int BoundX = 0, BoundY = 0;
             int iw, tiw, ih, tih;
             // Let's first get the bounderies
             foreach (KthuraObject O in Objects) {
@@ -359,7 +360,7 @@ namespace NSKthura {
                             BlockMap[TX, TY] = true;
                             if (KthuraDraw.DrawDriver.HasTexture(O)) {
                                 iw = KthuraDraw.DrawDriver.ObjectWidth(O); //ImageWidth(o.textureimage)
-                                tiw =(int)Math.Ceiling((decimal)iw / GW);
+                                tiw = (int)Math.Ceiling((decimal)iw / GW);
                                 ih = KthuraDraw.DrawDriver.ObjectHeight(O); //ImageHeight(o.textureimage)
                                 tih = (int)Math.Ceiling((decimal)ih / GH);
                                 for (AX = TX; AX < TX + (tiw); AX++) for (AY = TY; AY < TY + tih; AY++) {
@@ -378,7 +379,8 @@ namespace NSKthura {
                     W = O.w - 1; if (W < 0) W = 0;
                     H = O.h - 1; if (H < 0) H = 0;
                     switch (O.kind) {
-                        case "TiledArea": case "Zone":
+                        case "TiledArea":
+                        case "Zone":
                             TX = (int)Math.Floor((decimal)(X / GW));
                             TY = (int)Math.Floor((decimal)(Y / GH));
                             TW = (int)Math.Ceiling((decimal)((X + W) / GW));
@@ -397,7 +399,7 @@ namespace NSKthura {
 
 
 
-        public bool Block(int X,int Y) {
+        public bool Block(int X, int Y) {
             //Kthura.EDITTORLOG($"Block({X},{Y})");
             int GW = GridX;
             int GH = GridY;
@@ -413,7 +415,7 @@ namespace NSKthura {
             return BlockMap[TX, TY];
         }
 
-        public bool PureBlock(int x,int y) {
+        public bool PureBlock(int x, int y) {
             int BX = BlockMapBoundW;
             int BY = BlockMapBoundH;
             if (x < 0) return true;
@@ -452,9 +454,9 @@ namespace NSKthura {
             KthuraEdit.Stages.DBG.Log(m);
 #endif
         }
-#endregion
+        #endregion
 
-#region Data specific to the map!
+        #region Data specific to the map!
         /// <summary>
         /// When set to true, values requiring remapping (such as Tags, Lables, Dominance, BlockMapValues and (believe it or not) the y coordinate) will immediately cause that to happen.
         /// Please note that that if you have a lot of modifications to do, this will take away performance, so then you can best turn it off, do your modifications and remap everything later.
@@ -464,9 +466,9 @@ namespace NSKthura {
         public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
         public SortedDictionary<string, string> MetaData = new SortedDictionary<string, string>();
 
-#endregion
+        #endregion
 
-#region Control Methods
+        #region Control Methods
         public void CreateLayer(string name) {
             if (Layers.ContainsKey(name)) {
                 Debug.Print($"Kthura map already has a layer named {name}. Please pick a different name!");
@@ -474,15 +476,14 @@ namespace NSKthura {
             }
             Layers[name] = new KthuraLayer(this);
         }
-#endregion
+        #endregion
 
-#region New Map constructors
+        #region New Map constructors
         private Kthura() { } // I won't allow "New". A bit dangerous. So some static functions act as "constructors".
         public static Kthura Create() => Create(DefaultTextureJCR);
         public static Kthura Create(TJCRDIR TexJCR) {
 
-            var ret = new Kthura
-            {
+            var ret = new Kthura {
                 TextureJCR = TexJCR
             };
             // Please note! Single layer maps, were already officially deprecated a few years before this project began in C#
@@ -498,7 +499,7 @@ namespace NSKthura {
             bool dochat = true;
 
             void crash(string er) => throw new Exception($"KthuraLoad: {er}");
-            void assert(bool o,string er) {
+            void assert(bool o, string er) {
                 if (!o) crash(er);
             }
             void chat(string cm) {
@@ -507,8 +508,7 @@ namespace NSKthura {
 
 
             // This is the TRUE load routine. All overloads eventually lead to this one! ;-P
-            var ret = new Kthura
-            {
+            var ret = new Kthura {
                 MetaData = new SortedDictionary<string, string>(),
                 TextureJCR = TexJcr
             };
@@ -518,7 +518,7 @@ namespace NSKthura {
             var olines = sourcedir.ReadLines($"{prefix}Objects", true);
             var readlayers = false;
             bool tempautomap = automap; automap = false; // In order to fasten up the process this will be off temporarily. It can be turned on again, afterward!            
-            string curlayername="";
+            string curlayername = "";
             KthuraObject obj = null;
             KthuraLayer curlayer = null;
             // I should have done better than this, but what works that works!
@@ -526,7 +526,7 @@ namespace NSKthura {
             foreach (string rl in olines) {
                 var l = rl.Trim();
                 cnt++;
-                if ((!qstr.Prefixed(l, "--")) && (!qstr.Prefixed(l, "#")) && l!="") {
+                if ((!qstr.Prefixed(l, "--")) && (!qstr.Prefixed(l, "#")) && l != "") {
                     if (l == "LAYERS")
                         readlayers = true;
                     else if (l == "__END")
@@ -536,7 +536,7 @@ namespace NSKthura {
                     else if (l == "NEW") {
                         obj = new KthuraObject("?", ret.Layers[curlayername]);
                         chat($"New object in {curlayername}");
-                    }  else {
+                    } else {
                         var pi = l.IndexOf('='); if (pi < 0) throw new Exception($"Syntax error: \"{l}\" in {cnt}");
                         var key = l.Substring(0, pi).Trim();
                         var value = l.Substring(pi + 1).Trim();
@@ -662,11 +662,11 @@ namespace NSKthura {
         }
 
 
-            
 
-        
 
-        public static Kthura Load(string sourcefile,string prefix, TJCRDIR TexJCR) {
+
+
+        public static Kthura Load(string sourcefile, string prefix, TJCRDIR TexJCR) {
 
             var sf = JCR6.Dir(sourcefile);
 
@@ -674,7 +674,7 @@ namespace NSKthura {
 
         }
 
-        public static Kthura Load(TJCRDIR sourcedir, string prefix="") {
+        public static Kthura Load(TJCRDIR sourcedir, string prefix = "") {
 
             var tj = DefaultTextureJCR;
 
@@ -692,12 +692,12 @@ namespace NSKthura {
 
         }
 
-#endregion
+        #endregion
 
-#region Core functions as statics (since C# requires classes even when you don't need them).
+        #region Core functions as statics (since C# requires classes even when you don't need them).
         static TJCRDIR DefaultTextureJCR = null;
-        static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;        
-#endregion
+        static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;
+        #endregion
     }
 
 }
