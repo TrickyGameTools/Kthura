@@ -42,6 +42,111 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\jxsrcca\jcr6_jxsrcca.cs">
+      <Link>Include\JCR6\Drivers\jxsrcca\jcr6_jxsrcca.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\Common\CommandLineParser.cs">
+      <Link>Include\JCR6\Drivers\lzma\Common\CommandLineParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\Common\CRC.cs">
+      <Link>Include\JCR6\Drivers\lzma\Common\CRC.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\Common\InBuffer.cs">
+      <Link>Include\JCR6\Drivers\lzma\Common\InBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\Common\OutBuffer.cs">
+      <Link>Include\JCR6\Drivers\lzma\Common\OutBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\ICoder\ICoder.cs">
+      <Link>Include\JCR6\Drivers\lzma\ICoder\ICoder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\lzma2jcr6.cs">
+      <Link>Include\JCR6\Drivers\lzma\lzma2jcr6.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZMA\LzmaBase.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZMA\LzmaBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZMA\LzmaDecoder.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZMA\LzmaDecoder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZMA\LzmaEncoder.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZMA\LzmaEncoder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZ\IMatchFinder.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZ\IMatchFinder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZ\LzBinTree.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZ\LzBinTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZ\LzInWindow.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZ\LzInWindow.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\LZ\LzOutWindow.cs">
+      <Link>Include\JCR6\Drivers\lzma\LZ\LzOutWindow.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\RangeCoder\RangeCoder.cs">
+      <Link>Include\JCR6\Drivers\lzma\RangeCoder\RangeCoder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\RangeCoder\RangeCoderBit.cs">
+      <Link>Include\JCR6\Drivers\lzma\RangeCoder\RangeCoderBit.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\RangeCoder\RangeCoderBitTree.cs">
+      <Link>Include\JCR6\Drivers\lzma\RangeCoder\RangeCoderBitTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\lzma\SevenZipHelper.cs">
+      <Link>Include\JCR6\Drivers\lzma\SevenZipHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\Adler32.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\Adler32.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\AssemblyInfo.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\Deflate.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\Deflate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\InfBlocks.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\InfBlocks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\InfCodes.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\InfCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\Inflate.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\Inflate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\InfTree.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\InfTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\StaticTree.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\StaticTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\SupportClass.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\SupportClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\Tree.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\Tree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\ZInputStream.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\ZInputStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\Zlib.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\Zlib.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\ZOutputStream.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\ZOutputStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\ZStream.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\ZStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\Drivers\Compression\zlib\zlib\ZStreamException.cs">
+      <Link>Include\JCR6\Drivers\zlib\zlib\ZStreamException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\JCR6\jcr6.cs">
+      <Link>Include\JCR6\jcr6.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\Dirry.cs">
       <Link>Include\Units\Dirry.cs</Link>
     </Compile>
@@ -66,16 +171,27 @@
     <Compile Include="..\Class\KthuraCore.cs">
       <Link>Include\Kthura\KthuraCore.cs</Link>
     </Compile>
+    <Compile Include="..\Class\KthuraDraw.cs">
+      <Link>Include\Kthura\KthuraDraw.cs</Link>
+    </Compile>
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>Include\Build\builddate.cs</Link>
     </Compile>
     <Compile Include="..\XPortClass\basis.cs">
       <Link>Include\Export\basis.cs</Link>
     </Compile>
+    <Compile Include="Include\Export\xml.cs" />
+    <Compile Include="Include\JCR6\InitJCR6.cs" />
     <Compile Include="KthuraExport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\JCR6\Drivers\Compression\lzma\readme.md">
+      <Link>Include\JCR6\Drivers\lzma\readme.md</Link>
+    </None>
+    <None Include="..\..\..\JCR6\Drivers\Compression\zlib\readme.md">
+      <Link>Include\JCR6\Drivers\zlib\readme.md</Link>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />

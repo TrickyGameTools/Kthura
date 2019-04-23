@@ -98,8 +98,9 @@ namespace KthuraExport_NS {
         void Assert(bool ok,string e) { if (!ok) Error(e); }
         void Assert(string ok, string e) => Assert(ok.Length > 0, e);
         void Assert(int ok, string e) => Assert(ok != 0, e);
+        void Assert(TGINI ok, string e) => Assert(ok != null, e);
 
-        void Doing(string a, string b) { Yellow($"{a}: "); Cyan($"{b}\b"); }
+        void Doing(string a, string b) { Yellow($"{a}: "); Cyan($"{b}\n"); }
 
         void Init(string[] args) {
             if (args.Length == 0) {
@@ -107,6 +108,7 @@ namespace KthuraExport_NS {
                 OriCol();
                 Environment.Exit(0);
             }
+            InitJCR6.Go();
             Dirry.InitAltDrives(AltDrivePlaforms.Windows); // TODO: I may need to expand this later for Linux and Mac.
             cli_Settings = new FlagParse(args);
             cli_Settings.CrString("target");
@@ -128,6 +130,12 @@ namespace KthuraExport_NS {
             Assert(WorkSpace, "I can't find out what the workspace is. Is Kthura properly configured?");
             Assert(File.Exists(ProjectConfigFile), $"I could not access {ProjectConfigFile}. It appears it doesn't exist!");
             Doing("Reading project", ProjectConfigFile);
+            ProjectConfig = GINI.ReadFromFile(ProjectConfigFile);
+            Assert(ProjectConfig, "Project could not be properly read.");
+            Target = ProjectConfig.C("EXPORT.TARGET"); if (Target == "") Target = cli_Settings.GetString("target");
+            Assert(Target, "No target");
+            Doing("Exporting to", Target);
+            Assert(ExportBasis.HaveDriver(Target), $"Driver to export to {Target} has not been found!");
         }
 
         internal void Run(string[] args) {
