@@ -95,3 +95,5 @@ if (Test-Path "KthuraTextEditor"){  #This "if" is needed since the TextEditor is
 	cpy "KthuraTextEditor/bin/Release/*.exe" "Text Editor Executables"
 	cpy "KthuraTextEditor/bin/Release/*.dll" "Text Editor Libraries"
 }
+bld "KthuraExport" "Exporter"
+cpy "KthuraExport/bin/Release/*.exe" "Exporter"
