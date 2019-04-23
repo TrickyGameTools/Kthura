@@ -1,6 +1,6 @@
 // Lic:
-// XML exporter for Kthura
-// ---
+// Export Kthura
+// Extensible Markup Language
 // 
 // 
 // 
@@ -23,6 +23,7 @@
 // 
 // Version: 19.04.23
 // EndLic
+
 
 
 using System.Text;
@@ -75,4 +76,5 @@ namespace KthuraExport_NS {
         
     }
 }
+
 

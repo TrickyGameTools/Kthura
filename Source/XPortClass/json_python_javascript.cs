@@ -1,6 +1,6 @@
 // Lic:
-// Kthura Exporter
-// JSON, JavaScript and Python (and I guess the Python variant can also used in Boo)
+// Export Kthura
+// JSON, JavaScript, Python
 // 
 // 
 // 
@@ -23,6 +23,7 @@
 // 
 // Version: 19.04.23
 // EndLic
+
 
 using System.Text;
 using NSKthura;
@@ -120,4 +121,5 @@ namespace KthuraExport_NS {
 
     }
 }
+
 

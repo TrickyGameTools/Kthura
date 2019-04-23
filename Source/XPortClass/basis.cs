@@ -25,6 +25,7 @@
 // EndLic
 
 
+
 #define EXPORT_ALPHA
 
 using NSKthura;
@@ -57,12 +58,14 @@ namespace KthuraExport_NS {
 
         static public void Init() {
             new xport_xml();
+            new xport_lua();
             new javascript();
             new python();
         }
     }
 
 }
+
 
 
 

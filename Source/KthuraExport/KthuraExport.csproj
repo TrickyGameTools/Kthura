@@ -183,6 +183,9 @@
     <Compile Include="..\XPortClass\json_python_javascript.cs">
       <Link>Include\Export\json_python_javascript.cs</Link>
     </Compile>
+    <Compile Include="..\XPortClass\lua.cs">
+      <Link>Include\Export\lua.cs</Link>
+    </Compile>
     <Compile Include="..\XPortClass\xml.cs">
       <Link>Include\Export\xml.cs</Link>
     </Compile>
