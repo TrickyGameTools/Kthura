@@ -332,6 +332,7 @@ ASALocalRun/
 
 # Some Temp dirs
 Dev
+test
 
 # MKL
 MKL*
