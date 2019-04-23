@@ -24,7 +24,8 @@
 // Version: 19.04.23
 // EndLic
 
-ï»¿using UseJCR6;
+
+using UseJCR6;
 
 static class InitJCR6 {
     public static void Go() {
@@ -33,4 +34,5 @@ static class InitJCR6 {
         JCR6_zlib.Init();
     }
 }
+
 

@@ -24,7 +24,8 @@
 // Version: 19.04.23
 // EndLic
 
-#undef EXPORT_ALPHA
+
+#define EXPORT_ALPHA
 
 using NSKthura;
 using System.Diagnostics;
@@ -56,9 +57,12 @@ namespace KthuraExport_NS {
 
         static public void Init() {
             new xport_xml();
+            new javascript();
+            new python();
         }
     }
 
 }
+
 
 
