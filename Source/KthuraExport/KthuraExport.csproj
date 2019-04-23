@@ -180,8 +180,12 @@
     <Compile Include="..\XPortClass\basis.cs">
       <Link>Include\Export\basis.cs</Link>
     </Compile>
-    <Compile Include="Include\Export\json_python_javascript.cs" />
-    <Compile Include="Include\Export\xml.cs" />
+    <Compile Include="..\XPortClass\json_python_javascript.cs">
+      <Link>Include\Export\json_python_javascript.cs</Link>
+    </Compile>
+    <Compile Include="..\XPortClass\xml.cs">
+      <Link>Include\Export\xml.cs</Link>
+    </Compile>
     <Compile Include="Include\JCR6\InitJCR6.cs" />
     <Compile Include="KthuraExport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

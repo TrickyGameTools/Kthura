@@ -24,11 +24,7 @@
 // Version: 19.04.23
 // EndLic
 
-ï»¿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using NSKthura;
 
 namespace KthuraExport_NS {
