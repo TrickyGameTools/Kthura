@@ -333,6 +333,7 @@ ASALocalRun/
 # Some Temp dirs
 Dev
 test
+InstallerScript/*.exe
 
 # MKL
 MKL*
