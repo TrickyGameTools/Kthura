@@ -146,11 +146,13 @@ namespace KthuraExport_NS {
             Doing("Reading project", ProjectConfigFile);
             ProjectConfig = GINI.ReadFromFile(ProjectConfigFile);
             Assert(ProjectConfig, "Project could not be properly read.");
-            Target = ProjectConfig.C("EXPORT.TARGET"); if (Target == "") Target = cli_Settings.GetString("target");
+            Target = cli_Settings.GetString("target");
+            if (Target == "") Target = ProjectConfig.C("EXPORT.TARGET");
             Assert(Target, "No target");
             Doing("Exporting to", Target);
             Assert(ExportBasis.HaveDriver(Target), $"Driver to export to {Target} has not been found!");
-            XPTo = ProjectConfig.C("EXPORT.XPTO"); if (XPTo == "") XPTo = cli_Settings.GetString("xpto");
+            XPTo = cli_Settings.GetString("xpto");
+            if (XPTo == "") XPTo = ProjectConfig.C("EXPORT.XPTO");
             Assert(XPTo, "No export-to folder.");
             Map = cli_Settings.GetString("map");
         }
