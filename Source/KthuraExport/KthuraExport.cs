@@ -21,8 +21,9 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.23
+// Version: 19.04.24
 // EndLic
+
 
 
 using System;
@@ -75,7 +76,7 @@ namespace KthuraExport_NS {
         void Green(string m) => ColWrite(ConsoleColor.Green, m);
 
         void Header() {
-            MKL.Version("Kthura for C# - KthuraExport.cs","19.04.23");
+            MKL.Version("Kthura for C# - KthuraExport.cs","19.04.24");
             MKL.Lic    ("Kthura for C# - KthuraExport.cs","GNU General Public License 3");
             Red($"Kthura Exporter {MKL.Newest}\t");
             Magenta($"Built: {BuildDate.sBuildDate}\n");
@@ -202,5 +203,6 @@ namespace KthuraExport_NS {
         #endregion
     }
 }
+
 
 

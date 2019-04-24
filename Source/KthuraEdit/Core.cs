@@ -17,13 +17,13 @@
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 // 
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.21
+// Version: 19.04.24
 // EndLic
+
 #define KthuraEditFileLog
 
 
@@ -350,6 +350,7 @@ namespace KthuraEdit {
 #endregion
     }
 }
+
 
 
 
