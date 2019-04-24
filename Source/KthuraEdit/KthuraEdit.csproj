@@ -187,6 +187,18 @@
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>builddate.cs</Link>
     </Compile>
+    <Compile Include="..\XPortClass\basis.cs">
+      <Link>Include\Export\basis.cs</Link>
+    </Compile>
+    <Compile Include="..\XPortClass\json_python_javascript.cs">
+      <Link>Include\Export\json_python_javascript.cs</Link>
+    </Compile>
+    <Compile Include="..\XPortClass\lua.cs">
+      <Link>Include\Export\lua.cs</Link>
+    </Compile>
+    <Compile Include="..\XPortClass\xml.cs">
+      <Link>Include\Export\xml.cs</Link>
+    </Compile>
     <Compile Include="EditorSpecificDrawFunctions.cs" />
     <Compile Include="Lua_API.cs" />
     <Compile Include="Stages\QuestionList.cs" />

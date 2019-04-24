@@ -28,7 +28,6 @@
 
 
 
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -83,13 +82,22 @@ namespace KthuraEdit
             Core.Project = "Test";
             Core.MapFile = "TestMap";
 #else
-            Core.Crash("Project from parameters not yet set");
+            //Core.Crash("Project from parameters not yet set");
+            Core.FLOG("Parameter Check!");
+            for (int i = 0; i < Core.args.Length; i++) Core.FLOG($"{i}/{Core.args.Length-1}:> {Core.args[i]}");
+            if (Core.args.Length < 3) {
+                Core.Crash("No arguments given!\nUsage: TeddyEdit <project> <map>\n \n If you are not sure how to use this tool, use the launcher in stead!");
+                return;
+            }
+            Core.Project = Core.args[1];
+            Core.MapFile = Core.args[2];
+
 #endif
             Core.InitLua();
             EditorSpecificDrawFunctions.init();
             NSKthura.KthuraDrawMonoGame.UseMe();
             NSKthura.KthuraDraw.IgnoreVisibility = true;
-
+            KthuraExport_NS.ExportBasis.Init();
         }
 
         /// <summary>

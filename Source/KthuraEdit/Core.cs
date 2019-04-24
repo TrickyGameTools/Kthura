@@ -17,26 +17,18 @@
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 // 
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
 // Version: 19.04.21
 // EndLic
-
-
-
-
-
-
-
-
+#define KthuraEditFileLog
 
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,17 +38,34 @@ using UseJCR6;
 using KthuraEdit.Stages;
 using NSKthura;
 using NLua;
+using KthuraExport_NS;
 
-namespace KthuraEdit
-{
+
+
+
+namespace KthuraEdit {
     class Core {
-        #region Init & Core config
+
+        #region Debug
+#if KthuraEditFileLog
+        static QuickStream FLOGBT;
+#endif
+        static public void FLOG(string a) {
+#if KthuraEditFileLog
+            FLOGBT = QuickStream.AppendFile("E:/Temp/KthuraDebugLog.txt");
+            FLOGBT.WriteString($"{DateTime.Now.ToString()}> {a}\n",true);
+            FLOGBT.Close();
+#endif
+        }
+#endregion
+#region Init & Core config
         static public string MyExe => System.Reflection.Assembly.GetEntryAssembly().Location;
         static Kthura_EditCore TrueCore;
         static GraphicsDeviceManager GDM;
         static GraphicsDevice GD;
         static SpriteBatch SB;
         static public Kthura_EditCore MGCore { get; private set; }
+        static public string[] args => Environment.GetCommandLineArgs();
 
         static TJCRDIR JCR;
         static Core() {
@@ -67,6 +76,7 @@ namespace KthuraEdit
 #if DEBUG
             JCR = JCR6.Dir($"E:/Projects/Applications/VisualStudio/Kthura/Releases/KthuraEdit.jcr"); // This is where my jcr file lives... Silly me...
 #else
+            FLOG($"Reading JCR: {qstr.ExtractDir(MyExe)}/KthuraEdit.jcr");
             JCR = JCR6.Dir($"{qstr.ExtractDir(MyExe)}/KthuraEdit.jcr");
 #endif
         }
@@ -83,9 +93,9 @@ namespace KthuraEdit
             MousePointer = TQMG.GetImage("MousePointer.png");
             MainEdit.ComeToMe();
         }
-        #endregion
+#endregion
 
-        #region Error Handling
+#region Error Handling
         public static void Crash(string Message) {
             DBG.Log($"ERROR!\n{Message}\n\nHit Escape to exit this program");
             dontsave = true;
@@ -96,9 +106,9 @@ namespace KthuraEdit
         public static void Crash(Exception e) {
             Crash($"{e.Message}\n\nTraceback:\n{e.StackTrace}\n\nIt's likely you encountered a bug. Please report this!\n\nHit Escape to exit this program");
         }
-        #endregion
+#endregion
 
-        #region Input State
+#region Input State
         static public KeyboardState kb { get; private set; }
         static public MouseState ms { get; private set; }
         static public JoystickState joy { get; private set; }
@@ -138,9 +148,9 @@ namespace KthuraEdit
                     throw new Exception($"Core.MsDown: Unknown mouse button required: {b}");
             }
         }
-        #endregion
+#endregion
 
-        #region Flow State
+#region Flow State
         static BaseStage CurrentStage;
         public static void GoStage(BaseStage stage) => CurrentStage = stage;
 
@@ -155,15 +165,15 @@ namespace KthuraEdit
             UpdateStates();
             CurrentStage.Update();
         }
-        #endregion
+#endregion
 
-        #region Shutdown
+#region Shutdown
         static public void Quit() {
             MGCore.Quit = true;
         }
-        #endregion
+#endregion
 
-        #region Platform Detection        
+#region Platform Detection        
         public static AltDrivePlaforms ADP {
             get {
                 switch (Environment.OSVersion.Platform) {
@@ -191,9 +201,9 @@ namespace KthuraEdit
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region Lua init
+#region Lua init
         static public Lua Script { get; private set; } = new Lua();
         static Lua_API LAPI = new Lua_API();
         static public void InitLua() {
@@ -229,16 +239,16 @@ namespace KthuraEdit
             }
 
         }
-        #endregion
+#endregion
 
-        #region Global configuration
+#region Global configuration
         static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI");
         static TGINI GlobalConfig = GINI.ReadFromFile(ConfigFile);
         static public string GlobalWorkSpace => Dirry.AD(GlobalConfig.C($"WorkSpace.{Platform}"));
         static TJCRDIR TexJCR;
-        #endregion
+#endregion
 
-        #region Save
+#region Save
         static public bool dontsave = false;
         public static void Save() {
             if (dontsave) return;
@@ -252,10 +262,32 @@ namespace KthuraEdit
                 DBG.Log($"ERROR Saving failed!\n{e.Message}\n{JCR6.JERROR}");
             }
             UI.SaveTexMemory();
-        }
-        #endregion
 
-        #region Project Data
+            var X_To = Dirry.AD(ProjectConfig.C("EXPORT.XPTO").Trim());
+            var X_Target = ProjectConfig.C("EXPORT.TARGET").Trim();
+            if (X_To!="" && X_Target != "") {
+                if (!ExportBasis.HaveDriver(X_Target))
+                    DBG.Log($"I don't have any export driver named '{X_To}'");
+                else {
+                    DBG.Log($"Translating map to {X_Target}");
+                    var exporter = ExportBasis.Get(X_Target);
+                    var translation = exporter.DoExport(Map);
+                    try {
+                        DBG.Log($"Writing translation into {X_To}/{exporter.ExportedFile(MapFile)}");
+                        Directory.CreateDirectory(X_To);
+                        QuickStream.SaveString($"{X_To}/{exporter.ExportedFile(MapFile)}",translation);
+                    } catch (Exception e){
+                        for(int f = 1000; f > 40; f--) {
+                            Console.Beep(f, 1);
+                            DBG.Log($"ERROR! {e.Message}");
+                        }
+                    }
+                }
+            }
+        }
+#endregion
+
+#region Project Data
         private static string _prj = ""; // "Real" variable. PSST! This is very very secret!
         public static string Project {
             get => _prj;
@@ -287,9 +319,9 @@ namespace KthuraEdit
         }
         static string ProjectFile => $"{GlobalWorkSpace}/{_prj}/{_prj}.Project.GINI";
         public static TGINI ProjectConfig { get; private set; }
-        #endregion
+#endregion
 
-        #region The actual map
+#region The actual map
         static public Kthura Map { get; private set; }
         private static string _map = "";
         public static string MapPath => Dirry.AD(ProjectConfig.C("MAPS"));
@@ -315,7 +347,7 @@ namespace KthuraEdit
             }
         }
         public static string FPMapFile => $"{MapPath}/{_map}";
-        #endregion
+#endregion
     }
 }
 

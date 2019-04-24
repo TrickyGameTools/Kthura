@@ -90,6 +90,8 @@ bld "KthuraEdit" "Editor"
 cpy "KthuraEdit/bin/Windows/x86/Release/*.exe" "Editor Executables"
 cpy "KthuraEdit/bin/Windows/x86/Release/*.dll" "Editor Libraries"
 cpy "KthuraEdit/bin/Windows/x86/Release/*.xml" "Editor Data"
+cpy "KthuraEdit/bin/Windows/x86/Release/*.dylib" "Editor Dynamic Libraries"
+cpy "KthuraEdit/bin/Windows/x86/Release/*.config" "Editor Configuration"
 if (Test-Path "KthuraTextEditor"){  #This "if" is needed since the TextEditor is optional!
 	bld "KthuraTextEditor" "Text Editor"
 	cpy "KthuraTextEditor/bin/Release/*.exe" "Text Editor Executables"
