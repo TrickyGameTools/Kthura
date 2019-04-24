@@ -26,7 +26,7 @@
 
 
 
-#define EXPORT_ALPHA
+#undef EXPORT_ALPHA
 
 using NSKthura;
 using System.Diagnostics;
