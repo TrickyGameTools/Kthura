@@ -95,20 +95,26 @@ namespace KthuraEdit.Stages
                     if (e.ToUpper() == "PNG") {
                         var dirsplit = ent.Entry.Split('/');
                         var bundle = -1;
+                        var font = false;
                         for(int i=0; i<dirsplit.Length;i++) {
                             var d = dirsplit[i];
-                            if (bundle < 0 && qstr.Suffixed(d.ToUpper(), ".JPBF")) bundle = i;
+                            if (bundle < 0 && qstr.Suffixed(d.ToUpper(), ".JPBF"))
+                                bundle = i;
+                            else if (qstr.Suffixed(d.ToUpper(), ".JFBF"))
+                                font = true;
                         }
-                        if (bundle < 0) {
-                            Textures.Add(new TexItem(y, ent.Entry)); y += 25;
-                        } else if (lastbundle=="" || !qstr.Prefixed(ent.Entry,lastbundle)) {
-                            lastbundle = "";
-                            for (int i=0;i<=bundle;i++) {
-                                if (lastbundle != "") lastbundle += "/";
-                                lastbundle += dirsplit[i];
-                                
+                        if (!font) {
+                            if (bundle < 0) {
+                                Textures.Add(new TexItem(y, ent.Entry)); y += 25;
+                            } else if (lastbundle == "" || !qstr.Prefixed(ent.Entry, lastbundle)) {
+                                lastbundle = "";
+                                for (int i = 0; i <= bundle; i++) {
+                                    if (lastbundle != "") lastbundle += "/";
+                                    lastbundle += dirsplit[i];
+
+                                }
+                                Textures.Add(new TexItem(y, lastbundle)); y += 25;
                             }
-                            Textures.Add(new TexItem(y, lastbundle)); y += 25;
                         }
                     }
                 }

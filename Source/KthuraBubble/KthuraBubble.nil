@@ -1,0 +1,87 @@
+#say "Kthura!"
+
+class Kthura
+	readonly int ID
+		
+	get int ScrollX
+		return BKTHURA:GetScroll(self.ID,"X")
+	end
+	
+	set int ScrollX
+		BKTHURA:SetScroll(self.ID,"X",value)
+	end
+
+	get int ScrollY
+		return BKTHURA:GetScroll(self.ID,"Y")
+	end
+	
+	set int ScrollY
+		BKTHURA:SetScroll(self.ID,"Y",value)
+	end
+	
+	get string Layer
+		return BKTHURA:GetLayer(self.ID)
+	end
+	
+	set string Layer
+		BKTHURA:SetLayer(self.ID,value)
+	end
+	
+	void Draw(x,y)
+		BKTHURA:Draw(self.ID,x or 0, y or 0)
+	end
+	
+	table CountObjects()
+		string tstring
+		tstring = BKTHURA:CountObjects(self.ID)
+		//CSay(tstring)
+		#pure
+		return (loadstring or load)(tstring)()
+		#endpure
+	end
+	
+	void DESTRUCTOR()
+		if self.ID!=0
+			BKTHURA:Destroy(self.ID)
+		end
+	end
+	
+	private table mdata
+	set table Data
+		error("The field \"Data\" is read-only!")
+	end
+	
+	get table Data
+		return self.mdata
+	end
+	
+	
+	
+	void CONSTRUCTOR(mapname)
+		switch type(mapname)
+			case "nil"
+				self.ID = BKTHURA:Create()
+			case "string"
+				self.ID = BKTHURA:Load(mapname)
+			default
+				error("Invalid input for initiating a Kthura Map! ("+type(mapname)+")")
+		end
+		setmetatable(self.mdata,{
+			['__newindex'] = void(t,string k,string v)
+				BKTHURA:SetData(self.ID,k,v)
+			end,
+			['__index'] = string(t,k)
+				return BKTHURA:GetData(self.ID,k)
+			end,
+			['__call'] = table(t)
+				string tempscript
+				table temptable
+				tempscript = BKTHURA:GetDataKeys(self.ID)
+				// CSay(tempscript) // debug
+				temptable = assert(NIL.LuaLoadString(tempscript))
+				return temptable()
+			end
+		})
+	end
+	
+end

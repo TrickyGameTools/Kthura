@@ -24,7 +24,7 @@
 // Version: 19.04.24
 // EndLic
 
-
+#undef DEBUG_PROJECT_MAP
 
 
 
@@ -79,7 +79,7 @@ namespace KthuraEdit
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Core.StartStep3(spriteBatch);
-#if DEBUG
+#if DEBUG_PROJECT_MAP
             Core.Project = "Test";
             Core.MapFile = "TestMap";
 #else
@@ -137,7 +137,8 @@ namespace KthuraEdit
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearWrap, null, null);
             if (!UpdatedOnce)
                 Debug.WriteLine("Skipping draw as the first update has not yet taken place! (Security measure to prevent needless crashes)");
             else

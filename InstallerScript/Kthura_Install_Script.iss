@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 LicenseFile=E:\Projects\Applications\LicDocs\GPL3.txt
 OutputDir=E:\Projects\Applications\VisualStudio\Kthura\InstallerScript
 OutputBaseFilename=Kthura_Setup
-SetupIconFile=E:\Projects\Applications\VisualStudio\Kthura\Source\KthuraEdit\Icon.ico
+SetupIconFile=E:\Projects\Applications\VisualStudio\Kthura\Source\KthuraLauncher\Kthura.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -70,10 +70,12 @@ Source: "E:\Projects\Applications\VisualStudio\Kthura\Releases\SharpDX.XAudio2.x
 Source: "E:\Projects\Applications\VisualStudio\Kthura\Releases\SharpDX.XInput.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Projects\Applications\VisualStudio\Kthura\Releases\SharpDX.XInput.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Projects\Applications\VisualStudio\Kthura\Releases\SharpDX.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Projects\Applications\VisualStudio\Kthura\Releases\KthuraEdit.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{commonprograms}\Kthura Text Editor"; Filename: "{app}\KthuraTextEditor.exe"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
 

@@ -160,6 +160,9 @@
     <Compile Include="..\..\..\TrickyUnits\FileList.cs">
       <Link>Include\Units\FileList.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\FormConfirm.cs">
+      <Link>Include\Units\FormConfirm.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\GINI Is Not Ini.cs">
       <Link>Include\Units\GINI Is Not Ini.cs</Link>
     </Compile>
@@ -225,6 +228,7 @@
       <HintPath>packages\NLua.1.4.14\lib\net45\NLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

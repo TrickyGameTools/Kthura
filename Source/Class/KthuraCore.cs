@@ -527,7 +527,7 @@ namespace NSKthura {
             foreach (string rl in olines) {
                 var l = rl.Trim();
                 cnt++;
-                if ((!qstr.Prefixed(l, "--")) && (!qstr.Prefixed(l, "#")) && l != "") {
+                if ((!qstr.Prefixed(l, "--")) && (!(qstr.Prefixed(l, "#") && readlayers==false)) && l != "") {
                     if (l == "LAYERS")
                         readlayers = true;
                     else if (l == "__END")

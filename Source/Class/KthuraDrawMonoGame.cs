@@ -19,10 +19,6 @@
 // EndLic
 
 
-
-
-
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using TrickyUnits;
@@ -30,7 +26,11 @@ using TrickyUnits;
 
 namespace NSKthura {
 
+    delegate void dCrashOnNoTex(string tex);
+
 	class KthuraDrawMonoGame:KthuraDraw{
+
+        public static dCrashOnNoTex CrashOnNoTex = null;
 
         #region Chain me into Kthura
         static KthuraDrawMonoGame me = new KthuraDrawMonoGame();
@@ -52,6 +52,7 @@ namespace NSKthura {
             if (!Textures.ContainsKey(tag)) {
                 if (qstr.ExtractExt(file.ToUpper()) == "JPBF") {
                     Textures[tag] = TQMG.GetBundle(map.TextureJCR, $"{file}/");
+                    //Bubble.BubConsole.WriteLine($"KTHURA DRAW DEBUG: Loading Bundle {file}", 255, 255, 0); // debug! (must be on comment when not in use)
                 } else {
                     if (map.TextureJCR == null) Debug.WriteLine("TextureJCR is null???");
                     var bt = map.TextureJCR.ReadFile(file);
@@ -87,7 +88,6 @@ namespace NSKthura {
         public override void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             var tx = GetTex(obj);
             if (tx != null) {
-                
                 TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
                 //TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
                 TQMG.SetAlpha((byte)obj.Alpha255);
@@ -98,7 +98,7 @@ namespace NSKthura {
                 TQMG.Scale(1000, 1000);
                 TQMG.RotateRAD(0);
                 TQMG.SetAlpha(255);
-            }
+            } else CrashOnNoTex?.Invoke($"Obstacle-texture '{obj.Texture}' did somehow not load!");
         }
 
         public override int ObjectHeight(KthuraObject obj) {

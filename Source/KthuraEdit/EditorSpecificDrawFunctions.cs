@@ -24,11 +24,6 @@
 // Version: 19.04.20
 // EndLic
 
-
-
-
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +42,7 @@ namespace KthuraEdit
         static void DrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             if (UI.ModifyShowZone || UI.InZoneTab) {
                 TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
-                TQMG.SetAlpha(1);
+                TQMG.SetAlpha(75);
                 TQMG.DrawRectangle(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
                 TQMG.SetAlpha(255);
                 TQMG.Color(0, 0, 0);

@@ -1331,7 +1331,18 @@ namespace KthuraEdit {
                         break;
                     case Keys.Right:
                         ScrollX += MapLayer.GridX / 2;
-                        break;
+                        break;                    
+                }
+            }
+            // Delete
+            if (currentTBItem!=null && currentTBItem.Name=="Modify" && MapLayer!=null && M_SelectedObject != null) {
+                var k = TQMGKey.GetKey();
+                if (k == Keys.Delete) {
+                    if (Confirm.Yes($"Are you sure you wish to delete this {M_SelectedObject.kind}?")) {
+                        MapLayer.Objects.Remove(M_SelectedObject);
+                        M_SelectedObject = null;
+                        MapLayer.TotalRemap();
+                    }
                 }
             }
             // Fields in toolbox
