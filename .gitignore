@@ -338,6 +338,7 @@ InstallerScript/*.exe
 # MKL
 MKL*
 *MKL*
+*.zip
 
 # And for Mac users
 .DS_Store
