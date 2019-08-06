@@ -2,7 +2,8 @@
 
 class Kthura
 	readonly int ID
-		
+	static delegate PermaStore
+	
 	get int ScrollX
 		return BKTHURA:GetScroll(self.ID,"X")
 	end
@@ -24,7 +25,30 @@ class Kthura
 	end
 	
 	set string Layer
+		// CSay("Switching to layer: "..value)
 		BKTHURA:SetLayer(self.ID,value)
+	end
+	
+	get bool AutoRemap
+		return BKTHURA:GetAutoRemap(self.ID)
+	end
+	
+	set bool AutoRemap
+		BKTHURA:SetAutoRemap(self.ID,value)
+	end
+	
+	void Remap()
+		BKTHURA:TotalRemap(self.ID)
+	end
+	
+	void Kill(string tag)
+		BKTHURA:Kill(self.ID,tag)
+	end
+	
+	void PermaKill(string tag)
+		assert(self.PermaStore,"Kthura.PermaStore not configured! Cannot PermaKill!")
+		Kill(tag)
+		self.PermaStore('LocalKthura.Kill("'..tag..'"))\n"')
 	end
 	
 	void Draw(x,y)

@@ -18,12 +18,14 @@ namespace KthuraBubble {
 		Dictionary<int,Kthura> KMaps = new Dictionary<int,Kthura>();
         Dictionary<int, BubKthScroll> KScroll = new Dictionary<int, BubKthScroll>();
         Dictionary<int, string> Layers = new Dictionary<int, string>();
-
+        TMap<int, bool> AutoRemap = new TMap<int, bool>();
+       
         int Assign(Kthura map) {
             int i = 0;
             do i++; while (KMaps.ContainsKey(i));
             KMaps[i] = map;
             KScroll[i] = new BubKthScroll();
+            AutoRemap[i] = true;
             foreach(string first in map.Layers.Keys) { 
                 // Is there a better way?
                 Layers[i] = first;
@@ -31,6 +33,37 @@ namespace KthuraBubble {
             }
             return i;
         }
+
+        public void SetAutoRemap(int ID, bool value) {
+            AutoRemap[ID] = value;
+        }
+
+        public void TotalRemap(int ID) {
+            try {
+                KMaps[ID].Layers[Layers[ID]].TotalRemap();
+            } catch (Exception Ramp) { // Ramp means "disaster" in Dutch
+                if (!KMaps.ContainsKey(ID))
+                    Crash($"There is no map index ${ID}");
+                else if (!KMaps[ID].Layers.ContainsKey(Layers[ID]))
+                    Crash($"Kthura map {ID} does not have a layer named \"{Layers[ID]}\"");
+                else
+                    Crash(Ramp);
+            }           
+        }
+
+        public void Kill(int ID,string Tag) {
+            try {
+                KthuraObject Victim=null;
+                foreach (KthuraObject Obj in KMaps[ID].Layers[Layers[ID]].Objects) if (Obj.Tag == Tag) Victim = Obj;
+                if (Victim == null) return;
+                KMaps[ID].Layers[Layers[ID]].Objects.Remove(Victim);
+                if (AutoRemap[ID]) TotalRemap(ID);
+            } catch (Exception Disasteriffic) {
+                SBubble.MyError($"Kthura.Kill({ID},{Tag}):", Disasteriffic.Message, $"Layer: {Layers[ID]}\n\n{SBubble.TraceLua(statename)}");
+            }
+        }
+
+        public bool GetAutoRemap(int ID) => AutoRemap[ID];
 
         public string CountObjects(int ID) {
             var ret = new StringBuilder("return {");
@@ -70,10 +103,11 @@ namespace KthuraBubble {
 
         public void SetLayer(int ID,string K) {
             Assert(Layers.ContainsKey(ID), $"Layer dictionary does not have index #{ID}");
+            System.Diagnostics.Debug.WriteLine($"Let's switch map {ID} to layer {K}!");
             Layers[ID] = K;
         }
 
-        public string GetLayer(int ID, string K) {
+        public string GetLayer(int ID) {
             Assert(Layers.ContainsKey(ID), $"Layer dictionary does not have index #{ID}");
             return Layers[ID];
         }
@@ -130,7 +164,14 @@ namespace KthuraBubble {
 
         public int Load(string name) {
             try {
-                var KMap = Kthura.Load(SBubble.JCR, $"Maps/Kthura/{name.Trim()}/", SBubble.JCR);                
+                var mappath = $"Maps/Kthura/{name.Trim()}/";
+                BubConsole.WriteLine($"Loading Kthura map {mappath}", 180, 0, 255);
+                if (!(SBubble.JCR.Exists($"{mappath}Objects") && SBubble.JCR.Exists($"{mappath}Data"))) {
+                    SBubble.MyError("Kthura LoadMap Error", $"Error finding the two required files for map {name}", $"Found({mappath}Objects) => {SBubble.JCR.Exists($"{mappath}Objects")}\nFound({mappath}Data) => {SBubble.JCR.Exists($"{mappath}Data")}");
+                    return 0;
+                }
+                var KMap = Kthura.Load(SBubble.JCR,mappath, SBubble.JCR);
+                BubConsole.WriteLine($"Kthura map {mappath} loaded", 180, 0, 255);
                 return Assign(KMap);
             } catch (Exception Ellende) {
                 if (JCR6.JERROR != "")
