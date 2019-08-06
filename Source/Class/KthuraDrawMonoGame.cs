@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDrawMonoGame.cs
 // MonoGame Driver for Kthura for C#
-// version: 19.04.22
+// version: 19.08.06
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 
 
 using System.Collections.Generic;
@@ -140,6 +141,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 
