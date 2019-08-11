@@ -24,6 +24,7 @@
 // Version: 19.08.11
 // EndLic
 
+
 #undef DijkstraPathDebug
 
 using NSKthura;
@@ -445,5 +446,6 @@ namespace KthuraBubble {
     }
 
 }
+
 
 
