@@ -28,6 +28,7 @@ using NSKthura;
 using Bubble;
 using System;
 using System.Text;
+using System.Diagnostics;
 using System.Collections.Generic;
 using TrickyUnits;
 using UseJCR6;
@@ -45,6 +46,8 @@ namespace KthuraBubble {
         Dictionary<int, BubKthScroll> KScroll = new Dictionary<int, BubKthScroll>();
         Dictionary<int, string> Layers = new Dictionary<int, string>();
         TMap<int, bool> AutoRemap = new TMap<int, bool>();
+
+        string LuaTrace => SBubble.TraceLua(statename);
        
         int Assign(Kthura map) {
             int i = 0;
@@ -58,6 +61,32 @@ namespace KthuraBubble {
                 break;
             }
             return i;
+        }
+        
+        public void WalkToCoords(int ID, string ActorTag,int x, int y,bool real) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                A.WalkTo(x, y, real);
+            } catch(Exception Klotezooi) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo({x},{y},{real}):", Klotezooi);
+            }
+        }
+
+        public void WalkToSpot(int ID, string ActorTag, string Spot) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                A.WalkTo(Spot);
+            } catch (Exception Klotezooi) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo(\"{Spot}\"):", Klotezooi);
+            }
         }
 
         public void SetAutoRemap(int ID, bool value) {
@@ -138,6 +167,100 @@ namespace KthuraBubble {
             return Layers[ID];
         }
 
+        public bool ActorExists(int ID,string ActTag) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                var E = L.HasTag(ActTag);
+                return E && L.FromTag(ActTag).kind == "Actor";                
+            } catch (Exception Tragedie) {
+                SBubble.MyError($"Checking Actor exists on map #{ID}, tag {ActTag}", Tragedie.Message, SBubble.TraceLua(statename));
+                return false;
+            }
+        }
+
+        public void Spawn(int ID,string acttag,string exitpoint) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                if (L.HasTag(acttag)) Kill(ID, acttag);
+                var A = KthuraActor.Spawn(L, exitpoint);
+                if (A == null) throw new Exception($"Cannot spawn actor on non-existent spot {exitpoint}");
+                A.Tag = acttag;
+            } catch (Exception DonaldTrump) {
+                SBubble.MyError($"<MAP #{ID}>.Actor.{acttag}.Spawn(\"{exitpoint}\"):", DonaldTrump.Message, LuaTrace);
+            }
+        }
+
+        void GetCoords(int ID,string tag,ref int x, ref int y) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                if (!L.HasTag(tag)) throw new Exception($"Object not found in layer: {Layers[ID]}!");
+                var O = L.FromTag(tag);
+                x = O.x;
+                y = O.y;
+            } catch (Exception Verschrikkelijk) {
+                SBubble.MyError($"Kthura Object Coordinate Retriever (Map: #{ID}, Tag:{tag}):", Verschrikkelijk.Message, LuaTrace);
+            }
+        }
+
+        public int GetX(int ID,string tag) {
+            int x = 0;
+            int y = 0;
+            GetCoords(ID, tag, ref x, ref y);
+            return x;
+        }
+
+        public int GetY(int ID, string tag) {
+            int x = 0;
+            int y = 0;
+            GetCoords(ID, tag, ref x, ref y);
+            return y;
+        }
+
+        public string GetObjTex(int ID,string tag) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                return L.FromTag(tag).Texture;
+            } catch(Exception Calamity) {
+                SBubble.MyError($"Getting texture of object {ID}:{tag}", Calamity.Message, "");
+                return "ERROR";
+            }
+        }
+
+        public void SetObjTex(int ID, string tag, string value) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                L.FromTag(tag).Texture=value;
+            } catch (Exception Calamity) {
+                SBubble.MyError($"Setting texture of object {ID}:{tag}", Calamity.Message, LuaTrace);                
+            }
+        }
+        
+        public string GetActorWind(int ID,string tag) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                var O = L.FromTag(tag);
+                if (O.kind != "Actor") throw new Exception("Requested object is not an actor");
+                var A = (KthuraActor)O;               
+                return A.Wind;
+            } catch (Exception Merde) {
+                SBubble.MyError($"Getting wind of actor {ID}:{tag}", Merde.Message, LuaTrace);
+                return "Merde!";
+            }
+        }
+
+        public void SetActorWind(int ID, string tag,string value) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                var O = L.FromTag(tag);
+                if (O.kind != "Actor") throw new Exception("Requested object is not an actor");
+                var A = (KthuraActor)O;
+                A.Wind=value;
+            } catch (Exception Merde) {
+                SBubble.MyError($"Setting wind of actor {ID}:{tag}", Merde.Message, LuaTrace);
+            }
+        }
+
+
 
         public void Draw(int ID,int x, int y) {
             try {
@@ -146,7 +269,7 @@ namespace KthuraBubble {
                 var Lay = Layers[ID];
                 KthuraDraw.DrawMap(Map, Lay, Scroll.ScrollX, Scroll.ScrollY,x,y);
             } catch (Exception Moron) {
-                Crash(Moron);
+                Crash($"Draw(Res#{ID},{x},{y}):",Moron);
             }
         }
 
@@ -210,12 +333,62 @@ namespace KthuraBubble {
         }
 		
 		public void Destroy(int id) {
+            System.Diagnostics.Debug.WriteLine($"Destroying Kthura Map #{id}");
 			KMaps.Remove(id);
 		}
+
+        public void SetScrollX(int id,int svalue) {
+            try {
+                var M = KMaps[id];
+                //var L = M.Layers[Layers[id]];
+                KScroll[id].ScrollX = svalue;
+            } catch (Exception Stront) {
+                Crash($"Setting scroll X in resource {id} to {svalue}", Stront.Message);
+            }
+        }
+
+        public void SetScrollY(int id, int svalue) {
+            try {
+                var M = KMaps[id];
+                //var L = M.Layers[Layers[id]];
+                KScroll[id].ScrollY = svalue;
+            } catch (Exception Stront) {
+                Crash($"Setting scroll Y in resource {id} to {svalue}", Stront.Message);
+            }
+        }
+
+        public int GetScrollX(int id) {
+            try {
+                var M = KMaps[id];
+                //var L = M.Layers[Layers[id]];
+                return KScroll[id].ScrollX;
+            } catch (Exception Stront) {
+                Crash($"Getting scroll X in resource {id}", Stront.Message);
+                return 0;
+            }
+        }
+
+        public int GetScrollY(int id) {
+            try {
+                var M = KMaps[id];
+                //var L = M.Layers[Layers[id]];
+                return KScroll[id].ScrollY;
+            } catch (Exception Stront) {
+                Crash($"Getting scroll Y in resource {id}", Stront.Message);
+                return 0;
+            }
+        }
+
 
 
 
         #region Link to Bubble
+        void Crash(string Head, string msg) => SBubble.MyError(Head, msg, LuaTrace);
+#if DEBUG
+        void Crash(string head, Exception ex) => SBubble.MyError(head, ex.Message,$"{LuaTrace}\n\nC# Trace:\n{ex.StackTrace}");
+#else
+        void Crash(string head, Exception ex) => Crash(head, ex.Message);
+#endif        
         void Crash(string msg) => SBubble.MyError("Kthura Error", msg, SBubble.TraceLua(statename));
         void Crash(Exception ex) => Crash(ex.Message);
         void Assert(bool cond,string err) { if (!cond) Crash(err); }
@@ -235,10 +408,10 @@ namespace KthuraBubble {
             var bt = QuickStream.OpenEmbedded("KthuraBubble.nil");
             var l = bt.ReadString((int)bt.Size);
             bt.Close();            
-            SBubble.DoNIL(astatename, l);
+            SBubble.DoNIL(astatename, l,"Kthura API Link Script");
            
         }
-        #endregion
+#endregion
     }
 
 }

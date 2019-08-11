@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Kthura"
-#define MyAppVersion "19.04.23"
+#define MyAppVersion "19.08.06"
 #define MyAppPublisher "Jeroen P. Broks"
 #define MyAppURL "https://github.com/TrickyGameTools/Kthura"
 #define MyAppExeName "Kthura.exe"
@@ -25,7 +25,7 @@ LicenseFile=E:\Projects\Applications\LicDocs\GPL3.txt
 OutputDir=E:\Projects\Applications\VisualStudio\Kthura\InstallerScript
 OutputBaseFilename=Kthura_Setup
 SetupIconFile=E:\Projects\Applications\VisualStudio\Kthura\Source\KthuraLauncher\Kthura.ico
-Compression=lzma
+Compression=lzma2
 SolidCompression=yes
 
 [Languages]

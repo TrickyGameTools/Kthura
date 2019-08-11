@@ -57,7 +57,18 @@ namespace NSKthura {
                 } else {
                     if (map.TextureJCR == null) Debug.WriteLine("TextureJCR is null???");
                     var bt = map.TextureJCR.ReadFile(file);
+                    if (bt == null) {
+                        CrashOnNoTex?.Invoke($"Couldn't open texture file {file} for {tag}");
+                        Debug.WriteLine($"Couldn't open texture file {file} for {tag}");
+                        return null;
+                    }
                     Textures[tag] = TQMG.GetImage(bt);
+                    if (Textures[tag] == null) {
+                        CrashOnNoTex?.Invoke($"Texture `{file}` didn't load at all on tag {tag}.\n{UseJCR6.JCR6.JERROR}");
+                    }
+                }
+                if (Textures[tag].Frames == 0) {
+                    CrashOnNoTex?.Invoke($"Texture `{file}` for tag `{tag}` has no frames");
                 }
                 Textures[tag].HotBottomCenter();
             }
@@ -99,7 +110,25 @@ namespace NSKthura {
                 TQMG.Scale(1000, 1000);
                 TQMG.RotateRAD(0);
                 TQMG.SetAlpha(255);
-            } else CrashOnNoTex?.Invoke($"Obstacle-texture '{obj.Texture}' did somehow not load!");
+            } else CrashOnNoTex?.Invoke($"Obstacle-texture '{obj.Texture}' did somehow not load?");
+        }
+
+        public override void DrawActor(KthuraActor obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            var tx = GetTex(obj);
+            if (tx != null) {
+                obj.UpdateMoves();
+                TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+                //TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
+                TQMG.SetAlpha((byte)obj.Alpha255);
+                //TQMG.RotateRAD((float)obj.RotationRadians);
+                TQMG.RotateDEG(obj.RotationDegrees);
+                TQMG.Scale(obj.ScaleX, obj.ScaleY);
+                if (obj.AnimFrame >= tx.Frames) obj.AnimFrame = 0;
+                tx.XDraw(obj.x + ix - scrollx, obj.y + iy - scrolly,obj.AnimFrame);
+                TQMG.Scale(1000, 1000);
+                TQMG.RotateRAD(0);
+                TQMG.SetAlpha(255);
+            } else CrashOnNoTex?.Invoke($"Actor-texture '{obj.Texture}' did somehow not load?");            
         }
 
         public override int ObjectHeight(KthuraObject obj) {
@@ -110,6 +139,7 @@ namespace NSKthura {
                     return obj.h;
                 case "Obstacle":
                 case "Pic":
+                case "Actor":
                     tex = GetTex(obj);
                     return tex.Height;
                 default:
@@ -125,6 +155,7 @@ namespace NSKthura {
                     return obj.w;
                 case "Obstacle":
                 case "Pic":
+                case "Actor":
                     tex = GetTex(obj);
                     return tex.Width;
                 default:

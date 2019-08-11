@@ -20,9 +20,94 @@
 
 #say "Kthura!"
 
+table _actorlist
+
+
+class KthuraActor
+	
+	readonly string Tag
+	var parentmap
+	
+	get int ParentID
+		return self.parentmap.ID
+	end
+		
+	void CONSTRUCTOR(string sTag,parent)
+		assert(parent and type(parent)=="table" and parent[".classname"]=="Kthura","None or incorrect parent given") //"\n"..type(parent).." / "..(parent or {[".classname"]="<nil>"})[".classname"])
+		self.Tag=sTag
+		self.parentmap = parent
+		_actorlist[self.Tag] = self
+	end
+	
+	void DESTRUCTOR()
+		print("Kthura Actor destroyed!")
+		#pure
+		if CSay then CSay("Kthura Actor Destroyed!") end
+		#endpure
+	end
+	
+	get bool Exists
+		return BKTHURA:ActorExists(self.parentmap.ID,self.Tag)
+	end
+	
+	get int X
+		return BKTHURA:GetX(self.parentmap.ID,self.Tag)
+	end
+	
+	get int Y
+		return BKTHURA:GetY(self.parentmap.ID,self.Tag)
+	end
+	
+	get var Coords
+		return self.X,self.Y
+	end
+	
+	get string Texture
+		return BKTHURA:GetObjTex(self.parentmap.ID,self.Tag)
+	end
+	
+	set string Texture
+		BKTHURA:SetObjTex(self.parentmap.ID,self.Tag,value)
+	end
+	
+	get string Wind
+		return BKTHURA:GetActorWind(self.ParentID,self.Tag)
+	end
+	
+	set string Wind
+		BKTHURA:SetActorWind(self.ParentID,self.Tag,value)
+	end
+	
+	void Spawn(string exittag,onlyifnew)
+		if onlyifnew and self.Exists
+			return 
+		end
+		BKTHURA:Spawn(self.parentmap.ID,self.Tag,exittag)
+	end
+	
+	void Destroy()
+		self.parentmap = nil;
+	end
+	
+	void WalkTo(A,B,C)
+		if (type(A)=="number" and type(B)=="number")
+			#pure
+			if (CSay) then CSay("Walkto request: ("..A..","..B.."); Real: "..tostring(C~=false)) end
+			#endpure
+			BKTHURA:WalkToCoords(self.parentmap.ID,self.Tag,A,B,C!=false)
+		elseif type(A)=="string"
+			BKTHURA:WalkToSpot(A)
+		end
+	end
+	
+end
+
+
 class Kthura
 	readonly int ID
 	static delegate PermaStore
+	
+	readonly table Actor
 	
 	get int ScrollX
 		return BKTHURA:GetScroll(self.ID,"X")
@@ -68,7 +153,7 @@ class Kthura
 	void PermaKill(string tag)
 		assert(self.PermaStore,"Kthura.PermaStore not configured! Cannot PermaKill!")
 		Kill(tag)
-		self.PermaStore('LocalKthura.Kill("'..tag..'"))\n"')
+		self.PermaStore('LocalKthura.Kill("'..tag..'"))\n')
 	end
 	
 	void Draw(x,y)
@@ -84,10 +169,24 @@ class Kthura
 		#endpure
 	end
 	
-	void DESTRUCTOR()
+	void Destroy()
 		if self.ID!=0
 			BKTHURA:Destroy(self.ID)
 		end
+		table kill
+		for k,v in pairs(_actorlist[self.ID])
+			v.ParentMap=nil;
+			kill[#kill+1]=k
+		end
+		for _,k in ipairs(kill)
+			_actorlist[self.ID][k].Destroy()
+			_actorlist[self.ID][k]=nil;
+		end
+		_actorlist[self.ID]=nil;
+	end
+	
+	void DESTRUCTOR()
+		self.Destroy()
 	end
 	
 	private table mdata
@@ -126,7 +225,22 @@ class Kthura
 				return temptable()
 			end
 		})
+		_actorlist[self.ID] = {}
+		table ActorMeta		
+		ActorMeta.__newindex = void()
+			error("Kthura.Actor is a read-only table!")
+		end		
+		ActorMeta.__index = var(t,string k)
+			_actorlist[self.ID][k] = _actorlist[self.ID][k] or new KthuraActor(k,self)
+			return _actorlist[k]
+		end
+		setmetatable(self.Actor,ActorMeta)
 	end
 	
+	
 end
+
+
+
+
 

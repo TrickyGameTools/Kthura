@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System;
 using UseJCR6;
 using TrickyUnits;
+using TrickyUnits.Dijkstra;
 
 
 
@@ -183,6 +184,172 @@ namespace NSKthura {
         }
     }
 
+    class KthuraActor : KthuraObject {
+        /* Stuff which came from the original Kthura, as a kind of personal note!
+    Field SinglePicFile$,PicBundleDir$
+	Field SinglePic:TImage
+	Field PicBundle:TMap
+	Field ChosenPic$
+	Field InMotion = False
+	Field NotInMotionThen0 = True
+	Field Walking
+	Field WalkingIsMotion = True
+	Field WalkX, WalkY
+	Field Moving,MoveIgnoreBlock
+	Field UnMoveTimer = 4
+	Field MoveX, MoveY
+	Field MoveSkip = 4
+	Field FrameSpeed = 4
+	Field FrameSpeedCount
+	'Field WalkSkip = 4 'no longer needed
+	Field WalkSpot = 0
+	Field Wind$ = "North"
+	Field WalkingToX,WalkingToY	
+	Field FoundPath:PathFinderUnit
+	Field PathLength
+	Field Cycle = -1
+    */
+        public object DriverTextureObject = null; // To be defined by the graphics driver for its own needs
+        public string ChosenPic = "";
+        bool _InMotion;
+        public bool InMotion {
+            set => _InMotion = value;
+            get {
+                if (WalkingIsInMotion)
+                    return Walking || Moving;
+                else
+                    return _InMotion;
+            }
+        }
+        public bool NotInMotionThen0 = true;
+        public bool Walking = false;
+        public bool WalkingIsInMotion = true;
+        public bool Moving = false;
+        public bool MoveIgnoreBlock = false;
+        public bool AutoWind = true;
+        public int UnMoveTimer = 4;
+        public int MoveX = 0, MoveY = 0;
+        public int MoveSkip = 4;
+        public int FrameSpeed = 4;
+        public int FrameSpeedCount = 0;
+        public int WalkSpot = 0;
+        public string Wind = "North";
+        public int WalkingToX = 0, WalkingToY = 0;
+        public Path FoundPath = null;
+        public int PathIndex = 0;
+        public int PathLength;
+        public int Cycle = -1;
+                
+        public int CWalkX {
+            get {
+                if (Walking) return FoundPath.Nodes[PathIndex].x;
+                return 0;
+            }
+        }
+
+
+        public int CWalkY {
+            get {
+                if (Walking) return FoundPath.Nodes[PathIndex].y;
+                return 0;
+            }
+        }
+
+        public KthuraActor(KthuraLayer prnt):base("Actor",prnt) {
+                        
+        }
+
+        void Walk2Move() {
+            MoveX = (CWalkX * Parent.GridX) + (Parent.GridX / 2);
+            MoveY = (CWalkY * Parent.GridY) + (Parent.GridY);
+            Moving = true;
+        }
+
+        /// <summary>
+        /// Will make an actor walk to the given spot if it can be reached. Kthura will use my Dijkstra class for this.
+        /// </summary>
+        /// <param name="to_x"></param>
+        /// <param name="to_y"></param>
+        /// <param name="real"></param>
+        public void WalkTo(int to_x, int to_y,bool real=true) {
+            var gridx = Parent.GridX;
+            var gridy = Parent.GridY;
+            int tox = to_x, toy = to_y;
+            if (real) {
+                tox = to_x / gridx;
+                toy = to_y / gridy;
+            }
+            FoundPath = Dijkstra.QuickPath(Parent.PureBlockRev, Parent.BlockMapWidth, Parent.BlockMapHeight, x, y, tox, toy);
+            if (FoundPath.Success) {
+                PathIndex = 0;
+                Walking = true;
+                WalkingToX = to_x; //FoundPath.Nodes[0].x;
+                WalkingToY = to_y; //FoundPath.Nodes[1].y;
+                Walk2Move();
+            } else {
+                Walking = false;
+                FoundPath = null;
+            }
+        }
+
+
+        public void WalkTo(KthuraObject obj) {
+            WalkTo(obj.x, obj.y, true);
+        }
+
+        public void WalkTo(string tag) {
+            if (!Parent.HasTag(tag)) throw new Exception($"Object tagged `{tag}` not found");
+            WalkTo(Parent.FromTag(tag));
+        }
+
+        static public KthuraActor Spawn(KthuraLayer parent,string spot) {
+            var ret = new KthuraActor(parent);
+            if (!parent.HasTag(spot)) {
+                Debug.WriteLine($"WARNING! I cannot spawn an actor on not existent spot {spot}!");
+                return null;
+            }
+            var obj = parent.FromTag(spot);
+            ret.x = obj.x;
+            ret.y = obj.y;
+            ret.Dominance = obj.Dominance;
+            ret.Alpha255 = 255;
+            ret.R = 255;
+            ret.G = 255;
+            ret.B = 255;
+            ret.Visible = true;
+            return ret;
+        }
+
+        public void UpdateMoves() {
+            if (Moving || Walking) {
+                if (MoveX < x) { x -= MoveSkip; if (x < MoveX) x = MoveX; if (AutoWind) Wind = "WEST"; }
+                if (MoveX > x) { x += MoveSkip; if (x > MoveX) x = MoveX; if (AutoWind) Wind = "EAST"; }
+                if (MoveY < y) { y -= MoveSkip; if (y < MoveY) y = MoveY; if (AutoWind) Wind = "NORTH"; }
+                if (MoveY > y) { y += MoveSkip; if (y > MoveY) x = MoveY; if (AutoWind) Wind = "SOUTH"; }
+                if (MoveX == x && MoveY == y) {
+                    if (!Walking)
+                        Moving = false;
+                    else {
+                        PathIndex++;
+                        if (PathIndex >= PathLength) {
+                            Walking = false;
+                            Moving = false;
+                        } else {
+                            Walk2Move();
+                        }
+                    }
+                }
+            }
+            if ((WalkingIsInMotion && Walking) || InMotion) {
+                FrameSpeedCount++;
+                if (FrameSpeedCount >= FrameSpeed) {
+                    FrameSpeedCount = 0;
+                    AnimFrame++;
+                }
+            } else if (WalkingIsInMotion && (!Walking)) AnimFrame = 0;
+        }
+    }
+
 
 
     class KthuraLayer {
@@ -275,8 +442,8 @@ namespace NSKthura {
         /// Will rebuild the blockmap. Please note that if Kthura.automap is set to true (that's by default the case), this will happen automatically, when needed. However for performance optimization reasons you can set it to false, and use this function manually.
         /// </summary>
         public void BuildBlockMap() { /* TODO: Code the damn blockmap builder! */
-                                      // KthuraObject O;
-            var GW = GridX;
+        // KthuraObject O;
+        var GW = GridX;
             var GH = GridY;
             int X, Y, W, H; //BX, BY,
             int TX, TY, AX, AY, TW, TH;
@@ -427,6 +594,14 @@ namespace NSKthura {
             //Kthura.EDITTORLOG($"Not stuck in boundaries, so let's return {BlockMap[TX,TY]}");
             return BlockMap[x, y];
         }
+
+        /// <summary>
+        /// Returns true if passible and false if not, which is reversed to what Kthura normally does. This function has been set up most of all for compatibility issues with my Dijkstra routine, but as most other Dijkstra and A* routines want 'true' for walkable areas and false for impassible ones, I decided to follow suit.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool PureBlockRev(int x, int y) => !PureBlock(x, y);
 
 
         public void TotalRemap() {

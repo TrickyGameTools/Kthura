@@ -24,12 +24,13 @@ using TrickyUnits;
 namespace NSKthura{
 
     delegate void DelDrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
-    delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+    delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);    
 
     abstract class KthuraDraw {
         #region The Abstract part every Draw Driver must have!
         abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        abstract public void DrawActor(KthuraActor obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public int ObjectWidth(KthuraObject obj);
         abstract public int ObjectHeight(KthuraObject obj);
         abstract public bool HasTexture(KthuraObject obj);
@@ -55,6 +56,9 @@ namespace NSKthura{
                                 break;
                             case "Obstacle":
                                 if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
+                                break;
+                            case "Actor":
+                                if (DrawDriver != null) DrawDriver.DrawActor((KthuraActor)obj, x, y, scrollx, scrolly);
                                 break;
                             case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
                             case "Pivot":
