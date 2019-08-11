@@ -1,7 +1,7 @@
 // License Information:
 // KthuraBubble/KthuraBubble.nil
 // Kthura NIL Glue
-// version: 19.08.06
+// version: 19.08.11
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -18,6 +18,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // End License Information
 
+
 #say "Kthura!"
 
 table _actorlist
@@ -26,16 +27,13 @@ table _actorlist
 class KthuraActor
 	
 	readonly string Tag
-	var parentmap
 	
-	get int ParentID
-		return self.parentmap.ID
-	end
+	int ParentID
 		
 	void CONSTRUCTOR(string sTag,parent)
 		assert(parent and type(parent)=="table" and parent[".classname"]=="Kthura","None or incorrect parent given") //"\n"..type(parent).." / "..(parent or {[".classname"]="<nil>"})[".classname"])
 		self.Tag=sTag
-		self.parentmap = parent
+		self.parentid = parent.ID
 		_actorlist[self.Tag] = self
 	end
 	
@@ -47,15 +45,15 @@ class KthuraActor
 	end
 	
 	get bool Exists
-		return BKTHURA:ActorExists(self.parentmap.ID,self.Tag)
+		return BKTHURA:ActorExists(self.parentID,self.Tag)
 	end
 	
 	get int X
-		return BKTHURA:GetX(self.parentmap.ID,self.Tag)
+		return BKTHURA:GetX(self.parentID,self.Tag)
 	end
 	
 	get int Y
-		return BKTHURA:GetY(self.parentmap.ID,self.Tag)
+		return BKTHURA:GetY(self.parentID,self.Tag)
 	end
 	
 	get var Coords
@@ -63,11 +61,11 @@ class KthuraActor
 	end
 	
 	get string Texture
-		return BKTHURA:GetObjTex(self.parentmap.ID,self.Tag)
+		return BKTHURA:GetObjTex(self.parentID,self.Tag)
 	end
 	
 	set string Texture
-		BKTHURA:SetObjTex(self.parentmap.ID,self.Tag,value)
+		BKTHURA:SetObjTex(self.parentID,self.Tag,value)
 	end
 	
 	get string Wind
@@ -82,11 +80,11 @@ class KthuraActor
 		if onlyifnew and self.Exists
 			return 
 		end
-		BKTHURA:Spawn(self.parentmap.ID,self.Tag,exittag)
+		BKTHURA:Spawn(self.parentID,self.Tag,exittag)
 	end
 	
 	void Destroy()
-		self.parentmap = nil;
+		//self.parentmap = nil;
 	end
 	
 	void WalkTo(A,B,C)
@@ -94,7 +92,7 @@ class KthuraActor
 			#pure
 			if (CSay) then CSay("Walkto request: ("..A..","..B.."); Real: "..tostring(C~=false)) end
 			#endpure
-			BKTHURA:WalkToCoords(self.parentmap.ID,self.Tag,A,B,C!=false)
+			BKTHURA:WalkToCoords(self.parentID,self.Tag,A,B,C!=false)
 		elseif type(A)=="string"
 			BKTHURA:WalkToSpot(A)
 		end
@@ -239,6 +237,7 @@ class Kthura
 	
 	
 end
+
 
 
 

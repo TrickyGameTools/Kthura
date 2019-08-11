@@ -21,8 +21,10 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.08.06
+// Version: 19.08.11
 // EndLic
+
+#undef DijkstraPathDebug
 
 using NSKthura;
 using Bubble;
@@ -71,7 +73,16 @@ namespace KthuraBubble {
                 if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
                 var A = (KthuraActor)O;
                 A.WalkTo(x, y, real);
-            } catch(Exception Klotezooi) {
+                if (A.FoundPath!=null && A.FoundPath.Success) {
+                    BubConsole.WriteLine($"Request to walk to ({x},{y}) was succesful!", 0, 255, 0);
+#if DijkstraPathDebug
+                    var P = new StringBuilder("Walk: ");
+                    foreach (TrickyUnits.Dijkstra.Node N in A.FoundPath.Nodes) P.Append($"({N.x},{N.y}); ");
+                    BubConsole.WriteLine(P.ToString(), 255, 180, 0);
+#endif
+                } else
+                    BubConsole.WriteLine($"Request to walk to ({x},{y}) has failed!", 255, 0, 0);
+            } catch (Exception Klotezooi) {
                 Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo({x},{y},{real}):", Klotezooi);
             }
         }
@@ -84,6 +95,11 @@ namespace KthuraBubble {
                 if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
                 var A = (KthuraActor)O;
                 A.WalkTo(Spot);
+                if (A.FoundPath.Success)
+                    BubConsole.WriteLine($"Request to walk to spot \"{Spot}\" was succesful!", 0, 255, 0);
+                else
+                    BubConsole.WriteLine($"Request to walk to \"{Spot}\" has failed!", 255, 0, 0);
+                    BubConsole.WriteLine($"Request to walk to \"{Spot}\" has failed!", 255, 0, 0);
             } catch (Exception Klotezooi) {
                 Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo(\"{Spot}\"):", Klotezooi);
             }
@@ -267,6 +283,20 @@ namespace KthuraBubble {
                 var Map = KMaps[ID];
                 var Scroll = KScroll[ID];
                 var Lay = Layers[ID];
+#if DijkstraPathDebug
+                var L = Map.Layers[Lay];
+                foreach (KthuraObject O in L.Objects) {
+                    if (O.kind == "Actor") {
+                        var A = (KthuraActor)O;
+                        if (A.Walking) {
+                            BubConsole.CSay($"Actor: {A.Tag}; Walking {A.Walking}; Moving: {A.Moving}; Path-Index: {A.PathIndex}; Length: {A.PathLength}");
+                            BubConsole.CSay($"Current position: ({A.x},{A.y})");
+                            BubConsole.CSay($"Moving to: ({A.MoveX},{A.MoveY})");
+                            BubConsole.CSay($"Walkingto: ({A.WalkingToX},{A.WalkingToY})");
+                        }
+                    }
+                }
+#endif
                 KthuraDraw.DrawMap(Map, Lay, Scroll.ScrollX, Scroll.ScrollY,x,y);
             } catch (Exception Moron) {
                 Crash($"Draw(Res#{ID},{x},{y}):",Moron);
@@ -415,4 +445,5 @@ namespace KthuraBubble {
     }
 
 }
+
 

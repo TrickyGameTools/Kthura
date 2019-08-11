@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 19.08.06
+// version: 19.08.11
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 
 
 
@@ -237,7 +238,12 @@ namespace NSKthura {
         public int WalkingToX = 0, WalkingToY = 0;
         public Path FoundPath = null;
         public int PathIndex = 0;
-        public int PathLength;
+        public int PathLength {
+            get {
+                if (FoundPath == null) return 0;
+                return FoundPath.Nodes.Length;
+            }
+        }
         public int Cycle = -1;
                 
         public int CWalkX {
@@ -275,20 +281,25 @@ namespace NSKthura {
             var gridx = Parent.GridX;
             var gridy = Parent.GridY;
             int tox = to_x, toy = to_y;
+            int fromx = x, fromy = y;
             if (real) {
                 tox = to_x / gridx;
                 toy = to_y / gridy;
+                fromx = x / gridx;
+                fromy = y / gridy;
             }
-            FoundPath = Dijkstra.QuickPath(Parent.PureBlockRev, Parent.BlockMapWidth, Parent.BlockMapHeight, x, y, tox, toy);
+            FoundPath = Dijkstra.QuickPath(Parent.PureBlockRev, Parent.BlockMapWidth, Parent.BlockMapHeight, fromx, fromy, tox, toy);
             if (FoundPath.Success) {
                 PathIndex = 0;
                 Walking = true;
                 WalkingToX = to_x; //FoundPath.Nodes[0].x;
                 WalkingToY = to_y; //FoundPath.Nodes[1].y;
+                MoveX = x;
+                MoveY = y;
                 Walk2Move();
             } else {
                 Walking = false;
-                FoundPath = null;
+                FoundPath = null;                
             }
         }
 
@@ -325,7 +336,7 @@ namespace NSKthura {
                 if (MoveX < x) { x -= MoveSkip; if (x < MoveX) x = MoveX; if (AutoWind) Wind = "WEST"; }
                 if (MoveX > x) { x += MoveSkip; if (x > MoveX) x = MoveX; if (AutoWind) Wind = "EAST"; }
                 if (MoveY < y) { y -= MoveSkip; if (y < MoveY) y = MoveY; if (AutoWind) Wind = "NORTH"; }
-                if (MoveY > y) { y += MoveSkip; if (y > MoveY) x = MoveY; if (AutoWind) Wind = "SOUTH"; }
+                if (MoveY > y) { y += MoveSkip; if (y > MoveY) y = MoveY; if (AutoWind) Wind = "SOUTH"; }
                 if (MoveX == x && MoveY == y) {
                     if (!Walking)
                         Moving = false;
@@ -339,6 +350,9 @@ namespace NSKthura {
                         }
                     }
                 }
+            } else {
+                MoveX = x;
+                MoveY = y;
             }
             if ((WalkingIsInMotion && Walking) || InMotion) {
                 FrameSpeedCount++;
@@ -878,6 +892,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 

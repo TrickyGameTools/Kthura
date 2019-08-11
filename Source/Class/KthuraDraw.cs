@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.04.21
+// version: 19.08.11
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -17,6 +17,7 @@
 // misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
+
 
 using System;
 using TrickyUnits;
@@ -46,6 +47,9 @@ namespace NSKthura{
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
         static public void DrawMap(KthuraLayer layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) {
+            bool AutoRemapOnHold = Kthura.automap;
+            bool actorsmoved = false;
+            Kthura.automap = false;
             if (layer.ObjectDrawOrder == null) layer.RemapDominance();
             foreach(KthuraObject obj in layer.ObjectDrawOrder) {
                 if (obj.Visible || IgnoreVisibility) {
@@ -57,9 +61,13 @@ namespace NSKthura{
                             case "Obstacle":
                                 if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
                                 break;
-                            case "Actor":
-                                if (DrawDriver != null) DrawDriver.DrawActor((KthuraActor)obj, x, y, scrollx, scrolly);
-                                break;
+                            case "Actor": {
+                                    int oldx = x;
+                                    int oldy = y;
+                                    if (DrawDriver != null) DrawDriver.DrawActor((KthuraActor)obj, x, y, scrollx, scrolly);
+                                    actorsmoved = actorsmoved || oldx != x || oldy != y;
+                                    break;
+                                }
                             case "Zone": DrawZone(obj, x, y, scrollx, scrolly); break;
                             case "Pivot":
                                 DrawPivot?.Invoke(obj, x, y, scrollx, scrolly); break;
@@ -76,10 +84,14 @@ namespace NSKthura{
                     }
                 }
             }
+            // Restore Automap
+            Kthura.automap = AutoRemapOnHold;
+            if (Kthura.automap && actorsmoved) layer.TotalRemap(); // If actors have moved, make sure remapping is done
         }
         #endregion
     }
 }
+
 
 
 
