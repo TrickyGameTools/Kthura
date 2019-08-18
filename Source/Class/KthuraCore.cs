@@ -314,6 +314,12 @@ namespace NSKthura {
             WalkTo(Parent.FromTag(tag));
         }
 
+        /// <summary>
+        /// Spawns the actor on a spot on the map
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="spot"></param>
+        /// <returns></returns>
         static public KthuraActor Spawn(KthuraLayer parent,string spot) {
             var ret = new KthuraActor(parent);
             if (!parent.HasTag(spot)) {
@@ -329,6 +335,36 @@ namespace NSKthura {
             ret.G = 255;
             ret.B = 255;
             ret.Visible = true;
+            ret.Impassible = false;
+            if (obj.MetaData.ContainsKey("Wind")) ret.Wind = obj.MetaData["Wind"]; else ret.Wind = "NORTH";
+            return ret;
+        }
+
+        /// <summary>
+        /// Spawns an actor on given coordinates on the map
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="wind"></param>
+        /// <param name="R"></param>
+        /// <param name="G"></param>
+        /// <param name="B"></param>
+        /// <param name="alpha"></param>
+        /// <param name="Dominance"></param>
+        /// <returns></returns>
+        static public KthuraActor Spawn(KthuraLayer parent, int x,int y, string wind="NORTH", byte R=255, byte G=255, byte B=255, byte alpha=255,int Dominance = 20) {
+            var ret = new KthuraActor(parent);
+            ret.x = x;
+            ret.y = y;
+            ret.Wind = wind;
+            ret.R = R;
+            ret.G = G;
+            ret.B = B;
+            ret.Alpha255 = alpha;
+            ret.Dominance = Dominance;
+            ret.Visible = true;
+            ret.Impassible = false;
             return ret;
         }
 

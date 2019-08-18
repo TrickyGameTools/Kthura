@@ -34,7 +34,7 @@ class KthuraActor
 	void CONSTRUCTOR(string sTag,parent)
 		assert(parent and type(parent)=="table" and parent[".classname"]=="Kthura","None or incorrect parent given") //"\n"..type(parent).." / "..(parent or {[".classname"]="<nil>"})[".classname"])
 		self.Tag=sTag
-		self.parentid = parent.ID
+		self.ParentID = parent.ID
 		_actorlist[self.Tag] = self
 	end
 	
@@ -46,15 +46,15 @@ class KthuraActor
 	end
 	
 	get bool Exists
-		return BKTHURA:ActorExists(self.parentID,self.Tag)
+		return BKTHURA:ActorExists(self.ParentID,self.Tag)
 	end
 	
 	get int X
-		return BKTHURA:GetX(self.parentID,self.Tag)
+		return BKTHURA:GetX(self.ParentID,self.Tag)
 	end
 	
 	get int Y
-		return BKTHURA:GetY(self.parentID,self.Tag)
+		return BKTHURA:GetY(self.ParentID,self.Tag)
 	end
 	
 	get var Coords
@@ -62,11 +62,11 @@ class KthuraActor
 	end
 	
 	get string Texture
-		return BKTHURA:GetObjTex(self.parentID,self.Tag)
+		return BKTHURA:GetObjTex(self.ParentID,self.Tag)
 	end
 	
 	set string Texture
-		BKTHURA:SetObjTex(self.parentID,self.Tag,value)
+		BKTHURA:SetObjTex(self.ParentID,self.Tag,value)
 	end
 	
 	get string Wind
@@ -81,7 +81,7 @@ class KthuraActor
 		if onlyifnew and self.Exists
 			return 
 		end
-		BKTHURA:Spawn(self.parentID,self.Tag,exittag)
+		BKTHURA:Spawn(self.ParentID,self.Tag,exittag)
 	end
 	
 	void Destroy()
@@ -93,7 +93,7 @@ class KthuraActor
 			#pure
 			if (CSay) then CSay("Walkto request: ("..A..","..B.."); Real: "..tostring(C~=false)) end
 			#endpure
-			BKTHURA:WalkToCoords(self.parentID,self.Tag,A,B,C!=false)
+			BKTHURA:WalkToCoords(self.ParentID,self.Tag,A,B,C!=false)
 		elseif type(A)=="string"
 			BKTHURA:WalkToSpot(A)
 		end
@@ -174,7 +174,7 @@ class Kthura
 		end
 		table kill
 		for k,v in pairs(_actorlist[self.ID])
-			v.ParentMap=nil;
+			// v.ParentMap=nil;
 			kill[#kill+1]=k
 		end
 		for _,k in ipairs(kill)
