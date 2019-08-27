@@ -47,7 +47,7 @@ namespace KthuraEdit {
             if (!Markers.ContainsKey(i)) {
                 Markers[i] = TQMG.GetImage($"Markers/{i}.png");
                 Markers[i].HotCenter();
-                DBG.Log($"Loaded marker #{i}");
+                DBG.Log($"Loaded marker #{i}");                
             }
             return Markers[i];
         }

@@ -147,6 +147,9 @@
     <Compile Include="..\..\..\JCR6\jcr6.cs">
       <Link>Include\JCR6\jcr6.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\Dijkstra.cs">
+      <Link>Include\Units\Dijkstra.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\Dirry.cs">
       <Link>Include\Units\Dirry.cs</Link>
     </Compile>
@@ -158,6 +161,9 @@
     </Compile>
     <Compile Include="..\..\..\TrickyUnits\GINI Is Not Ini.cs">
       <Link>Include\Units\GINI Is Not Ini.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\TrickyUnits\Maps.cs">
+      <Link>Include\Units\Maps.cs</Link>
     </Compile>
     <Compile Include="..\..\..\TrickyUnits\mkl.cs">
       <Link>Include\Units\mkl.cs</Link>

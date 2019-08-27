@@ -85,6 +85,17 @@ class KthuraActor
 		BKTHURA:Spawn(self.ParentID,self.Tag,exittag)
 	end
 	
+	void SpawnCoords(int x, int y, onlyifnew)
+		if onlyifnew and self.Exists
+			return 
+		end
+		BKTHURA:SpawnCoords(self.ParentID,self.Tag,x,y)
+	end
+	
+	void CoordSpawn(int x, int y, onlyifnew)
+		$SpawnCoords(x,y,onlyifnew)
+	end
+	
 	void Destroy()
 		//self.parentmap = nil;
 	end
@@ -108,6 +119,10 @@ class Kthura
 	static delegate PermaStore
 	
 	readonly table Actor
+	
+	string Obj
+	table ObjInt
+	table ObjString
 	
 	get int ScrollX
 		return BKTHURA:GetScroll(self.ID,"X")
@@ -134,6 +149,52 @@ class Kthura
 		BKTHURA:SetLayer(self.ID,value)
 	end
 	
+	get table Layers
+		string glay 
+		glay = BKTHURA:GetLayers(self.ID)
+		#pure
+		return assert( (loadstring or load)(glay)() )
+		#endpure
+	end
+	
+	get var EachLayer
+		var r
+		int i
+		r = $Layers
+		return var ()
+			i++
+			if i>#r 
+				return nil
+			else
+				return r[i]
+			end
+		end
+	end
+	
+	table Tags(alay)
+		string lay
+		string gtags
+		lay = alay or $Layer
+		gtags = BKTHURA:GetTags(self.ID,lay)
+		#pure
+		return assert( (loadstring or load)(gtags)() )
+		#endpure
+	end
+	
+	var EachTag(alay)
+		var r
+		int i
+		r = $Tags(alay)
+		return var ()
+			i++
+			if i>#r 
+				return nil
+			else
+				return r[i]
+			end
+		end
+	end
+		
 	get bool AutoRemap
 		return BKTHURA:GetAutoRemap(self.ID)
 	end
@@ -235,6 +296,27 @@ class Kthura
 			return _actorlist[k]
 		end
 		setmetatable(self.Actor,ActorMeta)
+		setmetatable(self.ObjInt,{
+			['__newindex'] = void()
+				error("ObjInt is in the current version of Kthura for Bubble read-only!");
+			end,
+			['__index'] = number(t,string k)
+				return BKTHURA:ObjInt(self.ID, self.Layer,self.Obj,k)
+			end,
+			['__gc'] = void()
+				// Silly Easter Egg! :P
+				CSay("Did you know that Darth Vader never said \"Luke! I am your father!\"?")
+			end
+		})
+		setmetatable(self.ObjString,{
+			['__newindex'] = void()
+				error("ObjString is in the current version of Kthura for Bubble read-only!");
+			end,
+			['__index'] = number(t,string k)
+				return BKTHURA:Objstring(self.ID, self.Layer,self.Obj,k)
+			end
+		})
+
 	end
 	
 	

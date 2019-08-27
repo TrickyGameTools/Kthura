@@ -80,7 +80,7 @@ namespace NSKthura{
                                 } else {
                                     throw new Exception($"Unknown drawing object kind: {obj.kind}");
                                 }
-                                break;
+                                //break;
                         }
                     }
                 }

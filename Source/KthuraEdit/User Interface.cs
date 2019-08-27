@@ -1019,7 +1019,7 @@ namespace KthuraEdit {
             var cst = chosencspot.Replace("$", "CSPOT_");
             Lua_XStuff.callbackstage = "INIT";
             Lua_XStuff.Ask.Clear();
-            Core.Lua($"{cst}_Init()");
+            Core.Lua($"if type({cst})=='table' then {cst}.Init() else {cst}_Init() end");
             Lua_XStuff.WantX = ogPosX;
             Lua_XStuff.WantY = ogPosY;
             QuestionList.ComeToMe($"Data for creating {chosencspot}",Lua_XStuff.Ask.ToArray(),CSpot_Place);
@@ -1036,7 +1036,8 @@ namespace KthuraEdit {
             Lua_XStuff.ME = new KthuraObject(chosencspot, MapLayer);
             Lua_XStuff.ME.x = Lua_XStuff.WantX;
             Lua_XStuff.ME.y = Lua_XStuff.WantY;
-            bs.Append($"{cst}_Create(Kthura.ME,KTHURAQDATA)\n");
+            Lua_XStuff.ME.Alpha1000 = 1000;
+            bs.Append($"if type({cst})=='table' then {cst}.Create(Kthura.ME,KTHURADATA) else {cst}_Create(Kthura.ME,KTHURAQDATA) end\n");
             bs.Append("KTHURAQDATA = nil\n");
             Core.Lua(bs.ToString());
         }

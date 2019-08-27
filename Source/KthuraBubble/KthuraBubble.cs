@@ -66,6 +66,30 @@ namespace KthuraBubble {
             return i;
         }
         
+        public string GetLayers(int id) {
+            try {
+                var ret = new StringBuilder("local ret = {}\n");
+                foreach (string k in KMaps[id].Layers.Keys) ret.Append($"ret[#ret+1] = \"{k}\"\n");
+                ret.Append("\n\nreturn ret");
+                return $"{ret}";
+            } catch (Exception e) {
+                SBubble.MyError($"Kthura.GetLayers({id}):", e.Message, LuaTrace);
+                return "return {}";
+            }
+        }
+
+        public string GetTags(int id,string layer) {
+            var ret = new StringBuilder("local ret = {}");
+            try {
+                foreach (string k in KMaps[id].Layers[layer].Tags) ret.Append($"ret[#ret+1] = \"{k}\"\n");
+                ret.Append("\n\nreturn ret");
+            } catch (Exception e) {
+                SBubble.MyError($"Kthura.GetTags({id},\"{layer}\"):", e.Message, LuaTrace);
+                return "return {}";
+            }
+            return ret.ToString();
+        }
+        
         public void WalkToCoords(int ID, string ActorTag,int x, int y,bool real) {
             try {
                 var M = KMaps[ID];
@@ -206,6 +230,19 @@ namespace KthuraBubble {
                 SBubble.MyError($"<MAP #{ID}>.Actor.{acttag}.Spawn(\"{exitpoint}\"):", DonaldTrump.Message, LuaTrace);
             }
         }
+
+        public void SpawnCoords(int ID ,string acttag,int x,int y) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                if (L.HasTag(acttag)) Kill(ID, acttag);
+                var A = KthuraActor.Spawn(L, x, y);
+                if (A == null) throw new Exception($"Cannot spawn actor on coordinate ({x},{y})");
+                A.Tag = acttag;
+            } catch (Exception DonaldTrump) {
+                SBubble.MyError($"<MAP #{ID}>.Actor.{acttag}.Spawn({x},{y}):", DonaldTrump.Message, LuaTrace);
+            }
+
+}
 
         void GetCoords(int ID,string tag,ref int x, ref int y) {
             try {
@@ -407,6 +444,49 @@ namespace KthuraBubble {
             } catch (Exception Stront) {
                 Crash($"Getting scroll Y in resource {id}", Stront.Message);
                 return 0;
+            }
+        }
+
+        public int ObjInt(int id, string Lay,string Tag,string stat) {
+            try {
+                var M = KMaps[id]; 
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "X": return T.x;
+                    case "Y": return T.y;
+                    case "W": case "WIDTH": return T.w;
+                    case "H": case "HEIGHT": return T.h;
+                    case "DOMINANCE": return T.Dominance;
+                    case "R": case "RED": return T.R;
+                    case "G": case "GREEN": return T.G;
+                    case "B": case "BLUE": return T.B;
+                    case "OBJECTWIDTH": return KthuraDraw.DrawDriver.ObjectWidth(T);
+                    case "OBJECTHEIGHT": return KthuraDraw.DrawDriver.ObjectHeight(T);
+                    default:
+                        throw new Exception($"There is no integer field named: {stat}");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+                return 0;
+            }
+        }
+
+
+        public string ObjString(int id, string Lay, string Tag, string stat) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "KIND": return T.kind;
+                    case "TEXTURE": return T.Texture;
+                    default:
+                        throw new Exception($"There is no string field named: {stat}");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+                return "ERROR";
             }
         }
 

@@ -211,24 +211,36 @@ namespace KthuraEdit {
             try {
                 var basescript = JCR.LoadString("Script/BasisScript.lua");
                 var scriptfile = ($"{GlobalWorkSpace}/{Project}/{Project}.Script.lua").Replace("\\", "/");
+                var nilfile = ($"{GlobalWorkSpace}/{Project}/{Project}.Script.nil").Replace("\\", "/");
+                var nilcore = QuickStream.StringFromEmbed("NIL.lua");
                 var tscript = basescript;
                 DBG.Log("- Setting up Lua");
                 DBG.Log("  = Setting up API");
                 Script["Kthura"] = LAPI;
+                DBG.Log("  = Compiling NIL");
+                Script.DoString($"NIL = (function()\n{nilcore}\n end)()", "NIL Core");
                 DBG.Log("  = Compiling Main Script");
                 Script.DoString(tscript, "Kthura Script");
-                if (File.Exists(scriptfile)) {
+                if (File.Exists(nilfile)) {
+                    DBG.Log($"  = Loading {nilfile}");
+                    //var impscript = QuickStream.LoadString(scriptfile);
+                    DBG.Log($"  = Compiling {nilfile}");
+                    //tscript = tscript.Replace("--[[CONTENT]]", impscript);
+                    //Script.DoString("NIL.Load(\"#accept ME\",\"ME\")()","ME");
+                    Script.DoString($"NIL.Use(\"{nilfile}\")");
+                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");
+                } else if (File.Exists(scriptfile)) {
                     DBG.Log($"  = Loading {scriptfile}");
                     //var impscript = QuickStream.LoadString(scriptfile);
                     DBG.Log($"  = Compiling {scriptfile}");
                     //tscript = tscript.Replace("--[[CONTENT]]", impscript);
                     Script.DoFile(scriptfile);
-                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");
+                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");                
                 }
 
             } catch (Exception e) {
                 DBG.Log($"   = ERROR: {e.Message}");
-                DBG.Log("An error popped up during setting up Lua.\nPlease note that placing custom spots may not work properly now!");
+                DBG.Log("An error popped up during setting up Lua/NIL.\nPlease note that placing custom spots may not work properly now!");
             }
         }
         static public void Lua(string command, bool silent = false) {
