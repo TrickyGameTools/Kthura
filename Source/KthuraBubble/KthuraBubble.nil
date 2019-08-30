@@ -112,6 +112,10 @@ class KthuraActor
 		end
 	end
 	
+	get bool Walking
+		return BKTHURA:Walking(self.ParentID,self.Tag)
+	end
+	
 end
 
 
@@ -314,7 +318,7 @@ class Kthura
 				error("ObjString is in the current version of Kthura for Bubble read-only!");
 			end,
 			['__index'] = number(t,string k)
-				return BKTHURA:Objstring(self.ID, self.Layer,self.Obj,k)
+				return BKTHURA:ObjString(self.ID, self.Layer,self.Obj,k)
 			end
 		})
 

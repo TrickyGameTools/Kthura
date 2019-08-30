@@ -131,6 +131,20 @@ namespace KthuraBubble {
             }
         }
 
+        public bool Walking(int id, string ActorTag) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                return A.Walking;
+            } catch (Exception Verschrikkelijk) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.Walking:", Verschrikkelijk);
+                return false;
+            }
+        }
+
         public void SetAutoRemap(int ID, bool value) {
             AutoRemap[ID] = value;
         }
