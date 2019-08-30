@@ -132,7 +132,7 @@ namespace KthuraBubble {
             }
         }
 
-        public bool Walking(int id, string ActorTag) {
+        public bool Walking(int ID, string ActorTag) {
             try {
                 var M = KMaps[ID];
                 var L = M.Layers[Layers[ID]];
