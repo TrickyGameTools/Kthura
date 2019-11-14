@@ -80,6 +80,25 @@ namespace KthuraBubble {
             }
         }
 
+        public bool HasTag(int id,string layer, string tag) {
+            try {
+                return KMaps[id].Layers[layer].HasTag(tag);
+            } catch (Exception FuckYou) {
+                SBubble.MyError($"BubbleKthura.Map[{id}].Layer[\"{layer}\"].HasTag(\"{tag}\"): ", FuckYou.Message, LuaTrace);
+                return false;
+            }
+        }
+
+        public bool LHasTag(int id,string tag) {
+            try {
+                return KMaps[id].Layers[Layers[id]].HasTag(tag);
+            } catch (Exception FuckYou) {
+                SBubble.MyError($"BubbleKthura.Map[{id}].LHasTag(\"{tag}\"): ", FuckYou.Message, LuaTrace);
+                return false;
+            }
+
+        }
+
         public string GetTags(int id,string layer) {
             var ret = new StringBuilder("local ret = {}");
             try {
@@ -90,6 +109,20 @@ namespace KthuraBubble {
                 return "return {}";
             }
             return ret.ToString();
+        }
+
+        public bool ObjectInZone(int id,string Obj,string Zon) {
+            bool ret = false;
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                var o = l.FromTag(Obj);
+                ret = o.IsInZone(Zon);                
+            } catch ( Exception EpicFail) {
+                SBubble.MyError($"Kthura.ObjectInZone({id},\"{Obj}\",\"{Zon}\"):", EpicFail.Message, LuaTrace);
+            }
+            return ret;
         }
         
         public void WalkToCoords(int ID, string ActorTag,int x, int y,bool real) {
@@ -141,10 +174,24 @@ namespace KthuraBubble {
                 var A = (KthuraActor)O;
                 return A.Walking;
             } catch (Exception Verschrikkelijk) {
-                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.Walking:", Verschrikkelijk);
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.GetWalking:", Verschrikkelijk);
                 return false;
             }
         }
+
+        public void SetWalking(int ID, string ActorTag,bool v) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                A.Walking = v;
+            } catch (Exception Verschrikkelijk) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.SetWalking:", Verschrikkelijk);                
+            }
+        }
+
 
         public void SetAutoRemap(int ID, bool value) {
             AutoRemap[ID] = value;
@@ -506,6 +553,21 @@ namespace KthuraBubble {
             }
         }
 
+        public void SetObjString(int id, string Lay, string Tag, string stat,string value) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "KIND": T.kind=value; break;
+                    case "TEXTURE":  T.Texture=value; break;
+                    default:
+                        throw new Exception($"There is no string field named: {stat}");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+            }
+        }
 
 
 

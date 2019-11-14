@@ -63,7 +63,9 @@ namespace KthuraEdit
         static void DrawCSpot(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             Lua_XStuff.callbackstage = "SHOW";
             Lua_XStuff.ME = obj;
-            Core.Lua($";({obj.kind.Replace("$","CSPOT_")}_Show or NOTHING)(Kthura.ME)", true);
+            var OTAG =  obj.kind.Replace("$", "CSPOT_") ;
+            //KthuraEdit.Stages.DBG.Log($"if {OTAG} and {OTAG}[\".hasmember\"].Show then {OTAG}.Show(Kthura.ME) else ({obj.kind.Replace("$", "CSPOT_")}_Show or NOTHING)(Kthura.ME) end");
+            Core.Lua($"if {OTAG} and {OTAG}[\".hasmember\"]('Show') then {OTAG}.Show(Kthura.ME) else ({obj.kind.Replace("$","CSPOT_")}_Show or NOTHING)(Kthura.ME) end", true);
        }
 
 

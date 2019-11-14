@@ -123,6 +123,15 @@ namespace NSKthura {
         // Dominance takes prioity over all. When domincance is the same then y will play a role, and then the x value.
         // cnt just has to make sure every value is unique.
 
+
+        public bool IsInZone(string ztag) {
+            if (!Parent.HasTag(ztag)) return false;
+            var zone = Parent.FromTag(ztag);
+            if (kind != "Object" && kind != "Actor") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Main Object must be either Object or Actor");
+            if (zone.kind != "TiledArea" && zone.kind != "Zone") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Zone Object must be either Zone or TiledArea");
+            return x >= zone.x && y >= zone.y && x <= zone.x + zone.w && y <= zone.y + zone.h;
+        }
+
         #region recalc values
 
         int _alpha1000 = 0;
@@ -535,6 +544,7 @@ namespace NSKthura {
             // And now for the REAL work.		
             foreach (KthuraObject O in Objects) {
                 if (O.Impassible) {
+                    Debug.WriteLine($"Checking object {O.kind}; {O.Texture}; {O.Labels}");
                     X = O.x; if (X < 0) X = 0;
                     Y = O.y; if (Y < 0) Y = 0;
                     W = O.w - 1; if (W < 0) W = 0;
@@ -565,6 +575,7 @@ namespace NSKthura {
                             TX = (int)Math.Floor((decimal)(X / GW));
                             TY = (int)Math.Floor((decimal)((Y - 1) / GH));
                             BlockMap[TX, TY] = true;
+                            if (KthuraDraw.DrawDriver == null) throw new Exception("Draw Driver is null!");
                             if (KthuraDraw.DrawDriver.HasTexture(O))
                                 iw = KthuraDraw.DrawDriver.ObjectWidth(O);
                             else
@@ -896,29 +907,19 @@ namespace NSKthura {
 
 
         public static Kthura Load(string sourcefile, string prefix, TJCRDIR TexJCR) {
-
             var sf = JCR6.Dir(sourcefile);
-
             return Load(sf, prefix, TexJCR);
-
         }
 
         public static Kthura Load(TJCRDIR sourcedir, string prefix = "") {
-
             var tj = DefaultTextureJCR;
-
             if (tj == null) tj = sourcedir;
-
             return Load(sourcedir, prefix, tj);
-
         }
 
         public static Kthura Load(string sourcefile, string prefix = "") {
-
             var sf = JCR6.Dir(sourcefile);
-
             return Load(sf, prefix);
-
         }
 
         #endregion

@@ -71,7 +71,7 @@ namespace NSKthura {
                 if (Textures[tag].Frames == 0) {
                     CrashOnNoTex?.Invoke($"Texture `{file}` for tag `{tag}` has no frames");
                 }
-                Textures[tag].HotBottomCenter();
+                if (obj.kind=="Obstacle") Textures[tag].HotBottomCenter();
             }
             return Textures[tag];
         }
@@ -112,6 +112,10 @@ namespace NSKthura {
                 TQMG.RotateRAD(0);
                 TQMG.SetAlpha(255);
             } else CrashOnNoTex?.Invoke($"Obstacle-texture '{obj.Texture}' did somehow not load?");
+        }
+
+        override public void DrawPic(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            DrawObstacle(obj, ix, iy, scrollx, scrolly); // Seems odd, but trust me... :-P
         }
 
         public override void DrawActor(KthuraActor obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {

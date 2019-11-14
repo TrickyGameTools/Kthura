@@ -34,6 +34,7 @@ namespace NSKthura{
         abstract public void DrawTiledArea(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawActor(KthuraActor obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        abstract public void DrawPic(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public int ObjectWidth(KthuraObject obj);
         abstract public int ObjectHeight(KthuraObject obj);
         abstract public bool HasTexture(KthuraObject obj);
@@ -62,6 +63,9 @@ namespace NSKthura{
                                 break;
                             case "Obstacle":
                                 if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
+                                break;
+                            case "Pic":
+                                if (DrawDriver != null) DrawDriver.DrawPic(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Actor": {
                                     int oldx = x;

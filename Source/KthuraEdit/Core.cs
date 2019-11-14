@@ -364,7 +364,11 @@ namespace KthuraEdit {
                         if (TexJCR == null) DBG.Log("HEY HEY HEY! Texture JCR is null! Should not be possible!");
                         Map = Kthura.Load(FPMapFile, "", TexJCR);
                     } catch (Exception e) {
-                        Crash($"Loading Kthura map failed!\n{e.Message}\n{JCR6.JERROR}");
+#if DEBUG
+                        Crash($"Loading Kthura map failed!\n{e.Message}\n{JCR6.JERROR}\n\n{e.StackTrace}");
+#else
+                        Crash($"Loading Kthura map failed!\n{e.Message}\n{JCR6.JERROR}\n\n");
+#endif
                         return;
                     }
                 } else {

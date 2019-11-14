@@ -1053,6 +1053,10 @@ namespace KthuraEdit {
                         if (ms.X>=obj.x && ms.Y>obj.y && ms.X<=obj.x+obj.w && ms.Y <= obj.y + obj.h) 
                             M_SelectedObject = obj;
                         break;
+                    case "Pic":
+                        if (ms.Y >= obj.y && ms.Y <= obj.y + KthuraDraw.DrawDriver.ObjectHeight(obj) && ms.X >= obj.x  && ms.X <= obj.x + KthuraDraw.DrawDriver.ObjectWidth(obj) )
+                            M_SelectedObject = obj;
+                        break;
                     case "Obstacle":
                         if (ms.Y<=obj.y && ms.Y>=obj.y-KthuraDraw.DrawDriver.ObjectHeight(obj) && ms.X>=obj.x-(KthuraDraw.DrawDriver.ObjectWidth(obj)/2) && ms.X <= obj.x + (KthuraDraw.DrawDriver.ObjectWidth(obj) / 2)) 
                             M_SelectedObject = obj;
@@ -1131,6 +1135,9 @@ namespace KthuraEdit {
                 case "Pivot":
                 case "Exit":
                     TQMG.DrawLineRect(x - 8, y - 8, 16, 16);
+                    break;
+                case "Pic":
+                    TQMG.DrawLineRect(x , y , KD.ObjectWidth(M_SelectedObject), KD.ObjectHeight(M_SelectedObject));
                     break;
                 case "Obstacle":
                     TQMG.DrawLineRect(x - (KD.ObjectWidth(M_SelectedObject) / 2), y - KD.ObjectHeight(M_SelectedObject),  KD.ObjectWidth(M_SelectedObject) , KD.ObjectHeight(M_SelectedObject));

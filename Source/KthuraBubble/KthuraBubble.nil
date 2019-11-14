@@ -109,12 +109,20 @@ class KthuraActor
 			#endpure
 			BKTHURA:WalkToCoords(self.ParentID,self.Tag,A,B,C!=false)
 		elseif type(A)=="string"
-			BKTHURA:WalkToSpot(A)
+			BKTHURA:WalkToSpot(self.ParentID,self.Tag,A)
 		end
 	end
 	
 	get bool Walking
 		return BKTHURA:Walking(self.ParentID,self.Tag)
+	end
+	
+	set bool Walking
+		BKTHURA:SetWalking(self.ParentID,self.Tag,value)
+	end
+	
+	bool IsInZone(string zone)
+		return BKTHURA:ObjectInZone(self.ParentID,self.Tag,zone)
 	end
 	
 end
@@ -200,6 +208,14 @@ class Kthura
 			end
 		end
 	end
+	
+	bool HasTag(string A,B)
+		if B
+			return BKTHURA:HasTag(self.ID,A,tostring(B))
+		else
+			return BKTHURA:LHasTag(self.ID,A)
+		end
+	end
 		
 	get bool AutoRemap
 		return BKTHURA:GetAutoRemap(self.ID)
@@ -265,7 +281,9 @@ class Kthura
 		return self.mdata
 	end
 	
-	
+	bool ObjInZone(string ObjTag,string zone)
+		return BKTHURA:ObjectInZone(self.ID,ObjTag,zone)
+	end
 	
 	void CONSTRUCTOR(mapname)
 		switch type(mapname)
@@ -315,8 +333,9 @@ class Kthura
 			end
 		})
 		setmetatable(self.ObjString,{
-			['__newindex'] = void()
-				error("ObjString is in the current version of Kthura for Bubble read-only!");
+			['__newindex'] = void(t,string k,string v)
+				//error("ObjString is in the current version of Kthura for Bubble read-only!");
+				BKTHURA:SetObjString(self.ID, self.Layer,self.Obj,k,v)
 			end,
 			['__index'] = number(t,string k)
 				return BKTHURA:ObjString(self.ID, self.Layer,self.Obj,k)

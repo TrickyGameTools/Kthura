@@ -80,6 +80,13 @@ namespace KthuraEdit
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Core.StartStep3(spriteBatch);
+
+            Core.InitLua();
+            EditorSpecificDrawFunctions.init();
+            NSKthura.KthuraDrawMonoGame.UseMe();
+            NSKthura.KthuraDraw.IgnoreVisibility = true;
+            KthuraExport_NS.ExportBasis.Init();
+
 #if DEBUG_PROJECT_MAP
             Core.Project = "Test";
             Core.MapFile = "TestMap";
@@ -95,11 +102,6 @@ namespace KthuraEdit
             Core.MapFile = Core.args[2];
 
 #endif
-            Core.InitLua();
-            EditorSpecificDrawFunctions.init();
-            NSKthura.KthuraDrawMonoGame.UseMe();
-            NSKthura.KthuraDraw.IgnoreVisibility = true;
-            KthuraExport_NS.ExportBasis.Init();
         }
 
         /// <summary>

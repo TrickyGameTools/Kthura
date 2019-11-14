@@ -9,10 +9,7 @@ everything in the underlying APIs.
 
 ]]
 
--- Locals appear to be faster than globals
-local table = table
-local os    = os
-local math  = math
+
 
 -- Sorry :P
 local sprintf = string.format
