@@ -71,7 +71,7 @@ namespace NSKthura {
                 if (Textures[tag].Frames == 0) {
                     CrashOnNoTex?.Invoke($"Texture `{file}` for tag `{tag}` has no frames");
                 }
-                if (obj.kind=="Obstacle") Textures[tag].HotBottomCenter();
+                if (obj.kind=="Obstacle" || obj.kind=="Actor") Textures[tag].HotBottomCenter();
             }
             return Textures[tag];
         }
