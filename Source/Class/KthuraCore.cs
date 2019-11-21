@@ -18,13 +18,6 @@
 // 3. This notice may not be removed or altered from any source distribution.
 // EndLic
 
-
-
-
-
-
-
-
 // For Debugging in Editor ONLY!
 #undef DEBUGLOGCHAT
 
@@ -278,7 +271,7 @@ namespace NSKthura {
 
         void Walk2Move() {
             MoveX = (CWalkX * Parent.GridX) + (Parent.GridX / 2);
-            MoveY = (CWalkY * Parent.GridY) + (Parent.GridY);
+            MoveY = ((CWalkY * Parent.GridY) + (Parent.GridY)) - 1;
             Moving = true;
         }
 
@@ -417,7 +410,7 @@ namespace NSKthura {
         internal int cnt = 0;
         internal List<KthuraObject> Objects = new List<KthuraObject>(); // Really this is basically the true core of Kthura!
         Dictionary<string, KthuraObject> TagMap = new Dictionary<string, KthuraObject>();
-        Dictionary<string, List<KthuraObject>> LabelMap = new Dictionary<string, List<KthuraObject>>();
+        public Dictionary<string, List<KthuraObject>>  LabelMap { get; private set; } = new Dictionary<string, List<KthuraObject>>();
         public List<KthuraObject> ObjectDrawOrder { get; private set; } = new List<KthuraObject>();
         readonly public Kthura Parent;
         int BlockMapBoundW = 100;

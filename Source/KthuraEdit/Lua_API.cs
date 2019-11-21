@@ -96,7 +96,7 @@ namespace KthuraEdit {
                     return QuickStream.LoadString(probeer);
                 }
             }
-            return $"error('Use request failed. {file} has not been found!";
+            return $"error('Use request failed. {file} has not been found!')";
         }
 
         public string LayerName => UI.selectedlayer;

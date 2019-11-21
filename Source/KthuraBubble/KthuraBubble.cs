@@ -47,10 +47,12 @@ namespace KthuraBubble {
     }
 
 	class KthuraBubble {
-		Dictionary<int,Kthura> KMaps = new Dictionary<int,Kthura>();
-        Dictionary<int, BubKthScroll> KScroll = new Dictionary<int, BubKthScroll>();
-        Dictionary<int, string> Layers = new Dictionary<int, string>();
-        TMap<int, bool> AutoRemap = new TMap<int, bool>();
+		static Dictionary<int,Kthura> KMaps = new Dictionary<int,Kthura>();
+        static Dictionary<int, BubKthScroll> KScroll = new Dictionary<int, BubKthScroll>();
+        static Dictionary<int, string> Layers = new Dictionary<int, string>();
+        static TMap<int, bool> AutoRemap = new TMap<int, bool>();
+
+        internal static Kthura GetMap(int ID) => KMaps[ID];
 
         string LuaTrace => SBubble.TraceLua(statename);
        
@@ -376,6 +378,35 @@ namespace KthuraBubble {
                 SBubble.MyError($"Setting wind of actor {ID}:{tag}", Merde.Message, LuaTrace);
             }
         }
+
+        public void SetVisible(int ID,string tag,bool vis) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                var O = L.FromTag(tag);
+                O.Visible = vis;
+            } catch (Exception VisWijf) {
+                SBubble.MyError($"Kthura.SetVisible({ID},\"{tag}\",{vis}):",VisWijf.Message, LuaTrace);
+            }
+        }
+        public void ShowObject(int ID, string tag) => SetVisible(ID, tag, true);
+        public void HideObject(int ID, string tag) => SetVisible(ID, tag, false);
+
+        void VisByLabel(int ID, string label, bool value) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                foreach (KthuraObject O in L.LabelMap[label]) O.Visible = value;
+            } catch (Exception Poepzooitje) {
+#if DEBUG
+                SBubble.MyError($"Kthura.VisByLabel({ID},\"{label}\",{value}):", Poepzooitje.Message, $"{LuaTrace}\n\nC# Trace{Poepzooitje.StackTrace}");
+#else
+                SBubble.MyError($"Kthura.VisByLabel({ID},\"{label}\",{value}):", Poepzooitje.Message, LuaTrace);
+#endif
+            }
+        }
+
+        public void HideByLabel(int ID, string label) => VisByLabel(ID, label, false);
+        public void ShowByLabel(int ID, string label) => VisByLabel(ID, label, true);
+
 
 
 

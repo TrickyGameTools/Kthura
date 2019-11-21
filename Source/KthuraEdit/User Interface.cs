@@ -1038,7 +1038,7 @@ namespace KthuraEdit {
             Lua_XStuff.ME.x = Lua_XStuff.WantX;
             Lua_XStuff.ME.y = Lua_XStuff.WantY;
             Lua_XStuff.ME.Alpha1000 = 1000;
-            bs.Append($"if type({cst})=='table' then {cst}.Create(Kthura.ME,KTHURADATA) else {cst}_Create(Kthura.ME,KTHURAQDATA) end\n");
+            bs.Append($"if type({cst})=='table' then {cst}.Create(Kthura.ME,KTHURADATA) elseif type({cst}_Create)=='function' then {cst}_Create(Kthura.ME,KTHURAQDATA) else error('No {cst}_Create or {cst}.Create') end\n");
             bs.Append("KTHURAQDATA = nil\n");
             Core.Lua(bs.ToString());
         }

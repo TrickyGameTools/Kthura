@@ -236,7 +236,10 @@ namespace KthuraEdit {
                     DBG.Log($"  = Compiling {scriptfile}");
                     //tscript = tscript.Replace("--[[CONTENT]]", impscript);
                     Script.DoFile(scriptfile);
-                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");                
+                    Script.DoString("function NOTHING() end\n;(init or NOTHING)()", "Kthura Init");
+                } else {
+                    DBG.Log($"WARNING! Neither {nilfile} nor {scriptfile} have been found, so no script has been loaded!");
+
                 }
 
             } catch (Exception e) {

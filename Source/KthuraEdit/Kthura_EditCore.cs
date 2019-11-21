@@ -81,7 +81,6 @@ namespace KthuraEdit
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Core.StartStep3(spriteBatch);
 
-            Core.InitLua();
             EditorSpecificDrawFunctions.init();
             NSKthura.KthuraDrawMonoGame.UseMe();
             NSKthura.KthuraDraw.IgnoreVisibility = true;
@@ -100,8 +99,8 @@ namespace KthuraEdit
             }
             Core.Project = Core.args[1];
             Core.MapFile = Core.args[2];
-
 #endif
+            Core.InitLua();
         }
 
         /// <summary>
