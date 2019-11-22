@@ -102,16 +102,27 @@ class KthuraActor
 		//self.parentmap = nil;
 	end
 	
-	void WalkTo(A,B,C)
+	#say "WALKTO!"
+	bool WalkTo(A,B,C)
 		if (type(A)=="number" and type(B)=="number")
 			#pure
 			if (CSay) then CSay("Walkto request: ("..A..","..B.."); Real: "..tostring(C~=false)) end
 			#endpure
 			BKTHURA:WalkToCoords(self.ParentID,self.Tag,A,B,C!=false)
 		elseif type(A)=="string"
+			#pure
+			if (CSay) then CSay("Walkto request: Spot:'"..A.."'; Real: "..tostring(C~=false)) end
+			#endpure
 			BKTHURA:WalkToSpot(self.ParentID,self.Tag,A)
-		end
+		else
+			return false
+		end		
+		#pure
+		if (CSay) then CSay("Success received from Kthura is: "..tostring(BKTHURA.WalkSuccess)) end
+		#endpure
+		return BKTHURA.WalkSuccess
 	end
+	#say "/WALKTO"
 	
 	get bool Walking
 		return BKTHURA:Walking(self.ParentID,self.Tag)

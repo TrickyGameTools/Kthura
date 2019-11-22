@@ -126,6 +126,13 @@ namespace KthuraBubble {
             }
             return ret;
         }
+
+
+        static private bool _WalkSuccess = false;
+        public bool WalkSuccess {
+            get { BubConsole.WriteLine($"WalkSuccess asked: {_WalkSuccess}"); return _WalkSuccess; }
+            private set { _WalkSuccess = value; BubConsole.WriteLine($"Setting WalkSuccess to {value}"); }
+        }
         
         public void WalkToCoords(int ID, string ActorTag,int x, int y,bool real) {
             try {
@@ -135,17 +142,21 @@ namespace KthuraBubble {
                 if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
                 var A = (KthuraActor)O;
                 A.WalkTo(x, y, real);
-                if (A.FoundPath!=null && A.FoundPath.Success) {
+                if (A.FoundPath != null && A.FoundPath.Success) {
                     BubConsole.WriteLine($"Request to walk to ({x},{y}) was succesful!", 0, 255, 0);
+                    WalkSuccess = true;
 #if DijkstraPathDebug
                     var P = new StringBuilder("Walk: ");
                     foreach (TrickyUnits.Dijkstra.Node N in A.FoundPath.Nodes) P.Append($"({N.x},{N.y}); ");
                     BubConsole.WriteLine(P.ToString(), 255, 180, 0);
 #endif
-                } else
+                } else {
                     BubConsole.WriteLine($"Request to walk to ({x},{y}) has failed!", 255, 0, 0);
+                    WalkSuccess = false;
+                }
             } catch (Exception Klotezooi) {
                 Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo({x},{y},{real}):", Klotezooi);
+                WalkSuccess = false;
             }
         }
 
@@ -157,13 +168,17 @@ namespace KthuraBubble {
                 if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
                 var A = (KthuraActor)O;
                 A.WalkTo(Spot);
-                if (A.FoundPath.Success)
+                if (A.FoundPath.Success) {
                     BubConsole.WriteLine($"Request to walk to spot \"{Spot}\" was succesful!", 0, 255, 0);
-                else
+                    WalkSuccess = true;
+                } else {
                     BubConsole.WriteLine($"Request to walk to \"{Spot}\" has failed!", 255, 0, 0);
-                    BubConsole.WriteLine($"Request to walk to \"{Spot}\" has failed!", 255, 0, 0);
+                    //BubConsole.WriteLine($"Request to walk to \"{Spot}\" has failed!", 255, 0, 0);
+                    WalkSuccess = false;
+                }
             } catch (Exception Klotezooi) {
                 Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.WalkTo(\"{Spot}\"):", Klotezooi);
+                _WalkSuccess = false;
             }
         }
 
