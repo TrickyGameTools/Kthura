@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDrawMonoGame.cs
 // MonoGame Driver for Kthura for C#
-// version: 19.08.11
+// version: 19.11.23
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -94,7 +94,7 @@ namespace NSKthura {
             TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
             //TQMG.SetAlphaFloat((float)obj.Alpha1000 / 1000);
             TQMG.SetAlpha((byte)obj.Alpha255);
-            if (tx != null) TQMG.Tile(tx, obj.insertx, obj.inserty, obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h);
+            if (tx != null) TQMG.Tile(tx, obj.insertx, obj.inserty, obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h, obj.AnimFrame);
             TQMG.SetAlpha(255);
         }
 
@@ -107,7 +107,7 @@ namespace NSKthura {
                 //TQMG.RotateRAD((float)obj.RotationRadians);
                 TQMG.RotateDEG(obj.RotationDegrees);
                 TQMG.Scale(obj.ScaleX, obj.ScaleY);
-                tx.XDraw(obj.x + ix - scrollx, obj.y + iy - scrolly);
+                tx.XDraw(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.AnimFrame);
                 TQMG.Scale(1000, 1000);
                 TQMG.RotateRAD(0);
                 TQMG.SetAlpha(255);
@@ -173,10 +173,17 @@ namespace NSKthura {
             return Textures.ContainsKey(tag);
         }
 
+        public override void AnimReset(KthuraObject obj) {
+            var tex = GetTex(obj);
+            if (tex == null) return;
+            if (obj.AnimFrame >= tex.Frames) obj.AnimFrame = 0;
+        }
+
         #endregion
     }
 
 }
+
 
 
 

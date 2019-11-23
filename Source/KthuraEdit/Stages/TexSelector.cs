@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.08.06
+// Version: 19.11.23
 // EndLic
 
 
@@ -199,6 +199,7 @@ namespace KthuraEdit.Stages
         #endregion
     }
 }
+
 
 
 

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.08.27
+// Version: 19.11.23
 // EndLic
 
 
@@ -885,6 +885,7 @@ namespace KthuraEdit {
                 Fields["Height"].value = value.h.ToString();
                 Fields["Labels"].value = value.Labels;
                 Fields["Dominance"].value = value.Dominance.ToString();
+                Fields["AnimSpeed"].value = value.AnimSpeed.ToString();
                 Fields["Alpha"].value = value.Alpha1000.ToString();
                 Fields["RotDeg"].value = value.RotationDegrees.ToString();
                 Fields["cR"].value = value.R.ToString();
@@ -936,6 +937,8 @@ namespace KthuraEdit {
                     M_SelectedObject.Labels = strval; break;
                 case "Dominance":
                     M_SelectedObject.Dominance = intval; break;
+                case "AnimSpeed":
+                    M_SelectedObject.AnimSpeed = intval; break;
                 case "Alpha":
                     M_SelectedObject.Alpha1000 = intval; break;
                 case "RotDeg":
@@ -1442,6 +1445,7 @@ namespace KthuraEdit {
         #endregion
     }
 }
+
 
 
 

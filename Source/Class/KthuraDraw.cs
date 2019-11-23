@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 19.08.27
+// version: 19.11.23
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -28,6 +28,7 @@ namespace NSKthura{
 
     delegate void DelDrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
     delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);    
+    
 
     abstract class KthuraDraw {
         #region The Abstract part every Draw Driver must have!
@@ -35,6 +36,7 @@ namespace NSKthura{
         abstract public void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawActor(KthuraActor obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
         abstract public void DrawPic(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
+        abstract public void AnimReset(KthuraObject obj);
         abstract public int ObjectWidth(KthuraObject obj);
         abstract public int ObjectHeight(KthuraObject obj);
         abstract public bool HasTexture(KthuraObject obj);
@@ -56,15 +58,19 @@ namespace NSKthura{
             if (layer.ObjectDrawOrder == null) layer.RemapDominance();
             foreach(KthuraObject obj in layer.ObjectDrawOrder) {
                 if (obj.Visible || IgnoreVisibility) {
-                    if (true) { // This looks useless now, but this routine will be used later in optimalisation to see if an object is actually on screen, and if not, ignore it.
+                    if (true) { // This looks useless now, but this routine will be used later in optimalisation to see if an object is actually on screen, and if not, ignore it.                        
                         switch (obj.kind) {
                             case "TiledArea":
+                                obj.Animate(DrawDriver.AnimReset);                               
                                 if (DrawDriver != null) DrawDriver.DrawTiledArea(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Obstacle":
+                                obj.Animate(DrawDriver.AnimReset);
+                                //KthuraEdit.Stages.DBG.Log($"Animation frame for Obstacle {obj.Tag}: {obj.AnimFrame}"); // Must be on comment if not debugging the standard editor or no compile-o!
                                 if (DrawDriver != null) DrawDriver.DrawObstacle(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Pic":
+                                obj.Animate(DrawDriver.AnimReset);
                                 if (DrawDriver != null) DrawDriver.DrawPic(obj, x, y, scrollx, scrolly);
                                 break;
                             case "Actor": {
@@ -97,6 +103,7 @@ namespace NSKthura{
         #endregion
     }
 }
+
 
 
 

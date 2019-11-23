@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 19.08.18
+// version: 19.11.23
 // Copyright (C)  Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -46,6 +46,7 @@ namespace NSKthura {
         public int ScaleX = 1000, ScaleY = 1000;
         public int AnimSpeed = 0;
         public int AnimFrame = 0;
+        int AnimFrameSkip = 0;
         int _Dominance = 20;
         public float TrueScaleX => (float)ScaleX / 1000;
         public float TrueScaleY => (float)ScaleY / 1000;
@@ -110,7 +111,19 @@ namespace NSKthura {
             }
         }
 
-
+        public delegate void AnimReset(KthuraObject O);
+        public void Animate(AnimReset REST=null) {
+            if (kind != "Obstacle" && kind != "Pic" && kind != "TiledArea") return;
+            if (AnimSpeed < 0) return;
+            AnimFrameSkip++;
+            if (AnimFrameSkip >= AnimSpeed) {
+                AnimFrameSkip = 0;
+                AnimFrame++; 
+                // Please note that the core can NEVER know what driver is loaded. This feature should take care of that!
+                REST?.Invoke(this);
+            }
+            
+        }
 
         public string DomMapVal => $"{Dominance.ToString("D9")}.{y.ToString("D9")}.{x.ToString("D9")}.{cnt.ToString("D9")}";
         // Dominance takes prioity over all. When domincance is the same then y will play a role, and then the x value.
@@ -120,7 +133,7 @@ namespace NSKthura {
         public bool IsInZone(string ztag) {
             if (!Parent.HasTag(ztag)) return false;
             var zone = Parent.FromTag(ztag);
-            if (kind != "Object" && kind != "Actor") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Main Object must be either Object or Actor");
+            if (kind != "Obstacle" && kind != "Actor") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Main Object must be either Object or Actor");
             if (zone.kind != "TiledArea" && zone.kind != "Zone") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Zone Object must be either Zone or TiledArea");
             return x >= zone.x && y >= zone.y && x <= zone.x + zone.w && y <= zone.y + zone.h;
         }
@@ -924,6 +937,7 @@ namespace NSKthura {
     }
 
 }
+
 
 
 
