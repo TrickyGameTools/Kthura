@@ -193,6 +193,9 @@
     <Compile Include="..\Class\KthuraSave.cs">
       <Link>Class\KthuraSave.cs</Link>
     </Compile>
+    <Compile Include="..\Class\KthuraUsed.cs">
+      <Link>Class\KthuraUsed.cs</Link>
+    </Compile>
     <Compile Include="..\KthuraLauncher\builddate.cs">
       <Link>builddate.cs</Link>
     </Compile>

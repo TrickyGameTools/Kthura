@@ -304,6 +304,10 @@ namespace KthuraEdit {
         }
         #endregion
 
+        #region Used or not used!
+        public static KthuraUsed Used { get; private set; }
+        #endregion
+
         #region Project Data
         private static string _prj = ""; // "Real" variable. PSST! This is very very secret!
         public static string Project {
@@ -366,6 +370,7 @@ namespace KthuraEdit {
                     try {
                         if (TexJCR == null) DBG.Log("HEY HEY HEY! Texture JCR is null! Should not be possible!");
                         Map = Kthura.Load(FPMapFile, "", TexJCR);
+                        Used = new KthuraUsed(Map, TexJCR);
                     } catch (Exception e) {
 #if DEBUG
                         Crash($"Loading Kthura map failed!\n{e.Message}\n{JCR6.JERROR}\n\n{e.StackTrace}");

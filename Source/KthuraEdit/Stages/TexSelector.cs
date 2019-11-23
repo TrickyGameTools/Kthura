@@ -76,7 +76,9 @@ namespace KthuraEdit.Stages
         #region stuff
         bool GoToTab = true;
         bool TabData = true;
+        bool UsedOnly = false;
         List<TexItem> Textures;
+        List<TexItem> UsedTextures;
         int time2reload = 250;
         TQMGImage LoadedTex = UI.back;
         string chosen="";
@@ -85,6 +87,7 @@ namespace KthuraEdit.Stages
         int W => (int)(UI.ScrWidth * .75);
         TQMGText tGoToTab = UI.font20.Text("Go to last used object kind");
         TQMGText tTabData = UI.font20.Text("Retreive last used object data");
+        TQMGText tUsedOnly = UI.font20.Text("Used Textures Only");
 
         void GetTextures() {
             if (Textures == null) {
@@ -120,6 +123,11 @@ namespace KthuraEdit.Stages
                     }
                 }
             }
+            if (UsedTextures == null) UsedTextures = new List<TexItem>();
+            UsedTextures.Clear();
+            foreach(TexItem Tex in Textures) {
+                if (Core.Used[Tex.name]) UsedTextures.Add(Tex);
+            }
         }
 
         void ReloadTextures() {
@@ -146,8 +154,15 @@ namespace KthuraEdit.Stages
             if (LoadedTex != null) TQMG.SimpleTile(LoadedTex, 0, 0, UI.ScrWidth, UI.ScrHeight);
         }
 
+        List<TexItem> Tex2List {
+            get {
+                if (UsedOnly) return UsedTextures;
+                return Textures;
+            }
+        }
+
         void ListTextures() {
-            foreach(TexItem TI in Textures) {                
+            foreach(TexItem TI in Tex2List) {                
                 if (Core.ms.X < W && Core.ms.Y+ScrollY > TI.y && Core.ms.Y+ScrollY < TI.y + 22) {
                     if (chosen != TI.name) time2reload = 250;
                     chosen = TI.name;
@@ -157,6 +172,7 @@ namespace KthuraEdit.Stages
                     }
                 }
                 TQMG.Color(0, 255, 255);
+                if (Core.Used[TI.name]) TQMG.Color(255, 180, 0);
                 if (TI.name == chosen) {
                     TQMG.DrawRectangle(0, TI.y-ScrollY, W, 21);
                     TQMG.Color(0, 0, 0);
@@ -169,11 +185,14 @@ namespace KthuraEdit.Stages
             TQMG.Color(0, 255, 255);
             UI.CheckboxImage[GoToTab].Draw(W, 20);
             UI.CheckboxImage[TabData].Draw(W, 40);
+            UI.CheckboxImage[UsedOnly].Draw(W, 60);
             tGoToTab.Draw(W + 22, 20);
             tTabData.Draw(W + 22, 40);
+            tUsedOnly.Draw(W + 22, 60);
             if (Core.MsHit(1) && Core.ms.X>W) {
                 if (Core.ms.Y > 20 && Core.ms.Y < 40) GoToTab = !GoToTab;
                 if (Core.ms.Y > 40 && Core.ms.Y < 60) TabData = !TabData;
+                if (Core.ms.Y > 60 && Core.ms.Y < 80) UsedOnly = !UsedOnly;
             }
         }
         
