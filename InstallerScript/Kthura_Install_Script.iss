@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Kthura"
-#define MyAppVersion "19.08.06"
+#define MyAppVersion "19.11.23"
 #define MyAppPublisher "Jeroen P. Broks"
 #define MyAppURL "https://github.com/TrickyGameTools/Kthura"
 #define MyAppExeName "Kthura.exe"
