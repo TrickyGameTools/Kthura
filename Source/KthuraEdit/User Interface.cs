@@ -1041,7 +1041,7 @@ namespace KthuraEdit {
             Lua_XStuff.ME.x = Lua_XStuff.WantX;
             Lua_XStuff.ME.y = Lua_XStuff.WantY;
             Lua_XStuff.ME.Alpha1000 = 1000;
-            bs.Append($"if type({cst})=='table' then {cst}.Create(Kthura.ME,KTHURADATA) elseif type({cst}_Create)=='function' then {cst}_Create(Kthura.ME,KTHURAQDATA) else error('No {cst}_Create or {cst}.Create') end\n");
+            bs.Append($"if type({cst})=='table' then {cst}.Create(Kthura.ME,KTHURAQDATA) elseif type({cst}_Create)=='function' then {cst}_Create(Kthura.ME,KTHURAQDATA) else error('No {cst}_Create or {cst}.Create') end\n");
             bs.Append("KTHURAQDATA = nil\n");
             Core.Lua(bs.ToString());
         }
@@ -1281,6 +1281,19 @@ namespace KthuraEdit {
             }
 
         }
+
+        static void ScanRotten() {
+            var kill = new List<KthuraObject>();
+            foreach(KthuraObject o in MapLayer.Objects) {
+                var Rotten = false;
+                // Scan
+                Rotten = Rotten || ((o.kind == "TiledArea" || o.kind == "Zone") && (o.w == 0 || o.h == 0));
+                // Declared 'rotten'
+                if (Rotten && Confirm.Yes($"Object {o.kind}({o.x},{o.y}) {o.w}x{o.h} has been declared 'rotten'.\n\nShall I remove it?")) kill.Add(o);
+            }
+            foreach (KthuraObject o in kill) MapLayer.Objects.Remove(o);
+            MapLayer.TotalRemap();
+        }
         #endregion
 
         #region Meta
@@ -1427,6 +1440,7 @@ namespace KthuraEdit {
                 case 3001: DBG.ComeToMe(); break;
                 case 3002: ShowBlockMap(); break;
                 case 3003: CountObjects(); break;
+                case 3004: ScanRotten(); break;
                 case 3005: TagMap(); break;
                 case 3006:
                     QuestionList.ComeToMe("Please enter the new cam position:", new string[] { "X", "Y" }, GoToPos);

@@ -69,6 +69,37 @@ namespace KthuraBubble {
             }
             return i;
         }
+
+        public bool Blocked(int id, int x, int y, bool real) {
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                if (real)
+                    return l.Block(x, y);
+                return l.PureBlock(x, y);
+            } catch (Exception EpicFail) {
+                SBubble.MyError($"Kthura.Blocked({id},{x},{y},{real}):", EpicFail.Message, LuaTrace);
+            }
+            return false;
+        }
+
+        public bool InObj(int id, string objtag,int x, int y) {
+            bool ret = false;
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                var o = l.FromTag(objtag);
+                if (o.kind != "TiledArea" && o.kind != "Zone") throw new Exception($"Cannot do an incheck for object kind {o.kind}");
+                ret = x >= o.x && x <= o.x + o.w && y > o.y && y < o.y + o.h;
+            } catch (Exception EpicFail) {
+                SBubble.MyError($"Kthura.InObj({id},\"{objtag}\",{x},{y}):", EpicFail.Message, LuaTrace);
+            }
+            return ret;
+        }
+          
+        
         
         public string GetLayers(int id) {
             try {
@@ -136,6 +167,7 @@ namespace KthuraBubble {
         
         public void WalkToCoords(int ID, string ActorTag,int x, int y,bool real) {
             try {
+                if (!KMaps.ContainsKey(ID)) throw new Exception($"Map #{ID} does not exist!");
                 var M = KMaps[ID];
                 var L = M.Layers[Layers[ID]];
                 var O = L.FromTag(ActorTag);
@@ -162,13 +194,17 @@ namespace KthuraBubble {
 
         public void WalkToSpot(int ID, string ActorTag, string Spot) {
             try {
+                if (!KMaps.ContainsKey(ID)) throw new Exception($"Map #{ID} does not exist!");
                 var M = KMaps[ID];
+                if (!M.Layers.ContainsKey(Layers[ID])) throw new Exception($"Map #{ID} does not have a layer named {Layers[ID]}");
                 var L = M.Layers[Layers[ID]];
+                if (!L.HasTag(ActorTag)) throw new Exception($"Map #{ID} does not have an object(actor) tagged {ActorTag} on Layer {Layers[ID]}");
                 var O = L.FromTag(ActorTag);
                 if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
                 var A = (KthuraActor)O;
+                if (!L.HasTag(Spot)) throw new Exception($"Map #{ID} does not have an object(target) tagged {ActorTag} on Layer {Layers[ID]}");
                 A.WalkTo(Spot);
-                if (A.FoundPath.Success) {
+                if (A.FoundPath!=null && A.FoundPath.Success) {
                     BubConsole.WriteLine($"Request to walk to spot \"{Spot}\" was succesful!", 0, 255, 0);
                     WalkSuccess = true;
                 } else {
@@ -181,6 +217,61 @@ namespace KthuraBubble {
                 _WalkSuccess = false;
             }
         }
+
+        public void MoveToCoords(int ID, string ActorTag, int x, int y) {
+            try {
+                if (!KMaps.ContainsKey(ID)) throw new Exception($"Map #{ID} does not exist!");
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                A.MoveTo(x, y);
+                if (A.FoundPath != null && A.FoundPath.Success) {
+                    BubConsole.WriteLine($"Request to Move to ({x},{y}) was succesful!", 0, 255, 0);
+                    //MoveSuccess = true;
+#if DijkstraPathDebug
+                    var P = new StringBuilder("Move: ");
+                    foreach (TrickyUnits.Dijkstra.Node N in A.FoundPath.Nodes) P.Append($"({N.x},{N.y}); ");
+                    BubConsole.WriteLine(P.ToString(), 255, 180, 0);
+#endif
+                } else {
+                    BubConsole.WriteLine($"Request to Move to ({x},{y}) has failed!", 255, 0, 0);
+                    //MoveSuccess = false;
+                }
+            } catch (Exception Klotezooi) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.MoveTo({x},{y}):", Klotezooi);
+                //MoveSuccess = false;
+            }
+        }
+
+        public void MoveToSpot(int ID, string ActorTag, string Spot) {
+            try {
+                if (!KMaps.ContainsKey(ID)) throw new Exception($"Map #{ID} does not exist!");
+                var M = KMaps[ID];
+                if (!M.Layers.ContainsKey(Layers[ID])) throw new Exception($"Map #{ID} does not have a layer named {Layers[ID]}");
+                var L = M.Layers[Layers[ID]];
+                if (!L.HasTag(ActorTag)) throw new Exception($"Map #{ID} does not have an object(actor) tagged {ActorTag} on Layer {Layers[ID]}");
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                if (!L.HasTag(Spot)) throw new Exception($"Map #{ID} does not have an object(target) tagged {ActorTag} on Layer {Layers[ID]}");
+                A.MoveTo(Spot);
+                if (A.FoundPath != null && A.FoundPath.Success) {
+                    BubConsole.WriteLine($"Request to Move to spot \"{Spot}\" was succesful!", 0, 255, 0);
+                    //MoveSuccess = true;
+                } else {
+                    BubConsole.WriteLine($"Request to Move to \"{Spot}\" has failed!", 255, 0, 0);
+                    //BubConsole.WriteLine($"Request to Move to \"{Spot}\" has failed!", 255, 0, 0);
+                    //MoveSuccess = false;
+                }
+            } catch (Exception Klotezooi) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.MoveTo(\"{Spot}\"):", Klotezooi);
+                //_MoveSuccess = false;
+            }
+        }
+
+
 
         public bool Walking(int ID, string ActorTag) {
             try {
@@ -576,7 +667,7 @@ namespace KthuraBubble {
                         throw new Exception($"There is no integer field named: {stat}");
                 }
             } catch (Exception shit) {
-                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{Tag}\",\"{stat}\"):", shit.Message, LuaTrace);
                 return 0;
             }
         }
@@ -597,7 +688,7 @@ namespace KthuraBubble {
                 SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
                 return "ERROR";
             }
-        }
+        }  
 
         public void SetObjString(int id, string Lay, string Tag, string stat,string value) {
             try {
@@ -615,6 +706,44 @@ namespace KthuraBubble {
             }
         }
 
+        public string ObjData(int id, string Lay, string Tag, string Fld) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                if (!T.MetaData.ContainsKey(Fld)) return "";
+                return T.MetaData[Fld];
+            } catch (Exception Stront) {
+                SBubble.MyError($"Kthura.ObjData({id},\"{Lay}\",\"{Tag}\",\"{Fld}\"):", Stront.Message, LuaTrace);
+                return "ERROR!";
+            }
+        }
+
+        public void SetObjData(int id, string Lay, string Tag, string Fld,string Value) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                T.MetaData[Fld] = Value;
+            } catch (Exception Stront) {
+                SBubble.MyError($"Kthura.SetObjData({id},\"{Lay}\",\"{Tag}\",\"{Fld}\",\"{Value}\"):", Stront.Message, LuaTrace);
+            }
+
+        }
+
+        public string Tags(int id,string Lay) {
+                var ret = new StringBuilder();
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                L.RemapTags();
+                var T = L.Tags;
+                foreach (string t in T) ret.Append($"{L.FromTag(t).kind} {t}\n");
+            } catch (Exception mislukt) {
+                SBubble.MyError($"Tags({id},\"{Lay}\"):", mislukt.Message, LuaTrace);
+            }
+            return ret.ToString().Trim();
+        }
 
 
         #region Link to Bubble

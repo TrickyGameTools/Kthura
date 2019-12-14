@@ -152,6 +152,10 @@ function HasTag(tag)
    return Kthura:HasTag(tag)
 end
 
+function KillMe()
+	Kthura:KillMe()
+end
+
 -- Pivot callback
 Pivot_Init = NOTHING
 Pivot_Retag = NOTHING

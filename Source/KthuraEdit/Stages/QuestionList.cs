@@ -89,6 +89,7 @@ namespace KthuraEdit.Stages
 
         public override void Draw() {
             var cursor = " ";
+            var gotfield = false;
             UI.BackFull();
             TQMG.Color(255, 180, 0);
             Caption.Draw(UI.ScrWidth / 2, 5, TQMG_TextAlign.Center);
@@ -97,6 +98,7 @@ namespace KthuraEdit.Stages
                 TQ.capttext.Draw(10, TQ.y);
                 if (curfield == "") curfield = TQ.caption;
                 if (curfield == TQ.caption) {
+                    gotfield = true;
                     var nu = DateTime.Now.Second;
                     if (nu % 2 == 0) cursor = "_";
                     TQMG.Color(0, 255, 255);
@@ -111,6 +113,7 @@ namespace KthuraEdit.Stages
                     if (Core.MsHit(1) && (Core.ms.Y > TQ.y && Core.ms.Y < TQ.y + 24)) curfield = TQ.caption;
                 }
             }
+            if (!gotfield) curfield = "";
         }
 
         public override void Update() {

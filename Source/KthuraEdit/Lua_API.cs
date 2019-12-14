@@ -122,6 +122,11 @@ namespace KthuraEdit {
 
         // When creating new CSpots, the "ME" object should contain the Kthura object in question.
         public KthuraObject ME=>Lua_XStuff.ME;
+
+        public void KillMe() {
+            ME.Parent.Objects.Remove(ME);
+            //Remap();
+        }
     }
 }
 

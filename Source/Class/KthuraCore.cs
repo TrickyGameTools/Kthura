@@ -330,6 +330,19 @@ namespace NSKthura {
             WalkTo(Parent.FromTag(tag));
         }
 
+        public void MoveTo(int x, int y) {
+            MoveX = x;
+            MoveY = y;
+            Moving = true;
+        }
+
+        public void MoveTo(KthuraObject obj) => MoveTo(obj.x, obj.y);
+
+        public void MoveTo(string tag) {
+            if (!Parent.HasTag(tag)) throw new Exception($"Object tagged `{tag}` not found");
+            MoveTo(Parent.FromTag(tag));
+        }
+
         /// <summary>
         /// Spawns the actor on a spot on the map
         /// </summary>
@@ -636,7 +649,12 @@ namespace NSKthura {
         }
 
 
-
+        /// <summary>
+        /// Returns true or false based on the area being blocked based on the "real" coordinates
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <returns></returns>
         public bool Block(int X, int Y) {
             //Kthura.EDITTORLOG($"Block({X},{Y})");
             int GW = GridX;
@@ -653,6 +671,12 @@ namespace NSKthura {
             return BlockMap[TX, TY];
         }
 
+        /// <summary>
+        /// Returns true or false based on the area being blocked based on the grid coordinates
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public bool PureBlock(int x, int y) {
             int BX = BlockMapBoundW;
             int BY = BlockMapBoundH;
