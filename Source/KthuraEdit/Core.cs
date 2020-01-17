@@ -382,6 +382,7 @@ namespace KthuraEdit {
                 } else {
                     DBG.Log($"Creating Map: {value}");
                     Map = Kthura.Create(TexJCR);
+                    Used = new KthuraUsed(Map, TexJCR);
                 }
                     
             }
