@@ -60,6 +60,14 @@ class KthuraActor
 		return BKTHURA:GetY(self.ParentID,self.Tag)
 	end
 	
+	set int X
+		BKTHURA:SetX(self.ParentID,self.Tag,value)
+	end
+	
+	set int Y
+		BKTHURA:SetY(self.ParentID,self.Tag,value)
+	end
+	
 	get var Coords
 		return self.X,self.Y
 	end
@@ -228,6 +236,22 @@ class Kthura
 		return BKTHURA:InObj(self.ID,tag,x,y)
 	end
 	
+	void VisibilityByZone(string zone,bool value)
+		BKTHURA:VisibleByZone(self.ID,zone,value)
+	end
+	
+	void HideByZone(string zone)
+		self.VisibilityByZone(zone,false)
+	end
+	
+	void ShowByZone(string zone)
+		self.VisibilityByZone(zone,true)
+	end
+	
+	void RemapDominance()
+		BKTHURA:DomRemap(self.ID)
+	end
+	
 	void HideByLabel(string label)
 		BKTHURA:HideByLabel($ID,label)
 	end
@@ -337,11 +361,11 @@ class Kthura
 	end
 	
 	int ObjX(string tag)
-		return BKTHURA:GetX(tag)
+		return BKTHURA:GetX(self.ID,tag)
 	end
 	
 	int ObjY(string tag)
-		return BKTHURA:GetY(tag)
+		return BKTHURA:GetY(self.ID,tag)
 	end
 	
 	void HideObject(string tag)
@@ -350,6 +374,10 @@ class Kthura
 	
 	void ShowObject(string tag)
 		BKTHURA:ShowObject($ID,tag)
+	end
+	
+	void CreateTiledArea(string Texture,int x, int y, int w, int h, tag)
+		BKTHURA:CreateTiledArea($ID,Texture,x,y,w,h,tag or "")
 	end
 	
 	void CONSTRUCTOR(mapname)
@@ -388,8 +416,9 @@ class Kthura
 		end
 		setmetatable(self.Actor,ActorMeta)
 		setmetatable(self.ObjInt,{
-			['__newindex'] = void()
-				error("ObjInt is in the current version of Kthura for Bubble read-only!");
+			['__newindex'] = void(t,string k,int v)
+				//error("ObjInt is in the current version of Kthura for Bubble read-only!");
+				BKTHURA:SetObjInt(self.ID, self.Layer,self.Obj,k,v)
 			end,
 			['__index'] = number(t,string k)
 				return BKTHURA:ObjInt(self.ID, self.Layer,self.Obj,k)

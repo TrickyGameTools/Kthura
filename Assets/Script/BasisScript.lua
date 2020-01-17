@@ -187,7 +187,7 @@ function Exit_Create(ME,qdata)
       local gkey = GenerateKey(sprintf("Exit_%s_",SelectedLayer()))
       Kthura:Debug("Key generated "..gkey)
       qdata.Tag=gkey
-   end
+   end   
    ME.Tag=qdata.Tag;
    ME.MetaData["Wind"]=qdata.Wind --ME.Wind
    print("Exit created: "..ME.Tag)

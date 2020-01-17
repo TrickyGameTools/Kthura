@@ -36,10 +36,19 @@ using UseJCR6;
 namespace KthuraEdit.Stages
 {
     internal struct TexItem{
-        public int y;
+        private int _y;
+        public int uoy;
+        public int y {
+            set { _y = y; }
+            get {
+                if (TexSelector.UsedOnly)
+                    return uoy;
+                return _y;
+            }
+        }
         public string name;
         public TQMGText text;
-        public TexItem(int ny, string nname) { y = ny; name = nname;text = UI.font20.Text(nname); }
+        public TexItem(int ny, int nuoy, string nname) { _y = ny; uoy = nuoy; name = nname; text = UI.font20.Text(nname); }
     }
 
     class TexSelector:BaseStage {
@@ -76,7 +85,7 @@ namespace KthuraEdit.Stages
         #region stuff
         bool GoToTab = true;
         bool TabData = true;
-        bool UsedOnly = false;
+        internal static bool UsedOnly = false;
         List<TexItem> Textures;
         List<TexItem> UsedTextures;
         int time2reload = 250;
@@ -93,6 +102,7 @@ namespace KthuraEdit.Stages
             if (Textures == null) {
                 Textures = new List<TexItem>();
                 var y = 0;
+                var uoy = 0;
                 var lastbundle = "";
                 foreach (TJCREntry ent in Core.Map.TextureJCR.Entries.Values) {
                     var e = qstr.ExtractExt(ent.Entry);
@@ -109,7 +119,8 @@ namespace KthuraEdit.Stages
                         }
                         if (!font) {
                             if (bundle < 0) {
-                                Textures.Add(new TexItem(y, ent.Entry)); y += 25;
+                                Textures.Add(new TexItem(y, uoy, ent.Entry)); y += 25;
+                                if (Core.Used[ent.Entry]) uoy += 25;
                             } else if (lastbundle == "" || !qstr.Prefixed(ent.Entry, lastbundle)) {
                                 lastbundle = "";
                                 for (int i = 0; i <= bundle; i++) {
@@ -117,7 +128,8 @@ namespace KthuraEdit.Stages
                                     lastbundle += dirsplit[i];
 
                                 }
-                                Textures.Add(new TexItem(y, lastbundle)); y += 25;
+                                Textures.Add(new TexItem(y, uoy, lastbundle)); y += 25;
+                                if (Core.Used[lastbundle]) uoy += 25;
                             }
                         }
                     }

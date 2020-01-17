@@ -85,6 +85,8 @@ namespace KthuraEdit
             NSKthura.KthuraDrawMonoGame.UseMe();
             NSKthura.KthuraDraw.IgnoreVisibility = true;
             KthuraExport_NS.ExportBasis.Init();
+            NSKthura.KthuraDrawMonoGame.NoTexture = TrickyUnits.TQMG.GetImage("NoTex.png");
+
 
 #if DEBUG_PROJECT_MAP
             Core.Project = "Test";

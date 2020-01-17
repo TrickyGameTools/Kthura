@@ -84,6 +84,34 @@ namespace KthuraBubble {
             return false;
         }
 
+        public void DomRemap(int id) {
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                l.RemapDominance();
+            } catch (Exception EpicFail) {
+                SBubble.MyError($"Kthura.DominanceRemap({id}):", EpicFail.Message, LuaTrace);
+            }            
+        }
+
+        public void VisibleByZone(int id,string tag,bool value) {
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                if (!l.HasTag(tag)) throw new Exception("I cannot hide or show by a non-existent zone");
+                var zone = l.FromTag(tag);
+                if (zone.kind != "TiledArea" && zone.kind != "Zone") throw new Exception($"Object '{tag}' is a {zone.kind} which is not valid for a visible by zone change!");
+                foreach(KthuraObject o in l.Objects) {
+                    if (o != zone && o.x >= zone.x && o.y >= zone.y && o.x <= zone.x + zone.w && o.y <= zone.y + zone.h) o.Visible = value;                
+                }
+            } catch (Exception EpicFail) {
+                SBubble.MyError($"Kthura.VisilityByZone[{id},\"{tag}\"]={value}:", EpicFail.Message, LuaTrace);
+            }
+
+        }
+
         public bool InObj(int id, string objtag,int x, int y) {
             bool ret = false;
             try {
@@ -441,6 +469,29 @@ namespace KthuraBubble {
             return y;
         }
 
+        public void SetX(int ID, string tag, int NP) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                if (!L.HasTag(tag)) throw new Exception($"Object not found in layer: {Layers[ID]}!");
+                var O = L.FromTag(tag);
+                O.x = NP;
+            } catch (Exception Verschrikkelijk) {
+                SBubble.MyError($"Kthura Object Coordinate Definer (Map: #{ID}, Tag:{tag}):", Verschrikkelijk.Message, LuaTrace);
+            }
+        }
+
+        public void SetY(int ID, string tag, int NP) {
+            try {
+                var L = KMaps[ID].Layers[Layers[ID]];
+                if (!L.HasTag(tag)) throw new Exception($"Object not found in layer: {Layers[ID]}!");
+                var O = L.FromTag(tag);
+                O.y = NP;
+            } catch (Exception Verschrikkelijk) {
+                SBubble.MyError($"Kthura Object Coordinate Definer (Map: #{ID}, Tag:{tag}):", Verschrikkelijk.Message, LuaTrace);
+            }
+        }
+
+
         public string GetObjTex(int ID,string tag) {
             try {
                 var L = KMaps[ID].Layers[Layers[ID]];
@@ -663,12 +714,41 @@ namespace KthuraBubble {
                     case "B": case "BLUE": return T.B;
                     case "OBJECTWIDTH": return KthuraDraw.DrawDriver.ObjectWidth(T);
                     case "OBJECTHEIGHT": return KthuraDraw.DrawDriver.ObjectHeight(T);
+                    case "SCALEX": return T.ScaleX;
+                    case "SCALEY": return T.ScaleY;
                     default:
                         throw new Exception($"There is no integer field named: {stat}");
                 }
             } catch (Exception shit) {
                 SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{Tag}\",\"{stat}\"):", shit.Message, LuaTrace);
                 return 0;
+            }
+        }
+
+        public void SetObjInt(int id, string Lay, string Tag, string stat,int value) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "X": T.x=value; break;
+                    case "Y": T.y=value; break;
+                    case "W": case "WIDTH":  T.w=value; break;
+                    case "H": case "HEIGHT": T.h=value; break;
+                    case "DOMINANCE": T.Dominance=value; break;
+                    case "R": case "RED": T.R=value; break;
+                    case "G": case "GREEN": T.G=value; break;
+                    case "B": case "BLUE": T.B=value; break;
+                    case "OBJECTWIDTH": throw new Exception("Object Width cannot yet be changed!"); //return KthuraDraw.DrawDriver.ObjectWidth(T);
+                    case "OBJECTHEIGHT": throw new Exception("Object Height cannot yet be changed"); // return KthuraDraw.DrawDriver.ObjectHeight(T);
+                    case "SCALEX": T.ScaleX = value; break;
+                    case "SCALEY": T.ScaleY = value; break;
+                    default:
+                        throw new Exception($"There is no object integer field named: {stat}!");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjInt({id},\"{Lay}\",\"{Tag}\",\"{stat}\"):", shit.Message, LuaTrace);
+                return ;
             }
         }
 
@@ -743,6 +823,28 @@ namespace KthuraBubble {
                 SBubble.MyError($"Tags({id},\"{Lay}\"):", mislukt.Message, LuaTrace);
             }
             return ret.ToString().Trim();
+        }
+
+        public void CreateTiledArea(int id,string texture, int x, int y, int w,int h, string tag) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Layers[id]];
+                var O = new KthuraObject("TiledArea", L);
+                O.x = x;
+                O.y = y;
+                O.w = w;
+                O.h = h;
+                O.Tag = tag;
+                O.Texture = texture;
+                O.Visible = true;
+                O.Alpha255 = 255;
+                O.R = 255;
+                O.G = 255;
+                O.B = 255;
+                L.RemapTags();
+            } catch (Exception Afgang) {
+                SBubble.MyError($"CreateTiledArea({id},\"{texture}\",{x},{y},{w},{h},\"{tag}\"):", Afgang.Message, LuaTrace);
+            }
         }
 
 

@@ -40,6 +40,7 @@ namespace NSKthura {
         #endregion
 
         #region Textures
+        static public TQMGImage NoTexture = null;
         Dictionary<string, TQMGImage> Textures = new Dictionary<string, TQMGImage>();
         Kthura LastUsedMap;
 
@@ -59,13 +60,27 @@ namespace NSKthura {
                     if (map.TextureJCR == null) Debug.WriteLine("TextureJCR is null???");
                     var bt = map.TextureJCR.ReadFile(file);
                     if (bt == null) {
-                        CrashOnNoTex?.Invoke($"Couldn't open texture file {file} for {tag}");
-                        Debug.WriteLine($"Couldn't open texture file {file} for {tag}");
-                        return null;
-                    }
-                    Textures[tag] = TQMG.GetImage(bt);
-                    if (Textures[tag] == null) {
-                        CrashOnNoTex?.Invoke($"Texture `{file}` didn't load at all on tag {tag}.\n{UseJCR6.JCR6.JERROR}");
+                        if (NoTexture != null) {
+                            Textures[tag] = NoTexture; //TQMG.GetImage(NoTexture.GetTex(0));
+                            System.Console.Beep();
+                            Debug.WriteLine($"Texture {file} for {tag} could not be loaded , so set to alternet picture in stead ({UseJCR6.JCR6.JERROR})");
+                            //return NoTexture;
+                        } else {
+                            CrashOnNoTex?.Invoke($"Couldn't open texture file {file} for {tag}");
+                            Debug.WriteLine($"Couldn't open texture file {file} for {tag}");
+                            return null;
+                        }
+                    } else {
+                        Textures[tag] = TQMG.GetImage(bt);
+                        if (Textures[tag] == null) {
+                            if (NoTexture != null) {
+                                Textures[tag] = NoTexture;
+                                System.Console.Beep();
+                                Debug.WriteLine($"Texture {tag} could not be loaded, so set to alternet picture in stead");
+                            } else
+                                CrashOnNoTex?.Invoke($"Texture `{file}` didn't load at all on tag {tag}.\n{UseJCR6.JCR6.JERROR}");
+
+                        }
                     }
                 }
                 if (Textures[tag].Frames == 0) {
