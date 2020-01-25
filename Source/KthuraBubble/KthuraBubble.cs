@@ -120,7 +120,7 @@ namespace KthuraBubble {
                 var l = m.Layers[lname];
                 var o = l.FromTag(objtag);
                 if (o.kind != "TiledArea" && o.kind != "Zone") throw new Exception($"Cannot do an incheck for object kind {o.kind}");
-                ret = x >= o.x && x <= o.x + o.w && y > o.y && y < o.y + o.h;
+                ret = x >= o.x && x <= o.x + o.w && y >= o.y && y <= o.y + o.h;
             } catch (Exception EpicFail) {
                 SBubble.MyError($"Kthura.InObj({id},\"{objtag}\",{x},{y}):", EpicFail.Message, LuaTrace);
             }
