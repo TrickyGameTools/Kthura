@@ -141,7 +141,9 @@ class KthuraActor
 		return BKTHURA:ObjectInZone(self.ParentID,self.Tag,zone)
 	end
 	
-	bool Moving(self.ParentID,self.Tag)
+	get bool Moving
+		return BKTHURA:Moving(self.ParentID,self.Tag)
+	end
 
 	set bool Moving
 		BKTHURA:SetMoving(self.ParentID,self.Tag,value)

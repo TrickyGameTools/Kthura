@@ -328,6 +328,34 @@ namespace KthuraBubble {
             }
         }
 
+        public bool Moving(int ID, string ActorTag) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                return A.Moving;
+            } catch (Exception Verschrikkelijk) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.GetMoving:", Verschrikkelijk);
+                return false;
+            }
+        }
+
+        public void SetMoving(int ID, string ActorTag, bool v) {
+            try {
+                var M = KMaps[ID];
+                var L = M.Layers[Layers[ID]];
+                var O = L.FromTag(ActorTag);
+                if (O.kind != "Actor") throw new Exception($"Object \"{ActorTag}\" is a(n) {O.kind} and not an actor!");
+                var A = (KthuraActor)O;
+                A.Moving = v;
+            } catch (Exception Verschrikkelijk) {
+                Crash($"<Map #{ID}>.<KthuraActor.{ActorTag}>.SetMoving:", Verschrikkelijk);
+            }
+        }
+
+
 
         public void SetAutoRemap(int ID, bool value) {
             AutoRemap[ID] = value;
