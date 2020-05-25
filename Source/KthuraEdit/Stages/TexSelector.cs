@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 
+// (c) Jeroen P. Broks, 2019
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.11.23
+// Version: 20.05.25
 // EndLic
 
 
@@ -76,7 +76,9 @@ namespace KthuraEdit.Stages
             if (TQMGKey.Hit(Keys.Escape)) MainEdit.ComeToMe();
             if (TQMGKey.Held(Keys.Down)) goDown = true;
             if (TQMGKey.Held(Keys.Up)) goUp = true;
-            // mouse
+            if (TQMGKey.Hit(Keys.PageDown)) ScrollY = Math.Min(ScrollY + TQMG.ScrHeight, MaxScroll);
+            if (TQMGKey.Hit(Keys.PageUp)) ScrollY = Math.Max(0, ScrollY - TQMG.ScrHeight);
+            // Update
             if (goDown && ScrollY < MaxScroll) ScrollY += 3;
             if (goUp && ScrollY > 0) ScrollY -= 3;
         }
@@ -220,8 +222,3 @@ namespace KthuraEdit.Stages
         #endregion
     }
 }
-
-
-
-
-
