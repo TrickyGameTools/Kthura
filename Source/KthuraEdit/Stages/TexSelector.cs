@@ -81,6 +81,12 @@ namespace KthuraEdit.Stages
             // Update
             if (goDown && ScrollY < MaxScroll) ScrollY += 3;
             if (goUp && ScrollY > 0) ScrollY -= 3;
+            // Checkbox toggles
+            if (Core.MsHit(1) && Core.ms.X > W) {
+                if (Core.ms.Y > 20 && Core.ms.Y < 40) GoToTab = !GoToTab;
+                if (Core.ms.Y > 40 && Core.ms.Y < 60) TabData = !TabData;
+                if (Core.ms.Y > 60 && Core.ms.Y < 80) UsedOnly = !UsedOnly;
+            }
         }
         #endregion
 
@@ -212,11 +218,6 @@ namespace KthuraEdit.Stages
             tGoToTab.Draw(W + 22, 20);
             tTabData.Draw(W + 22, 40);
             tUsedOnly.Draw(W + 22, 60);
-            if (Core.MsHit(1) && Core.ms.X>W) {
-                if (Core.ms.Y > 20 && Core.ms.Y < 40) GoToTab = !GoToTab;
-                if (Core.ms.Y > 40 && Core.ms.Y < 60) TabData = !TabData;
-                if (Core.ms.Y > 60 && Core.ms.Y < 80) UsedOnly = !UsedOnly;
-            }
         }
         
         #endregion
