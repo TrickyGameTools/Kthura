@@ -91,7 +91,16 @@ namespace KthuraEdit.Stages
         int time2reload = 250;
         TQMGImage LoadedTex = UI.back;
         string chosen="";
-        int ScrollY = 0;
+        Dictionary<bool, int> TrueScrollY = new Dictionary<bool, int>();
+        int ScrollY { //= 0;
+            get {
+                if (!TrueScrollY.ContainsKey(UsedOnly)) return 0;
+                return TrueScrollY[UsedOnly];
+            }
+            set {
+                TrueScrollY[UsedOnly] = value;
+            }
+        }
         int MaxScroll => (Textures.Count * 25) - (UI.ScrHeight - 50);
         int W => (int)(UI.ScrWidth * .75);
         TQMGText tGoToTab = UI.font20.Text("Go to last used object kind");
