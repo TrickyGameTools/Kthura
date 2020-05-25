@@ -185,6 +185,7 @@ class Kthura
 	string Obj
 	table ObjInt
 	table ObjString
+	table ObjBool
 	table ObjData
 	
 	get int ScrollX
@@ -264,6 +265,10 @@ class Kthura
 	
 	void ShowByLabel(string label)
 		BKTHURA:ShowByLabel($ID,label)
+	end
+	
+	void VisibleOnlyByZone(string zone, bool inzone)
+		BKTHURA:VisibleOnlyByZone($ID,zone,inzone)
 	end
 	
 	table Tags(alay)
@@ -386,6 +391,10 @@ class Kthura
 		BKTHURA:CreateTiledArea($ID,Texture,x,y,w,h,tag or "")
 	end
 	
+	void CreateObstacle(string Texture, int x, int y,tag)
+		BKTHURA:CreateObstacle($ID,Texture,x,y,tag or "")
+	end
+	
 	void CONSTRUCTOR(mapname)
 		switch type(mapname)
 			case "nil"
@@ -441,6 +450,15 @@ class Kthura
 			end,
 			['__index'] = number(t,string k)
 				return BKTHURA:ObjString(self.ID, self.Layer,self.Obj,k)
+			end
+		})
+		setmetatable(self.ObjBool,{
+			['__newindex'] = void(t,string k,bool v)
+				//error("ObjString is in the current version of Kthura for Bubble read-only!");
+				BKTHURA:SetObjBool(self.ID, self.Layer,self.Obj,k,v)
+			end,
+			['__index'] = number(t,string k)
+				return BKTHURA:ObjBool(self.ID, self.Layer,self.Obj,k)
 			end
 		})
 		setmetatable(self.ObjData,{

@@ -1290,6 +1290,7 @@ namespace KthuraEdit {
                 Rotten = Rotten || ((o.kind == "TiledArea" || o.kind == "Zone") && (o.w == 0 || o.h == 0));
                 // Declared 'rotten'
                 if (Rotten && Confirm.Yes($"Object {o.kind}({o.x},{o.y}) {o.w}x{o.h} has been declared 'rotten'.\n\nShall I remove it?")) kill.Add(o);
+                if (o.Impassible && o.ForcePassible && Confirm.Yes($"Object { o.kind} ({ o.x},{ o.y}) { o.w} has both Impassible and ForcePassible checked!\n\n\nI recommend to either remove this object or to edit that out!\n\nDo you want to remove it?")) kill.Add(o);                
             }
             foreach (KthuraObject o in kill) MapLayer.Objects.Remove(o);
             MapLayer.TotalRemap();

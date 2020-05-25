@@ -154,6 +154,9 @@
     <Compile Include="..\..\..\TQMG\TQMG.cs">
       <Link>Include\Units\TQMG.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\Bressenham.cs">
+      <Link>Include\Units\Bressenham.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\Dijkstra.cs">
       <Link>Include\Units\Dijkstra.cs</Link>
     </Compile>

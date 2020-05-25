@@ -109,10 +109,32 @@ namespace KthuraBubble {
             } catch (Exception EpicFail) {
                 SBubble.MyError($"Kthura.VisilityByZone[{id},\"{tag}\"]={value}:", EpicFail.Message, LuaTrace);
             }
-
         }
 
-        public bool InObj(int id, string objtag,int x, int y) {
+        public void VisibleOnlyByZone(int id, string tag, bool inzone) {
+            try {
+                var lname = Layers[id];
+                var m = KMaps[id];
+                var l = m.Layers[lname];
+                if (!l.HasTag(tag)) throw new Exception("I cannot hide or show by a non-existent zone");
+                var zone = l.FromTag(tag);
+                if (zone.kind != "TiledArea" && zone.kind != "Zone") throw new Exception($"Object '{tag}' is a {zone.kind} which is not valid for a visible by zone change!");
+                foreach (KthuraObject o in l.Objects) {
+                    if (o != zone) {
+                        if (inzone)
+                            o.Visible = o.x >= zone.x && o.y >= zone.y && o.x <= zone.x + zone.w && o.y <= zone.y + zone.h;
+                        else
+                            o.Visible = !(o.x >= zone.x && o.y >= zone.y && o.x <= zone.x + zone.w && o.y <= zone.y + zone.h);
+                    }
+                }
+            } catch (Exception EpicFail) {
+                SBubble.MyError($"Kthura.VisilityOnlyByZone[{id},\"{tag}\"]={inzone}:", EpicFail.Message, LuaTrace);
+            }
+        }
+
+    
+
+    public bool InObj(int id, string objtag,int x, int y) {
             bool ret = false;
             try {
                 var lname = Layers[id];
@@ -448,6 +470,7 @@ namespace KthuraBubble {
 
         public void Spawn(int ID,string acttag,string exitpoint) {
             try {
+                if (!KMaps[ID].Layers.ContainsKey(Layers[ID])) throw new Exception($"I cannot contact spawn on non-existent layer {Layers[ID]}");
                 var L = KMaps[ID].Layers[Layers[ID]];
                 if (L.HasTag(acttag)) Kill(ID, acttag);
                 var A = KthuraActor.Spawn(L, exitpoint);
@@ -726,6 +749,52 @@ namespace KthuraBubble {
             }
         }
 
+        public bool ObjBool(int id, string Lay, string Tag, string stat) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "VISIBLE":
+                        return T.Visible;
+                    case "IMPASSIBLE":
+                        return T.Impassible;
+                    case "FORCEPASSIBLE":
+                        return T.ForcePassible;
+                    default:
+                        throw new Exception($"There is no boolean field named: {stat}");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjBool({id},\"{Lay}\",\"{Tag}\",\"{stat}\"):", shit.Message, LuaTrace);
+                return false;
+            }
+        }
+
+        public void SetObjBool(int id, string Lay, string Tag, string stat, bool value) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Lay];
+                var T = L.FromTag(Tag);
+                switch (stat.ToUpper()) {
+                    case "VISIBLE":
+                        T.Visible = value;
+                        break;
+                    case "IMPASSIBLE":
+                        T.Impassible = value;
+                        break;
+                    case "FORCEPASSIBLE":
+                        T.ForcePassible = value;
+                        break;
+                    default:
+                        throw new Exception($"There is no object integer field named: {stat}!");
+                }
+            } catch (Exception shit) {
+                SBubble.MyError($"Kthura.ObjInt({id},\"{Lay}\",\"{Tag}\",\"{stat}\"):", shit.Message, LuaTrace);
+                return;
+            }
+        }
+
+
         public int ObjInt(int id, string Lay,string Tag,string stat) {
             try {
                 var M = KMaps[id]; 
@@ -744,6 +813,7 @@ namespace KthuraBubble {
                     case "OBJECTHEIGHT": return KthuraDraw.DrawDriver.ObjectHeight(T);
                     case "SCALEX": return T.ScaleX;
                     case "SCALEY": return T.ScaleY;
+                    case "ALPHA": return T.Alpha1000;
                     default:
                         throw new Exception($"There is no integer field named: {stat}");
                 }
@@ -771,6 +841,7 @@ namespace KthuraBubble {
                     case "OBJECTHEIGHT": throw new Exception("Object Height cannot yet be changed"); // return KthuraDraw.DrawDriver.ObjectHeight(T);
                     case "SCALEX": T.ScaleX = value; break;
                     case "SCALEY": T.ScaleY = value; break;
+                    case "ALPHA": T.Alpha1000 = value; break;
                     default:
                         throw new Exception($"There is no object integer field named: {stat}!");
                 }
@@ -873,6 +944,27 @@ namespace KthuraBubble {
             } catch (Exception Afgang) {
                 SBubble.MyError($"CreateTiledArea({id},\"{texture}\",{x},{y},{w},{h},\"{tag}\"):", Afgang.Message, LuaTrace);
             }
+        }
+
+        public void CreateObstacle(int id, string texture, int x, int y,string tag) {
+            try {
+                var M = KMaps[id];
+                var L = M.Layers[Layers[id]];
+                var O = new KthuraObject("Obstacle", L);
+                O.x = x;
+                O.y = y;
+                O.Tag = tag;
+                O.Texture = texture;
+                O.Visible = true;
+                O.Alpha255 = 255;
+                O.R = 255;
+                O.G = 255;
+                O.B = 255;
+                L.RemapTags();
+            } catch (Exception Afgang) {
+                SBubble.MyError($"CreateObstacle({id},\"{texture}\",{x},{y},\"{tag}\"):", Afgang.Message, LuaTrace);
+            }
+
         }
 
 

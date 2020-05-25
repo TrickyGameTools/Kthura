@@ -1,0 +1,77 @@
+group KthuraGenerator
+
+	table Config
+	table Size
+	void CONSTRUCTOR()
+		setmetatable(self.Config,{
+			["__index"] = string(s,string k)
+				return BKTHURAGEN:GetConfig(k)
+			end,
+			["__newindex"] = void(s,string k,string v)
+				BKTHURAGEN:SetConfig(k,v)
+			end
+		})
+		setmetatable(self.Size,{
+			["__index"] = int(s,string k)
+				switch k:upper()
+					case "X" "W" "WIDTH"
+						return BKTHURAGEN.SizeX
+					case "Y" "H" "HEIGHT"
+						return BKTHURAGEN.SizeY
+					default
+						error("HUH?")
+				end
+			end,
+			["__newindex"]=void(s,string k,int v)
+				switch k:upper()
+					case "X" "W" "WIDTH"
+						BKTHURAGEN.SizeX = v
+					case "Y" "H" "HEIGHT"
+						BKTHURAGEN.SizeY = v
+					default
+						error("HUH?")
+				end
+			end
+		})
+	end
+	
+	void IgnoreDestroy(string tag)
+		BKTHURAGEN:IgnoreDestroy(tag)
+	end
+	
+	get string TexPlatform
+		return BKTHURAGEN.TexPlatform
+	end
+	set string TexPlatform
+		BKTHURAGEN.TexPlatform = value
+	end
+	
+	get string TexExit
+		return BKTHURAGEN.TexExit
+	end
+	set string TexExit
+		BKTHURAGEN.TexExit = value
+	end
+	
+	get string TexBottom
+		return BKTHURAGEN.TexBottom
+	end
+	set string TexBottom
+		BKTHURAGEN.TexBottom = value
+	end
+	
+	void SetMap(ID)
+		if type(ID)=="number"
+			BKTHURAGEN:SetMap(ID)
+		else
+			BKTHURAGEN:SetMap(ID.ID)
+		end
+	end
+	
+	void Generate(string Layer,createifnew)
+		//assert(map,"Nil for map?")
+		//assert(type(map)=="table" and map[".classname"]=="Kthura","Expected a kthura map.... What this is I don't know, but not a Kthura map!")
+		BKTHURAGEN:Generate(Layer,createifnew==true)
+	end
+
+end
