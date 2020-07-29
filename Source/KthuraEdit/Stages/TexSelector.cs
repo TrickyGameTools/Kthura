@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2019
+// (c) Jeroen P. Broks, 2019, 2020
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -87,6 +87,11 @@ namespace KthuraEdit.Stages
                 if (Core.ms.Y > 40 && Core.ms.Y < 60) TabData = !TabData;
                 if (Core.ms.Y > 60 && Core.ms.Y < 80) UsedOnly = !UsedOnly;
             }
+            if (Core.MsHit(1) && chosen!="" && Core.ms.X < W) {
+                UI.SetTexture(chosen, GoToTab, TabData);
+                MainEdit.ComeToMe();
+            }
+
         }
         #endregion
 
@@ -195,10 +200,6 @@ namespace KthuraEdit.Stages
                 if (Core.ms.X < W && Core.ms.Y+ScrollY > TI.y && Core.ms.Y+ScrollY < TI.y + 22) {
                     if (chosen != TI.name) time2reload = 250;
                     chosen = TI.name;
-                    if (Core.MsHit(1)) {
-                        UI.SetTexture(TI.name, GoToTab, TabData);
-                        MainEdit.ComeToMe();
-                    }
                 }
                 TQMG.Color(0, 255, 255);
                 if (Core.Used[TI.name]) TQMG.Color(255, 180, 0);
