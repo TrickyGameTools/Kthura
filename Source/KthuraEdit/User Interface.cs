@@ -416,14 +416,14 @@ namespace KthuraEdit {
                     case "Height":
                     case "W":
                     case "H":
-                        return kind == "TiledArea" || kind == "Zone";
+                        return kind == "TiledArea" || kind == "Zone" || kind == "StretchedArea";
                     case "InsX":
                     case "InsY":
                         return kind == "TiledArea";
                     case "Alpha":
                     case "AnimSpeed":
                     case "Frame":
-                        return kind == "TiledArea" || kind == "Pic" || kind == "Obstacle";
+                        return kind == "TiledArea" || kind == "Pic" || kind == "Obstacle" || kind == "StretchedArea";
                     case "RotDeg":
                     case "ScaleX":
                     case "ScaleY":
@@ -618,6 +618,7 @@ namespace KthuraEdit {
             // Tabs
             TBItems = new List<TBItem>(new TBItem[] {
                 new TBItem("TiledArea",ObjectParameters,AR_Tiled,null),
+                new TBItem("StrechedArea",ObjectParameters,AR_Stretched,null),
                 new TBItem("Obstacles",ObjectParameters,null,MC_Obstacle),
                 new TBItem("Zones",ObjectParameters,AR_Zones,null),
                 new TBItem("Other",Other,null,MC_CSpot),
@@ -838,6 +839,52 @@ namespace KthuraEdit {
             SealTexMemory();
             DBG.Log($"Created TiledArea at ({Area.x},{Area.y}), size: {Area.w}x{Area.h}");
         }
+
+        static void AR_Stretched(int x1, int y1, int x2, int y2) {
+            var opm = ObjectParamFields[currentTBItem.Name];
+            var opc = ObjectCheckBoxes[currentTBItem.Name];
+            var startx = x1;
+            var starty = y1;
+            var width = Math.Abs(x2 - x1);
+            var height = Math.Abs(y2 - y1);
+            if (x1 > x2) startx = x2;
+            if (y1 > y2) starty = y2;
+            if (opm["Texture"].value == "") return;
+            var Area = new KthuraObject("StretchedArea", MapLayer) {
+                x = startx,
+                y = starty,
+                w = width,
+                h = height,
+                Texture = opm["Texture"].value,
+                //insertx = qstr.ToInt(opm["InsX"].value),
+                //inserty = qstr.ToInt(opm["InsY"].value),
+                R = qstr.ToInt(opm["cR"].value),
+                G = qstr.ToInt(opm["cG"].value),
+                B = qstr.ToInt(opm["cB"].value),
+                Dominance = qstr.ToInt(opm["Dominance"].value),
+                Alpha1000 = qstr.ToInt(opm["Alpha"].value),
+                AnimSpeed = qstr.ToInt(opm["AnimSpeed"].value),
+                AnimFrame = qstr.ToInt(opm["Frame"].value),
+                Impassible = opc["Impassible"].value,
+                ForcePassible = opc["ForcePassible"].value,
+                Visible = opc["Visible"].value
+            };
+            if (!Area.Visible) Console.Beep();
+            // insert modulos
+            /* No value here!
+            if (opc["AutoIns"].value) {
+                int w = 0;
+                int h = 0;
+                KthuraDrawMonoGame.TexSizes(Area, ref w, ref h);
+                Area.insertx = Area.x % w;
+                Area.inserty = Area.y % h;
+            }
+            SealTexMemory();
+            // */
+            DBG.Log($"Created StretchedArea at ({Area.x},{Area.y}), size: {Area.w}x{Area.h}");
+        }
+
+
         static void AR_Zones(int x1, int y1, int x2, int y2) {
             var startx = x1;
             var starty = y1;
@@ -1052,7 +1099,7 @@ namespace KthuraEdit {
             foreach(KthuraObject obj in MapLayer.ObjectDrawOrder) {
                 var kind = obj.kind; if (kind[0] == '$') kind = "Pivot";
                 switch (kind) {
-                    case "TiledArea": case "Zone":
+                    case "TiledArea": case "Zone": case "StretchedArea":
                         if (ms.X>=obj.x && ms.Y>obj.y && ms.X<=obj.x+obj.w && ms.Y <= obj.y + obj.h) 
                             M_SelectedObject = obj;
                         break;
@@ -1133,6 +1180,7 @@ namespace KthuraEdit {
             switch (kind) {
                 case "TiledArea":
                 case "Zone":
+                case "StretchedArea":
                     TQMG.DrawLineRect(x, y, M_SelectedObject.w, M_SelectedObject.h);
                     break;
                 case "Pivot":
