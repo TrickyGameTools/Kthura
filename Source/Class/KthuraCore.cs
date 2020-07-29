@@ -538,6 +538,7 @@ namespace NSKthura {
                 switch (O.kind) {
                     case "TiledArea":
                     case "Zone":
+                    case "StretchedArea":
                         TX = (int)Math.Ceiling((decimal)((X + W) / GW));
                         TY = (int)Math.Ceiling((decimal)((Y + H) / GH));
                         if (TX > BoundX) BoundX = TX;
@@ -571,6 +572,7 @@ namespace NSKthura {
                     switch (O.kind) {
                         case "TiledArea":
                         case "Zone":
+                        case "StretchedArea":
                             Kthura.EDITTORLOG($"Working on Impassible {O.kind} {O.Tag}");
                             TX = (int)Math.Floor((decimal)X / GW);
                             TY = (int)Math.Floor((decimal)Y / GH);
@@ -632,6 +634,7 @@ namespace NSKthura {
                     switch (O.kind) {
                         case "TiledArea":
                         case "Zone":
+                        case "StretchedArea":
                             TX = (int)Math.Floor((decimal)(X / GW));
                             TY = (int)Math.Floor((decimal)(Y / GH));
                             TW = (int)Math.Ceiling((decimal)((X + W) / GW));
