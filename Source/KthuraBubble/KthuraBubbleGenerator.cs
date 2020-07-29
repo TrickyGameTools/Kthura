@@ -176,12 +176,25 @@ namespace KthuraBubble {
                             O.Alpha1000 = 1000;
                             O.Dominance = 20;
                             O.Visible = true;
+                            O.ForcePassible = true;
                             //O.Tag = "NPC_Next";
                             O.Tag = "ExitMap";
                             O.Texture = TexExit;
                             Lay.RemapTags();
                             p._exit = false;
                             BubConsole.CSay("Exit placed!");
+
+                            // Exit always on a platform
+                            var ExitPlate = new KthuraObject("TiledArea", Lay);
+                            ExitPlate.x = O.x-64;
+                            ExitPlate.y = O.y-64;
+                            ExitPlate.w = TopW * 5;
+                            ExitPlate.h = TopH * 5;
+                            ExitPlate.Dominance = 8; 
+                            Lay.Objects.Add(StartPoint);
+                            Plates.Add(ExitPlate);
+
+
                         }
                         continue;
                     }
@@ -202,6 +215,10 @@ namespace KthuraBubble {
                                 O.y = p.y;
                                 O.w = p.w;
                                 O.h = p.h;
+                                O.Alpha1000 = 1000;
+                                O.Visible = true;
+                                O.Dominance = 10;
+                                O.ForcePassible = true;
                                 Plates.Add(O);
                                 BubConsole.CSay($"N: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
                             }
