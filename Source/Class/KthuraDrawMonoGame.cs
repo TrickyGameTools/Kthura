@@ -113,6 +113,14 @@ namespace NSKthura {
             TQMG.SetAlpha(255);
         }
 
+        public override void DrawStretchedArea(KthuraObject obj , int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
+            var tx = GetTex(obj);
+            TQMG.Color((byte)obj.R, (byte)obj.G, (byte)obj.B);
+            TQMG.SetAlpha((byte)obj.Alpha255);
+            if (tx != null) tx.StretchDraw(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.w, obj.h, obj.AnimFrame);
+            TQMG.SetAlpha(255);
+        }
+
         public override void DrawObstacle(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0) {
             var tx = GetTex(obj);
             if (tx != null) {
@@ -156,6 +164,7 @@ namespace NSKthura {
             switch (obj.kind) {
                 case "Zone":
                 case "TiledArea":
+                case "StretchedArea":
                     return obj.h;
                 case "Obstacle":
                 case "Pic":
@@ -172,6 +181,7 @@ namespace NSKthura {
             switch (obj.kind) {
                 case "Zone":
                 case "TiledArea":
+                case "StretchedArea":
                     return obj.w;
                 case "Obstacle":
                 case "Pic":
