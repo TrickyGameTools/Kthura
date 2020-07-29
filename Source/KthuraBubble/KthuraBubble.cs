@@ -602,6 +602,11 @@ namespace KthuraBubble {
         void VisByLabel(int ID, string label, bool value) {
             try {
                 var L = KMaps[ID].Layers[Layers[ID]];
+                if (!L.LabelMap.ContainsKey(label)) {
+                    Console.Beep();
+                    BubConsole.CSay($"WARNING! Label '{label}' not found!");
+                    foreach (string k in L.LabelMap.Keys) BubConsole.CSay("= Has label: '{label}'");
+                }
                 foreach (KthuraObject O in L.LabelMap[label]) O.Visible = value;
             } catch (Exception Poepzooitje) {
 #if DEBUG
@@ -813,7 +818,10 @@ namespace KthuraBubble {
                     case "OBJECTHEIGHT": return KthuraDraw.DrawDriver.ObjectHeight(T);
                     case "SCALEX": return T.ScaleX;
                     case "SCALEY": return T.ScaleY;
+                    case "INSERTX": return T.insertx;
+                    case "INSERTY": return T.inserty;
                     case "ALPHA": return T.Alpha1000;
+                    case "ROTATION": case "ROTATIONDEGREES": return T.RotationDegrees;
                     default:
                         throw new Exception($"There is no integer field named: {stat}");
                 }
@@ -841,7 +849,11 @@ namespace KthuraBubble {
                     case "OBJECTHEIGHT": throw new Exception("Object Height cannot yet be changed"); // return KthuraDraw.DrawDriver.ObjectHeight(T);
                     case "SCALEX": T.ScaleX = value; break;
                     case "SCALEY": T.ScaleY = value; break;
+                    case "INSERTX": T.insertx = value; break;
+                    case "INSERTY": T.inserty = value; break;
                     case "ALPHA": T.Alpha1000 = value; break;
+                    case "ROTATION": case "ROTATIONDEGREES":  T.RotationDegrees = value; break;
+                    //case "ROTATIONRADIANS": T.RotationRadians = value; break;
                     default:
                         throw new Exception($"There is no object integer field named: {stat}!");
                 }
@@ -864,7 +876,7 @@ namespace KthuraBubble {
                         throw new Exception($"There is no string field named: {stat}");
                 }
             } catch (Exception shit) {
-                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+                SBubble.MyError($"Kthura.ObjString({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
                 return "ERROR";
             }
         }  
@@ -881,7 +893,7 @@ namespace KthuraBubble {
                         throw new Exception($"There is no string field named: {stat}");
                 }
             } catch (Exception shit) {
-                SBubble.MyError($"Kthura.ObjNum({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
+                SBubble.MyError($"Kthura.ObjString({id},\"{Lay}\",\"{stat}\"):", shit.Message, LuaTrace);
             }
         }
 
