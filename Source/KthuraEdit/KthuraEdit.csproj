@@ -184,6 +184,9 @@
     <Compile Include="..\..\..\TrickyUnits\qstream.cs">
       <Link>Include\Units\qstream.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\Rand.cs">
+      <Link>Include\Units\Rand.cs</Link>
+    </Compile>
     <Compile Include="..\Class\KthuraCore.cs">
       <Link>Class\KthuraCore.cs</Link>
     </Compile>
