@@ -115,186 +115,212 @@ namespace KthuraBubble {
         }
 
         public void Generate(string Layer, bool createifneeded) {
+            int CountDown = 10000;
+            if (CountDown == 0) { SBubble.MyError("Kthura generator error", "Time-Out", ""); return; }
             if (!Map.Layers.ContainsKey(Layer)) {
                 if (createifneeded) Map.Layers[Layer] = new KthuraLayer(Map); else { SBubble.MyError("Kthura Map Generator Error!", $"No layer named \"{Layer}\"!", LuaTrace); return; }
             }
-            SchoneOpruiming(Layer,false);
-            var Lay = Map.Layers[Layer];
-            var Obj = Lay.Objects;
-            // Back zone
-            var Back = new KthuraObject("Zone", Lay);
-            Back.x = 0;
-            Back.y = 0;
-            Back.w = SizeX;
-            Back.h = SizeY;
-            Back.Impassible = true;
-            Back.Tag = $"Kthura_Abyss_Generator_TotalBlock_{Layer}";
-            // var Plates
-            var Plates = new List<KthuraObject>();
-            // Start Plate
-            var StartX = Rand.StepInt(0, SizeX - (TopW * 6), 32);
-            var StartY = Rand.StepInt(0, SizeY - (TopH * 6), 32);
-            var StartPlate = new KthuraObject("TiledArea", Lay);
-            var StartPoint = new KthuraObject("Exit", Lay);
-            StartPlate.x = StartX;
-            StartPlate.y = StartY;
-            StartPlate.w = TopW * 5;
-            StartPlate.h = TopH * 5;
-            StartPoint.Tag = "Start";
-            StartPoint.MetaData["Wind"] = "South";
-            StartPoint.x = StartX + (int)Math.Floor(TopW * 2.5);
-            StartPoint.y = StartY + TopH * 3;
-            Lay.Objects.Add(StartPoint);
-            Plates.Add(StartPlate);
-            // Generate Map
-            int paths = Rand.Int(1, 6);
-            var plist = new List<KGPath>();
-            for (int q = 0; q < paths ; q++) {
-                var p = new KGPath();
-                p.x = StartX + TopW;
-                p.y = StartY + TopH;
-                p.dir = (byte)Rand.Int(1, 4);
-                p._exit = q == 0;
-                p.id = q;
-                plist.Add(p);
+            bool CanDoIt() {
+                var ret = false;
+                var A = new KthuraActor(Map.Layers[Layer]);
+                var S = Map.Layers[Layer].FromTag("Start");
+                var X = Map.Layers[Layer].FromTag("ExitMap");
+                A.x = S.x;
+                A.y = S.y;
+                A.WalkTo(X);
+                ret = A.FoundPath != null; // A.Walking;
+                Map.Layers[Layer].Objects.Remove(A);
+                if (!ret) {
+                    Console.Beep();
+                    BubConsole.WriteLine("ERROR!",255,0,0);
+                    BubConsole.WriteLine("Failed to set up a route from start to finish", 255, 180, 0);
+                    BubConsole.WriteLine($"Attempt countdown: {CountDown}",0,180,255);
+                    
+                } else {
+                    BubConsole.WriteLine($"From start to finish possible in {A.FoundPath.Nodes.Length} nodes");
+                }
+                return ret;
             }
-            bool alldone = false;
             do {
-                alldone = true;
-                foreach(KGPath p in plist) {
-                    p.stopped = p.stopped || Rand.Int(1, 20) % 8 == 0;
-                    alldone = alldone && p.stopped;
-                    if (p.stopped) {
-                        if (p._exit) {
-                            //var O = new KthuraObject("Obstacle",Lay);
-                            var O = new KthuraObject("TiledArea", Lay);
-                            Lay.Objects.Add(O);
-                            O.x = p.x + TopW; //+ (TopW / 2);
-                            O.y = p.y + TopH;
-                            O.w = TopW;
-                            O.h = TopH;
-                            O.Alpha1000 = 1000;
-                            O.Dominance = 20;
-                            O.Visible = true;
-                            O.ForcePassible = true;
-                            //O.Tag = "NPC_Next";
-                            O.Tag = "ExitMap";
-                            O.Texture = TexExit;
-                            Lay.RemapTags();
-                            p._exit = false;
-                            BubConsole.CSay("Exit placed!");
-
-                            // Exit always on a platform
-                            var ExitPlate = new KthuraObject("TiledArea", Lay);
-                            ExitPlate.x = O.x-64;
-                            ExitPlate.y = O.y-64;
-                            ExitPlate.w = TopW * 5;
-                            ExitPlate.h = TopH * 5;
-                            ExitPlate.Dominance = 8; 
-                            Lay.Objects.Add(StartPoint);
-                            Plates.Add(ExitPlate);
-
-
-                        }
-                        continue;
-                    }
-                    byte nd;
-                    do {
-                        nd = (byte)Rand.Int(1, 4);
-                    } while (nd == p.dir);
-                    p.dir = nd;                    
-                    switch (nd) {
-                        case 1: { // North
-                                if (p.y < TopH * 2) break;
-                                var y = Rand.StepInt(TopH, p.y,TopH);
-                                p.w = 3 * TopW;
-                                p.h = p.y - y;
-                                p.y = y;
+                --CountDown;
+                SchoneOpruiming(Layer, false);
+                var Lay = Map.Layers[Layer];
+                var Obj = Lay.Objects;
+                // Back zone
+                var Back = new KthuraObject("Zone", Lay);
+                Back.x = 0;
+                Back.y = 0;
+                Back.w = SizeX;
+                Back.h = SizeY;
+                Back.Impassible = true;
+                Back.Tag = $"Kthura_Abyss_Generator_TotalBlock_{Layer}";
+                // var Plates
+                var Plates = new List<KthuraObject>();
+                // Start Plate
+                var StartX = Rand.StepInt(0, SizeX - (TopW * 6), 32);
+                var StartY = Rand.StepInt(0, SizeY - (TopH * 6), 32);
+                var StartPlate = new KthuraObject("TiledArea", Lay);
+                var StartPoint = new KthuraObject("Exit", Lay);
+                StartPlate.x = StartX;
+                StartPlate.y = StartY;
+                StartPlate.w = TopW * 5;
+                StartPlate.h = TopH * 5;
+                StartPoint.Tag = "Start";
+                StartPoint.MetaData["Wind"] = "South";
+                StartPoint.x = StartX + (int)Math.Floor(TopW * 2.5);
+                StartPoint.y = StartY + TopH * 3;
+                Lay.Objects.Add(StartPoint);
+                Plates.Add(StartPlate);
+                // Generate Map
+                int paths = Rand.Int(1, 6);
+                var plist = new List<KGPath>();
+                for (int q = 0; q < paths; q++) {
+                    var p = new KGPath();
+                    p.x = StartX + TopW;
+                    p.y = StartY + TopH;
+                    p.dir = (byte)Rand.Int(1, 4);
+                    p._exit = q == 0;
+                    p.id = q;
+                    plist.Add(p);
+                }
+                bool alldone = false;
+                do {
+                    alldone = true;
+                    foreach (KGPath p in plist) {
+                        p.stopped = p.stopped || Rand.Int(1, 20) % 8 == 0;
+                        alldone = alldone && p.stopped;
+                        if (p.stopped) {
+                            if (p._exit) {
+                                //var O = new KthuraObject("Obstacle",Lay);
                                 var O = new KthuraObject("TiledArea", Lay);
-                                O.x = p.x;
-                                O.y = p.y;
-                                O.w = p.w;
-                                O.h = p.h;
+                                Lay.Objects.Add(O);
+                                O.x = p.x + TopW; //+ (TopW / 2);
+                                O.y = p.y + TopH;
+                                O.w = TopW;
+                                O.h = TopH;
                                 O.Alpha1000 = 1000;
+                                O.Dominance = 20;
                                 O.Visible = true;
-                                O.Dominance = 10;
                                 O.ForcePassible = true;
-                                Plates.Add(O);
-                                BubConsole.CSay($"N: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
-                            }
-                            break;
-                        case 2: {  // South
-                                if (p.y > SizeY - (TopH * 2)) break;
-                                var y = Rand.StepInt(p.y, SizeY - (TopH * 2), TopH);
-                                p.w = 3 * TopW;
-                                var O = new KthuraObject("TiledArea", Lay);
-                                O.x = p.x;
-                                O.y = p.y;
-                                O.w = p.w;
-                                O.h = y-p.y;
-                                Plates.Add(O);
-                                p.y = y - (TopH * 3);
-                                BubConsole.CSay($"S: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
-                            }
-                            break;
-                        case 3: { // West
-                                if (p.x < TopW * 2) break;
-                                var x = Rand.StepInt(TopW, p.x, TopW);
-                                p.h = 3 * TopH;
-                                p.w = p.x - x;
-                                p.x = x;
-                                var O = new KthuraObject("TiledArea", Lay);
-                                O.x = p.x;
-                                O.y = p.y;
-                                O.w = p.w;
-                                O.h = p.h;
-                                Plates.Add(O);
-                                BubConsole.CSay($"W: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
+                                //O.Tag = "NPC_Next";
+                                O.Tag = "ExitMap";
+                                O.Texture = TexExit;
+                                Lay.RemapTags();
+                                p._exit = false;
+                                BubConsole.CSay("Exit placed!");
+
+                                // Exit always on a platform
+                                var ExitPlate = new KthuraObject("TiledArea", Lay);
+                                ExitPlate.x = O.x - 64;
+                                ExitPlate.y = O.y - 64;
+                                ExitPlate.w = TopW * 5;
+                                ExitPlate.h = TopH * 5;
+                                ExitPlate.Dominance = 8;
+                                Lay.Objects.Add(StartPoint);
+                                Plates.Add(ExitPlate);
+
 
                             }
-                            break;
-                        case 4: {  // East
-                                if (p.x > SizeX - (TopW * 2)) break;
-                                var x = Rand.StepInt(p.x, SizeX - (TopW * 2), TopW);
-                                p.h = 3 * TopH;
-                                var O = new KthuraObject("TiledArea", Lay);
-                                O.x = p.x;
-                                O.y = p.y;
-                                O.h = p.h;
-                                O.w = x - p.x;
-                                Plates.Add(O);
-                                p.x = x - (TopW * 3);
-                                BubConsole.CSay($"E: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
-                            }
-                            break;
+                            continue;
+                        }
+                        byte nd;
+                        do {
+                            nd = (byte)Rand.Int(1, 4);
+                        } while (nd == p.dir);
+                        p.dir = nd;
+                        switch (nd) {
+                            case 1: { // North
+                                    if (p.y < TopH * 2) break;
+                                    var y = Rand.StepInt(TopH, p.y, TopH);
+                                    p.w = 3 * TopW;
+                                    p.h = p.y - y;
+                                    p.y = y;
+                                    var O = new KthuraObject("TiledArea", Lay);
+                                    O.x = p.x;
+                                    O.y = p.y;
+                                    O.w = p.w;
+                                    O.h = p.h;
+                                    O.Alpha1000 = 1000;
+                                    O.Visible = true;
+                                    O.Dominance = 10;
+                                    O.ForcePassible = true;
+                                    Plates.Add(O);
+                                    BubConsole.CSay($"N: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
+                                }
+                                break;
+                            case 2: {  // South
+                                    if (p.y > SizeY - (TopH * 2)) break;
+                                    var y = Rand.StepInt(p.y, SizeY - (TopH * 2), TopH);
+                                    p.w = 3 * TopW;
+                                    var O = new KthuraObject("TiledArea", Lay);
+                                    O.x = p.x;
+                                    O.y = p.y;
+                                    O.w = p.w;
+                                    O.h = y - p.y;
+                                    Plates.Add(O);
+                                    p.y = y - (TopH * 3);
+                                    BubConsole.CSay($"S: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
+                                }
+                                break;
+                            case 3: { // West
+                                    if (p.x < TopW * 2) break;
+                                    var x = Rand.StepInt(TopW, p.x, TopW);
+                                    p.h = 3 * TopH;
+                                    p.w = p.x - x;
+                                    p.x = x;
+                                    var O = new KthuraObject("TiledArea", Lay);
+                                    O.x = p.x;
+                                    O.y = p.y;
+                                    O.w = p.w;
+                                    O.h = p.h;
+                                    Plates.Add(O);
+                                    BubConsole.CSay($"W: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
+
+                                }
+                                break;
+                            case 4: {  // East
+                                    if (p.x > SizeX - (TopW * 2)) break;
+                                    var x = Rand.StepInt(p.x, SizeX - (TopW * 2), TopW);
+                                    p.h = 3 * TopH;
+                                    var O = new KthuraObject("TiledArea", Lay);
+                                    O.x = p.x;
+                                    O.y = p.y;
+                                    O.h = p.h;
+                                    O.w = x - p.x;
+                                    Plates.Add(O);
+                                    p.x = x - (TopW * 3);
+                                    BubConsole.CSay($"E: ({O.x},{O.y})/{O.w}x{O.h} .. {p}");
+                                }
+                                break;
+                        }
+                    }
+                } while (!alldone);
+
+                // End processing Plates
+                foreach (KthuraObject O in Plates) {
+                    O.ForcePassible = true;
+                    O.Dominance = 5;
+                    O.Texture = TexPlatform;
+                    O.Visible = true;
+                    O.Alpha1000 = 1000;
+                    Lay.Objects.Add(O);
+                    BubConsole.WriteLine($"Building with {O.kind}: ({O.x}x{O.y}) -- Visible: {O.Visible} -- Dominance: {O.Dominance}", (byte)Rand.Int(0, 255), (byte)Rand.Int(0, 255), (byte)Rand.Int(0, 255));
+                    if (O.w > 0 && O.h > 0) {
+                        var Bottom = new KthuraObject("TiledArea", Lay);
+                        Bottom.Dominance = 2; // Make sure that if it collides with a plate on the south, that plate will always cover it
+                        Bottom.x = O.x;
+                        Bottom.y = O.y + O.h;
+                        Bottom.w = O.w;
+                        Bottom.h = BotH;
+                        Bottom.Visible = true;
+                        Bottom.Alpha1000 = 1000;
+                        Bottom.Texture = TexBottom;
+                        Lay.Objects.Add(Bottom);
                     }
                 }
-            } while (!alldone);
-
-            // End processing Plates
-            foreach(KthuraObject O in Plates) {
-                O.ForcePassible = true;
-                O.Dominance = 5;
-                O.Texture = TexPlatform;
-                O.Visible = true;
-                O.Alpha1000 = 1000;
-                Lay.Objects.Add(O);
-                BubConsole.WriteLine($"Building with {O.kind}: ({O.x}x{O.y}) -- Visible: {O.Visible} -- Dominance: {O.Dominance}",(byte)Rand.Int(0,255), (byte)Rand.Int(0, 255), (byte)Rand.Int(0, 255));
-                if (O.w > 0 && O.h > 0) {
-                    var Bottom = new KthuraObject("TiledArea", Lay);
-                    Bottom.Dominance = 2; // Make sure that if it collides with a plate on the south, that plate will always cover it
-                    Bottom.x = O.x;
-                    Bottom.y = O.y + O.h;
-                    Bottom.w = O.w;
-                    Bottom.h = BotH;
-                    Bottom.Visible = true;
-                    Bottom.Alpha1000 = 1000;
-                    Bottom.Texture = TexBottom;
-                    Lay.Objects.Add(Bottom);
-                }
-            }
-            // Remap
-            Lay.TotalRemap();
+                // Remap
+                Lay.TotalRemap();
+            } while (!CanDoIt());
         }
 
         private KthuraAbyssGenerator() { }
