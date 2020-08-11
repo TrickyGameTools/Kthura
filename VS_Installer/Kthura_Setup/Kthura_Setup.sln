@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.960
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Kthura_Setup", "Kthura_Setup.vdproj", "{115935AC-50C0-4699-8F9F-0622ACC1A713}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{115935AC-50C0-4699-8F9F-0622ACC1A713}.Debug|Default.ActiveCfg = Debug
+		{115935AC-50C0-4699-8F9F-0622ACC1A713}.Debug|Default.Build.0 = Debug
+		{115935AC-50C0-4699-8F9F-0622ACC1A713}.Release|Default.ActiveCfg = Release
+		{115935AC-50C0-4699-8F9F-0622ACC1A713}.Release|Default.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04168018-6C90-4C1B-974B-6B54BEAA80BA}
+	EndGlobalSection
+EndGlobal
