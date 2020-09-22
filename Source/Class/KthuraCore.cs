@@ -113,7 +113,7 @@ namespace NSKthura {
 
         public delegate void AnimReset(KthuraObject O);
         public void Animate(AnimReset REST=null) {
-            if (kind != "Obstacle" && kind != "Pic" && kind != "TiledArea") return;
+            if (kind != "Obstacle" && kind != "Pic" && kind != "TiledArea" && kind!="StrechedArea") return;
             if (AnimSpeed < 0) return;
             AnimFrameSkip++;
             if (AnimFrameSkip >= AnimSpeed) {
