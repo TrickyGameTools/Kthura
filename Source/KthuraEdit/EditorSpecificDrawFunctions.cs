@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 
+// (c) Jeroen P. Broks, 2019
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.11.23
+// Version: 21.03.24
 // EndLic
 
 
@@ -65,6 +65,9 @@ namespace KthuraEdit
             Lua_XStuff.ME = obj;
             var OTAG =  obj.kind.Replace("$", "CSPOT_") ;
             //KthuraEdit.Stages.DBG.Log($"if {OTAG} and {OTAG}[\".hasmember\"].Show then {OTAG}.Show(Kthura.ME) else ({obj.kind.Replace("$", "CSPOT_")}_Show or NOTHING)(Kthura.ME) end");
+            //Core.Lua("_ShowNotFound = _ShowNotFound or {}");
+            //Core.Lua("_SNFF = _SNFF or function(msg) print(\"NOTE! \"..msg) return true end");
+            //Core.Lua($"if not {OTAG} then _ShowNotFound['Tabel{OTAG}'] = _ShowNotFound['Tabel{OTAG}'] or _SNFF('No table named {OTAG}') end");
             Core.Lua($"if {OTAG} and {OTAG}[\".hasmember\"]('Show') then {OTAG}.Show(Kthura.ME) else ({obj.kind.Replace("$","CSPOT_")}_Show or NOTHING)(Kthura.ME) end", true);
        }
 
@@ -78,11 +81,3 @@ namespace KthuraEdit
         }
     }
 }
-
-
-
-
-
-
-
-
