@@ -1,8 +1,8 @@
 // Lic:
 // Class/KthuraDraw.cs
 // Draw Kthura for C#
-// version: 20.07.29
-// Copyright (C) 2019 Jeroen P. Broks
+// version: 21.03.24
+// Copyright (C) 2019, 2021 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
@@ -27,8 +27,10 @@ using TrickyUnits;
 namespace NSKthura{
 
     delegate void DelDrawZone(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
-    delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);    
+    delegate void DelDrawPoint(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0);
     
+    delegate void DelDrawCustom(KthuraObject obj, int ix = 0, int iy = 0, int scrollx = 0, int scrolly = 0); // This one is specific for the engine calling it!
+
 
     abstract class KthuraDraw {
         #region The Abstract part every Draw Driver must have!
@@ -49,6 +51,7 @@ namespace NSKthura{
         static public DelDrawPoint DrawPivot = null; // Only needed in editors
         static public DelDrawPoint DrawExit = null;
         static public DelDrawPoint DrawCSpot = null;
+        static public DelDrawCustom DrawCustom = null;
         static public bool IgnoreVisibility = false; // If set to true, invisible objects will still be shown.
 
         static public void DrawMap(Kthura map, string layer, int scrollx = 0, int scrolly = 0, int x = 0, int y = 0) => DrawMap(map.Layers[layer], scrollx, scrolly, x, y);
@@ -90,6 +93,8 @@ namespace NSKthura{
                                 DrawPivot?.Invoke(obj, x, y, scrollx, scrolly); break;
                             case "Exit":
                                 DrawExit?.Invoke(obj, x, y, scrollx, scrolly); break;
+                            case "Custom":
+                                DrawCustom?.Invoke(obj, x, y, scrollx, scrolly); break;
                             default:
                                 if (qstr.Prefixed(obj.kind,"$")) {
                                     DrawCSpot?.Invoke(obj, x, y, scrollx, scrolly); break;
