@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2019
+// (c) Jeroen P. Broks, 2019, 2021
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 20.05.25
+// Version: 21.03.24
 // EndLic
 
 
@@ -73,6 +73,7 @@ namespace KthuraEdit {
         public string Build => BuildDate.sBuildDate;
         public string CallBackStage => Lua_XStuff.callbackstage;
 
+        int _GenKeyCnt = -1;
         public string GenKey(string prefix) {
             var time = "";
             var cnt = -1;
@@ -81,7 +82,8 @@ namespace KthuraEdit {
             do {
                 time = DateTime.Now.ToString();
                 cnt++;
-                ret = $"{qstr.md5($"{prefix}{time}{cnt}")}";
+                _GenKeyCnt++;
+                ret = $"{qstr.md5($"{prefix}{time}{cnt}{_GenKeyCnt}")}.{_GenKeyCnt}";
             } while (Core.Map.Layers[UI.selectedlayer].HasTag(ret,true));
             return $"{prefix}{ret}";
         }
