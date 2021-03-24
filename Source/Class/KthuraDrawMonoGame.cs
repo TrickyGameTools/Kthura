@@ -1,8 +1,8 @@
 // Lic:
 // Class/KthuraDrawMonoGame.cs
 // MonoGame Driver for Kthura for C#
-// version: 20.07.29
-// Copyright (C) 2019, 2020 Jeroen P. Broks
+// version: 21.03.24
+// Copyright (C) 2019, 2020, 2021 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
@@ -34,6 +34,9 @@ namespace NSKthura {
 
         public static dCrashOnNoTex CrashOnNoTex = null;
 
+        public enum TAutoBundle { Off, ReplaceInLoadOnly, AutomaticallyFixObject}
+        public TAutoBundle AutoBundle = TAutoBundle.AutomaticallyFixObject;
+
         #region Chain me into Kthura
         static KthuraDrawMonoGame me = new KthuraDrawMonoGame();
         static public void UseMe() => DrawDriver = me;
@@ -49,6 +52,20 @@ namespace NSKthura {
             var kind = obj.kind;
             var lay = obj.Parent;
             var map = lay.Parent;
+            var mfile = qstr.StripExt(file);
+            if (qstr.ExtractExt(file.ToUpper()) == "PNG" && map.TextureJCR.Exists($"{mfile}.frames") && map.TextureJCR.DirExists($"{mfile}.jpbf")) {
+                var rfile = $"{mfile}.jpbf";
+                switch (AutoBundle) {
+                    case TAutoBundle.Off: break;
+                    case TAutoBundle.AutomaticallyFixObject:                        
+                        obj.Texture = rfile; 
+                        // Fallthrough... Otherwise not supported in C#, so this is the only way to do it (bad bad Microsoft)
+                        goto case TAutoBundle.ReplaceInLoadOnly;
+                    case TAutoBundle.ReplaceInLoadOnly:
+                        file = rfile;
+                        break;
+                }
+            }
             if (map != LastUsedMap) Textures.Clear(); // Only store texture per map. Will take too much RAM otherwise!
             LastUsedMap = map;
             var tag = $"{kind}::{file}";
@@ -130,6 +147,7 @@ namespace NSKthura {
                 //TQMG.RotateRAD((float)obj.RotationRadians);
                 TQMG.RotateDEG(obj.RotationDegrees);
                 TQMG.Scale(obj.ScaleX, obj.ScaleY);
+                if (obj.AnimFrame < 0 || obj.AnimFrame >= tx.Frames) obj.AnimFrame = 0;
                 tx.XDraw(obj.x + ix - scrollx, obj.y + iy - scrolly, obj.AnimFrame);
                 TQMG.Scale(1000, 1000);
                 TQMG.RotateRAD(0);
