@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2019
+// (c) Jeroen P. Broks, 2019, 2021
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 20.05.25
+// Version: 21.03.24
 // EndLic
 
 
@@ -51,13 +51,15 @@ namespace KthuraEdit.Stages
         #endregion
 
         #region True Class
-        internal struct TQA {
+        internal struct TQA {            
             internal string caption;
             internal TQMGText capttext;
             internal int y;
         }
 
         Dictionary<string, string> QA = new Dictionary<string, string>();
+        Dictionary<string, string> QAO = new Dictionary<string, string>();
+        Dictionary<string, TQMGText> QAT = new Dictionary<string, TQMGText>();
         TQMGText Caption;
         List<TQA> ShowQuestions;
         string curfield = "";
@@ -69,12 +71,16 @@ namespace KthuraEdit.Stages
             foreach (string Q in questions) {
                 var Question = Q;
                 var eq = Q.IndexOf('=');
-
                 if (eq >= 0) {
                     Question = Q.Substring(0, eq);
                     QA[Question] = Q.Substring(eq + 1);
-                } else
+                    QAO[Question] = "";
+                    QAT[Question] = null;
+                } else {
+                    QAO[Question] = "*OLD*";
+                    QAT[Question] = null;
                     QA[Question] = "";
+                }
                 var TQ = new TQA {
                     caption = Question,
                     y = y,
@@ -94,22 +100,27 @@ namespace KthuraEdit.Stages
             TQMG.Color(255, 180, 0);
             Caption.Draw(UI.ScrWidth / 2, 5, TQMG_TextAlign.Center);
             foreach (TQA TQ in ShowQuestions) {
+                if (curfield == TQ.caption) {
+                    var nu = DateTime.Now.Second;
+                    if (nu % 2 == 0) cursor = "_";
+                } else cursor = "";
                 TQMG.Color(255, 255, 255);
                 TQ.capttext.Draw(10, TQ.y);
                 if (curfield == "") curfield = TQ.caption;
+                if (QA[TQ.caption] != QAO[TQ.caption] || QAT[TQ.caption] == null) QAT[TQ.caption] = UI.font20.Text($"{QA[TQ.caption]}{cursor}");
                 if (curfield == TQ.caption) {
                     gotfield = true;
-                    var nu = DateTime.Now.Second;
-                    if (nu % 2 == 0) cursor = "_";
                     TQMG.Color(0, 255, 255);
                     TQMG.DrawRectangle(300, TQ.y, UI.ScrWidth - 350, 23);
                     TQMG.Color(0, 0, 0);
-                    UI.font20.DrawText($"{QA[TQ.caption]}{cursor}", 302, TQ.y);
+                    //UI.font20.DrawText($"{QA[TQ.caption]}{cursor}", 302, TQ.y);
+                    QAT[TQ.caption].Draw(302, TQ.y);
                 } else {
                     TQMG.Color(0, 25, 25);
                     TQMG.DrawRectangle(300, TQ.y, UI.ScrWidth - 350, 23);
                     TQMG.Color(0, 255, 255);
-                    UI.font20.DrawText($"{QA[TQ.caption]}", 302, TQ.y);
+                    //UI.font20.DrawText($"{QA[TQ.caption]}", 302, TQ.y);
+                    QAT[TQ.caption].Draw(302, TQ.y);
                     if (Core.MsHit(1) && (Core.ms.Y > TQ.y && Core.ms.Y < TQ.y + 24)) curfield = TQ.caption;
                 }
             }
