@@ -1,8 +1,8 @@
 // Lic:
 // KthuraBubble/KthuraBubbleGenerator.cs
 // Kthura Bubble Map Generator
-// version: 20.07.29
-// Copyright (C) 2020 Jeroen P. Broks
+// version: 21.03.24
+// Copyright (C) 2020, 2021 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
