@@ -1,8 +1,8 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 20.07.29
-// Copyright (C) 2019, 2020 Jeroen P. Broks
+// version: 21.03.24
+// Copyright (C) 2019, 2020, 2021 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
 // arising from the use of this software.
@@ -134,7 +134,7 @@ namespace NSKthura {
             if (!Parent.HasTag(ztag)) return false;
             var zone = Parent.FromTag(ztag);
             if (kind != "Obstacle" && kind != "Actor") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Main Object must be either Object or Actor");
-            if (zone.kind != "TiledArea" && zone.kind != "Zone") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Zone Object must be either Zone or TiledArea");
+            if (zone.kind != "TiledArea" && zone.kind != "Zone" && zone.kind!="StretchedArea") throw new Exception($"KthuraMap.Object.IsInzone(\"{ztag}\"): Zone Object must be either Zone, StretchedArea or TiledArea. This is a {zone.kind}");
             return x >= zone.x && y >= zone.y && x <= zone.x + zone.w && y <= zone.y + zone.h;
         }
 
@@ -770,6 +770,7 @@ namespace NSKthura {
         public static Kthura Load(TJCRDIR sourcedir, string prefix, TJCRDIR TexJcr) {
 
             bool dochat = true;
+            bool containslayers = false; // Will be used to "repair" older maps without layers, as this is no longer supported.
 
             void crash(string er) => throw new Exception($"KthuraLoad: {er}");
             void assert(bool o, string er) {
@@ -786,6 +787,10 @@ namespace NSKthura {
                 TextureJCR = TexJcr
             };
             var m = sourcedir.LoadStringMap($"{prefix}Data");
+            if (m == null) {
+                Console.WriteLine($"ERROR! Failed to load {prefix}Data");
+                return null;
+            }
             foreach (string K in m.Keys)
                 ret.MetaData[K] = m[K];
             var olines = sourcedir.ReadLines($"{prefix}Objects", true);
@@ -804,9 +809,16 @@ namespace NSKthura {
                         readlayers = true;
                     else if (l == "__END")
                         readlayers = false;
-                    else if (readlayers)
-                        ret.Layers[l] = new KthuraLayer(ret);
+                    else if (readlayers) {
+                        ret.Layers[l.ToUpper()] = new KthuraLayer(ret);
+                        containslayers = true; }
                     else if (l == "NEW") {
+                        if (containslayers && (!ret.Layers.ContainsKey(curlayername))) crash($"Unknown layer: {curlayername}");
+                        if (!containslayers) {
+                            curlayername = "LAYERLESS";
+                            ret.Layers[curlayername] = new KthuraLayer(ret);
+                            containslayers = true;
+                        }
                         obj = new KthuraObject("?", ret.Layers[curlayername]);
                         chat($"New object in {curlayername}");
                     } else {
@@ -819,8 +831,8 @@ namespace NSKthura {
                             // Layer as a whole
                             case "LAYER":
                                 obj = null;
-                                curlayername = value;
-                                curlayer = ret.Layers[value];
+                                curlayername = value.ToUpper();
+                                curlayer = ret.Layers[value.ToUpper()];
                                 break;
                             case "GRID":
                                 if (curlayer == null) crash("GRID needs a layer!");
@@ -916,7 +928,7 @@ namespace NSKthura {
                                 obj.ScaleY = qstr.ToInt(s[1].Trim());
                                 break;
                             case "BLEND":
-                                if (qstr.ToInt(value) != 0) Debug.Print("Alternate Blends are only supported in the BlitzMax version of Kthura!");
+                                if (qstr.ToInt(value) != 0) Debug.Print("WARNING! Alternate Blends are only supported in the BlitzMax and C++ versions of Kthura!");
                                 break;
                             default:
                                 if (qstr.Prefixed(key, "DATA.")) {
