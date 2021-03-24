@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2019, 2020
+// (c) Jeroen P. Broks, 2019, 2020, 2021
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 20.07.29
+// Version: 21.03.24
 // EndLic
 
 
@@ -939,6 +939,8 @@ namespace KthuraEdit {
                 Fields["cG"].value = value.G.ToString();
                 Fields["cB"].value = value.B.ToString();
                 Fields["Tag"].value = value.Tag;
+                Fields["ScaleX"].value = value.ScaleX.ToString();
+                Fields["ScaleY"].value = value.ScaleY.ToString();
                 Checkboxes["Impassible"].value = value.Impassible;
                 Checkboxes["ForcePassible"].value = value.ForcePassible;
                 Checkboxes["Visible"].value = value.Visible;
@@ -1005,6 +1007,12 @@ namespace KthuraEdit {
                 case "Visible":
                     M_SelectedObject.Visible = bolval;
                     if (!bolval) Console.Beep();
+                    break;
+                case "ScaleX":
+                    M_SelectedObject.ScaleX = intval;
+                    break;
+                case "ScaleY":
+                    M_SelectedObject.ScaleY = intval;
                     break;
                 default:
                     Debug.WriteLine($"WARNING! I do not know field name {fieldname}");
@@ -1338,6 +1346,7 @@ namespace KthuraEdit {
                 Rotten = Rotten || ((o.kind == "TiledArea" || o.kind == "Zone") && (o.w == 0 || o.h == 0));
                 // Declared 'rotten'
                 if (Rotten && Confirm.Yes($"Object {o.kind}({o.x},{o.y}) {o.w}x{o.h} has been declared 'rotten'.\n\nShall I remove it?")) kill.Add(o);
+                if (o.kind == "Obstacle" && (o.ForcePassible || o.Impassible) && Confirm.Yes($"Obstacle has been found with the 'Impassible'/'Forcepassible' bit set to true.\n(Imp:{o.Impassible}; FcP:{o.ForcePassible})\n\nThe possibility to do this has been deprecated, and in future versions these bits will likely be ignored on obstacles. I therefore recommend to remove these bits from this obstacle.\n\nAre you okay with that?")) { o.Impassible = false; o.ForcePassible = false; }
                 if (o.Impassible && o.ForcePassible && Confirm.Yes($"Object { o.kind} ({ o.x},{ o.y}) { o.w} has both Impassible and ForcePassible checked!\n\n\nI recommend to either remove this object or to edit that out!\n\nDo you want to remove it?")) kill.Add(o);                
             }
             foreach (KthuraObject o in kill) MapLayer.Objects.Remove(o);
@@ -1406,7 +1415,13 @@ namespace KthuraEdit {
                         break;
                     case Keys.Right:
                         ScrollX += MapLayer.GridX / 2;
-                        break;                    
+                        break;
+                    case Keys.PageDown:
+                        ScrollY += (int)(Math.Floor((decimal)TQMG.ScrHeight/ MapLayer.GridY)* (MapLayer.GridY-2));
+                        break;
+                    case Keys.PageUp:
+                        ScrollY -= (int)(Math.Floor((decimal)TQMG.ScrHeight / MapLayer.GridY) * (MapLayer.GridY - 2));
+                        break;
                 }
             }
             // Delete
