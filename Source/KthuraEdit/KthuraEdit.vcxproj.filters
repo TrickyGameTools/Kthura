@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Units">
+      <UniqueIdentifier>{49fab12f-dbc9-443d-a6c5-5d21a4446366}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -20,6 +23,33 @@
     </ClCompile>
     <ClCompile Include="src\Config.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Bye.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dijkstra.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dirry.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\FileList.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp">
+      <Filter>Source Files\Units</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
