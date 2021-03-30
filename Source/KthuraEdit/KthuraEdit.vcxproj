@@ -140,6 +140,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Bye.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dijkstra.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dirry.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\FileList.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
