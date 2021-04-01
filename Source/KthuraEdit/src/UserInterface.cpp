@@ -1,3 +1,29 @@
+// Lic:
+// Kthura Map Editor (C++)
+// User Interface
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2021
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 21.04.01
+// EndLic
+
 // self
 #include "../headers/UserInterface.hpp"
 
@@ -5,6 +31,9 @@
 #include <iostream>
 
 // Units
+#include <QuickString.hpp>
+
+// TQSG
 #include <TQSE.hpp>
 #include <TQSG.hpp>
 
@@ -14,12 +43,45 @@ using namespace TrickyUnits;
 
 namespace KthuraEdit {
 	bool UI::_initialized{ false };
+	TQSG_AutoImage UI::Mouse{ nullptr };
+	UI* UI::_Current{ nullptr };
+	std::map<std::string, UI> UI::Stage{};
+
+	UI::UI(std::string name) {
+		_Name = name;
+	}
+	UI::UI() { Crash("Invalid UI definition"); }
 
 	void UI::Crash(std::string m) {
 		std::cout << "ERROR! " << m << std::endl;
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Kthura - Fatal Error", m.c_str(), TQSG_Window());
 		Done();
 		exit(1);
+	}
+
+	void UI::AddStage(std::string st) {
+		st = Upper(st);
+		if (Stage.count(st)) Crash("Dupe stage: " + st);
+		Stage[st] = UI{st};
+	}
+
+	UI* UI::GetStage(std::string st) {
+		st = Upper(st);
+		if (!Stage.count(st)) Crash("Non-existent stage: " + st);
+		return &Stage[st];
+	}
+
+	UI* UI::CurrentStage() {
+		return _Current;
+	}
+
+	void UI::GoToStage(std::string st) {
+		st = Upper(st);
+		if (!Stage.count(st)) Crash("Non-existent stage: " + st);
+		_Current = &Stage[st];
+		for (auto& si : Stage) {
+			si.second.MainGadget->Visible = si.first == st;
+		}
 	}
 
 	void UI::Start() {
@@ -40,6 +102,9 @@ namespace KthuraEdit {
 		SDL_SetWindowSize(TQSG_Window(), floor(W / .99), floor(H / .75));
 		//*/
 		TQSE_Init();
+		HideMouse();
+		jcr6::JT_Dir* JD = Config::JCR();		
+		Mouse = TQSG_LoadAutoImage(JD, std::string("MousePointer.png"));
 	}
 	bool UI::Run() {
 		auto go_on{ true };
@@ -49,6 +114,7 @@ namespace KthuraEdit {
 #ifdef QUICK_QUIT
 		if (TQSE_KeyHit(SDLK_ESCAPE)) go_on = false;
 #endif
+		Mouse->Draw(TQSE_MouseX(), TQSE_MouseY());
 		TQSG_Flip(20);
 		return go_on; // True code comes later!
 	}
