@@ -111,6 +111,9 @@
     <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp">
       <Filter>Source Files\June19</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI_Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp">
       <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_Map.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
