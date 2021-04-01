@@ -20,6 +20,7 @@ namespace KthuraEdit {
 		return false; // True code comes later!
 	}
 	void UI::Done() {
+		if (!_initialized) return;
 		_initialized = false;
 		std::cout << "Closing User Interface\n";
 	}
