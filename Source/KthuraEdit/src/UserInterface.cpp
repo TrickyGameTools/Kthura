@@ -8,6 +8,8 @@
 #include <TQSE.hpp>
 #include <TQSG.hpp>
 
+#define QUICK_QUIT
+
 using namespace TrickyUnits;
 
 namespace KthuraEdit {
@@ -28,15 +30,27 @@ namespace KthuraEdit {
 		// Interface load
 		_initialized = true;
 		std::cout << "Staring User Interface\n";
+		if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile,0,0,true)) Crash("Init Kthura failed");
+		/*
+		TQSG_Cls(); TQSG_Flip();
 		int
 			W{ TQSG_DesktopWidth() },
 			H{ TQSG_DesktopHeight() };
 		std::cout << "Desktop size: " << W << "x" << H << std::endl;
-		TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, floor(W / .99), floor(H / .80));
-
+		SDL_SetWindowSize(TQSG_Window(), floor(W / .99), floor(H / .75));
+		//*/
+		TQSE_Init();
 	}
 	bool UI::Run() {
-		return false; // True code comes later!
+		auto go_on{ true };
+		TQSG_Cls();
+		TQSE_Poll();
+		if (TQSE_Quit()) go_on = false;
+#ifdef QUICK_QUIT
+		if (TQSE_KeyHit(SDLK_ESCAPE)) go_on = false;
+#endif
+		TQSG_Flip(20);
+		return go_on; // True code comes later!
 	}
 	void UI::Done() {
 		if (!_initialized) return;
