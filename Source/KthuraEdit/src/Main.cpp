@@ -13,6 +13,10 @@
 #include <jcr6_zlib.hpp>
 #include <jcr6_jxsda.hpp>
 
+// SDL2 (must even though not used here be there, due to main replacement in SDL2)
+#include <SDL.h>
+#include <SDL_main.h>
+
 
 
 void InitJCR() {
