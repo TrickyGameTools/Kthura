@@ -53,7 +53,7 @@ namespace KthuraEdit {
 		std::cout << "Analysing: " << MyAssets() << std::endl;
 		_JCR = Dir(MyAssets());
 		auto err{ Get_JCR_Error_Message() };
-		if (err != "")
+		if (err != "" && err!="Ok")
 			return Success{ false,err };
 		return Success{ true,"" };
 	}
