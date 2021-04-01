@@ -22,6 +22,9 @@
     <Filter Include="Source Files\TQSG">
       <UniqueIdentifier>{7459a254-961b-48b8-be2f-9a0db809f8af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\TQSG">
+      <UniqueIdentifier>{09071924-3e86-4986-9c4e-b8b5dac1769e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -72,6 +75,15 @@
     <ClCompile Include="src\UserInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp">
+      <Filter>Header Files\TQSG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -79,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="headers\UserInterface.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp">
+      <Filter>Header Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp">
+      <Filter>Header Files\TQSG</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
