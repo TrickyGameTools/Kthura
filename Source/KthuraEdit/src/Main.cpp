@@ -7,6 +7,20 @@
 // Units
 #include <QuickString.hpp>
 
+// JCR6
+#include <jcr6_core.hpp>
+#include <jcr6_zlib.hpp>
+#include <jcr6_jxsda.hpp>
+
+
+
+void InitJCR() {
+	using namespace jcr6;
+	std::cout << "Initizing JCR6.\n";
+	init_JCR6();
+	init_zlib();
+	init_jxsda();
+}
 
 int main(int aantal_arg, char** arg) {
 	using namespace std;
@@ -21,8 +35,11 @@ int main(int aantal_arg, char** arg) {
 		cout << endl << "You can also use the Kthura Map Editor with the help of the Kthura Launcher" << endl;
 		return 0;
 	}
+
 	cout << "Project: " << Config::Project << endl;
-	cout << "    Map: " << Config::MapFile << endl;
+	cout << "    Map: " << Config::MapFile << endl<<endl;
+	
+	InitJCR();
 
 	return 0;
 }
