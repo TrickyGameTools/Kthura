@@ -20,7 +20,12 @@ using namespace TrickyUnits;
 
 
 namespace KthuraEdit {
+	// privates
+	jcr6::JT_Dir Config::_JCR;
+	std::string Config::_MyExe{ "" };
+	std::string Config::_MyExeDir{ "" };
 
+	// public
 	std::string Config::Project{ "" };
 	std::string Config::MapFile{ "" };
 	std::string Config::StartOnLayer{ "" };
@@ -35,9 +40,27 @@ namespace KthuraEdit {
 		return _MyExeDir;
 	}
 
+	std::string Config::MyAssets() {
+		return StripExt(_MyExe) + ".jcr";
+	}
+
+	jcr6::JT_Dir* Config::JCR() {
+		return &_JCR;
+	}
+
+	Success Config::GetJCR() {
+		using namespace jcr6;
+		std::cout << "Analysing: " << MyAssets() << std::endl;
+		_JCR = Dir(MyAssets());
+		auto err{ Get_JCR_Error_Message() };
+		if (err != "")
+			return Success{ false,err };
+		return Success{ true,"" };
+	}
+
 	void Config::ParseArgs(int aantal_arg, char** arg) {
 		using namespace std;
-		_MyExe = arg[0];
+		_MyExe = arg[0]; 
 		_MyExeDir = ExtractDir(_MyExe);
 		int pcnt{ 0 };
 		bool sw{ false };
