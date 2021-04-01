@@ -3,6 +3,7 @@
 
 // Kthura Editor
 #include "../headers/Config.hpp"
+#include "../headers/UserInterface.hpp"
 
 // Units
 #include <QuickString.hpp>
@@ -40,6 +41,11 @@ int main(int aantal_arg, char** arg) {
 	cout << "    Map: " << Config::MapFile << endl<<endl;
 	
 	InitJCR();
+
+	UI::Start();
+	do {} while (UI::Run());
+	UI::Done();
+	
 
 	return 0;
 }
