@@ -82,6 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\lib\x64;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\lib\x64;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\lib_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,14 +138,25 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>powershell dll-copy.ps1</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Make sure all dll files are present</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Bye.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dijkstra.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dirry.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\FileList.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />

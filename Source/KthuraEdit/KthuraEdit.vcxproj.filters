@@ -16,6 +16,9 @@
     <Filter Include="Source Files\Units">
       <UniqueIdentifier>{49fab12f-dbc9-443d-a6c5-5d21a4446366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\JCR6">
+      <UniqueIdentifier>{94d0bf44-794b-4445-b6b5-da760307a006}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -49,6 +52,18 @@
       <Filter>Source Files\Units</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp">
       <Filter>Source Files\Units</Filter>
     </ClCompile>
   </ItemGroup>
