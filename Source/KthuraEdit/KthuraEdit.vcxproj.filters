@@ -19,6 +19,9 @@
     <Filter Include="Source Files\JCR6">
       <UniqueIdentifier>{94d0bf44-794b-4445-b6b5-da760307a006}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\TQSG">
+      <UniqueIdentifier>{7459a254-961b-48b8-be2f-9a0db809f8af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -66,9 +69,15 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp">
       <Filter>Source Files\Units</Filter>
     </ClCompile>
+    <ClCompile Include="src\UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UserInterface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

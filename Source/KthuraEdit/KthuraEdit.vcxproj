@@ -163,9 +163,11 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp" />
+    <ClInclude Include="headers\UserInterface.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
