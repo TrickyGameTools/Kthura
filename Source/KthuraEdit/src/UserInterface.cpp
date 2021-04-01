@@ -28,7 +28,11 @@ namespace KthuraEdit {
 		// Interface load
 		_initialized = true;
 		std::cout << "Staring User Interface\n";
-
+		int
+			W{ TQSG_DesktopWidth() },
+			H{ TQSG_DesktopHeight() };
+		std::cout << "Desktop size: " << W << "x" << H << std::endl;
+		TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, floor(W / .99), floor(H / .80));
 
 	}
 	bool UI::Run() {
