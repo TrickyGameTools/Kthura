@@ -22,3 +22,7 @@ cp "$sdl_image\lib\x64\*.dll" "x64\Release"
 
 echo "Copying zlib"
 cp "$zlib\zlib.dll" "x64\Release"
+
+
+echo "Need assets"
+cp "../../Releases/KthuraEdit.jcr" "x64/Release"
