@@ -21,4 +21,4 @@ echo "Copying SDL2_Image"
 cp "$sdl_image\lib\x64\*.dll" "x64\Release"
 
 echo "Copying zlib"
-cp "$zlib\zlib.dll"
+cp "$zlib\zlib.dll" "x64\Release"
