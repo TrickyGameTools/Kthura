@@ -21,11 +21,12 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.01
+// Version: 21.04.02
 // EndLic
 
 // self
 #include "../headers/UserInterface.hpp"
+#include "../headers/UI_Map.hpp"
 
 // C++
 #include <iostream>
@@ -114,23 +115,33 @@ namespace KthuraEdit {
 		Mouse = TQSG_LoadAutoImage(JD, std::string("MousePointer.png"));
 
 		// Main screen config
+		AdeptStatus();
 		j19gadget::SetDefaultFont(JD, "Fonts/DOSFont.jfbf");
-		Screen()->BB = 255;
-		Screen()->BG = 0;
-		Screen()->BR = 180;
-		Screen()->FR = 0;
-		Screen()->FG = 255;
-		Screen()->FB = 255;
-		
+		auto Scr = WorkScreen();
+		Scr->BB = 255;
+		Scr->BG = 0;
+		Scr->BR = 180;
+		Scr->BA = 255;
+		Scr->FR = 0;
+		Scr->FG = 255;
+		Scr->FB = 255;
+		Scr->FA = 255;
+		auto
+			MenuFile = Scr->AddMenu("File"),
+			GridMenu = Scr->AddMenu("Grid"),
+			LayerMenu = Scr->AddMenu("Layers"),
+			DebugMenu = Scr->AddMenu("Debug");
 	}
 	bool UI::Run() {
 		auto go_on{ true };
 		TQSG_Cls();
+		Screen()->Draw();
 		TQSE_Poll();
 		if (TQSE_Quit()) go_on = false;
 #ifdef QUICK_QUIT
 		if (TQSE_KeyHit(SDLK_ESCAPE)) go_on = false;
 #endif
+		TQSG_ACol(255, 255, 255, 255);
 		Mouse->Draw(TQSE_MouseX(), TQSE_MouseY());
 		TQSG_Flip(20);
 		return go_on; // True code comes later!
