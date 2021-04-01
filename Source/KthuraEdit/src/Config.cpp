@@ -27,8 +27,18 @@ namespace KthuraEdit {
 
 	std::map<std::string, std::string> Config::ArgConfig{};
 	
+	std::string Config::MyExe() {
+		return _MyExe;
+	}
+
+	std::string Config::MyExeDir() {
+		return _MyExeDir;
+	}
+
 	void Config::ParseArgs(int aantal_arg, char** arg) {
 		using namespace std;
+		_MyExe = arg[0];
+		_MyExeDir = ExtractDir(_MyExe);
 		int pcnt{ 0 };
 		bool sw{ false };
 		string lstsw{ "" };
