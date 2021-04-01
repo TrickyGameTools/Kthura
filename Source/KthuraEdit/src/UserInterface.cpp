@@ -40,8 +40,12 @@
 #define QUICK_QUIT
 
 using namespace TrickyUnits;
+using namespace june19;
 
 namespace KthuraEdit {
+
+	
+
 	bool UI::_initialized{ false };
 	TQSG_AutoImage UI::Mouse{ nullptr };
 	UI* UI::_Current{ nullptr };
@@ -85,6 +89,7 @@ namespace KthuraEdit {
 	}
 
 	void UI::Start() {
+		
 		// JCR6
 		auto J{ Config::GetJCR() };
 		if (!J.Succesful) Crash("Failed to load " + Config::MyAssets() + "\n\n" + J.error);
@@ -101,10 +106,22 @@ namespace KthuraEdit {
 		std::cout << "Desktop size: " << W << "x" << H << std::endl;
 		SDL_SetWindowSize(TQSG_Window(), floor(W / .99), floor(H / .75));
 		//*/
+
+		// Mouse
 		TQSE_Init();
 		HideMouse();
 		jcr6::JT_Dir* JD = Config::JCR();		
 		Mouse = TQSG_LoadAutoImage(JD, std::string("MousePointer.png"));
+
+		// Main screen config
+		j19gadget::SetDefaultFont(JD, "Fonts/DOSFont.jfbf");
+		Screen()->BB = 255;
+		Screen()->BG = 0;
+		Screen()->BR = 180;
+		Screen()->FR = 0;
+		Screen()->FG = 255;
+		Screen()->FB = 255;
+		
 	}
 	bool UI::Run() {
 		auto go_on{ true };
