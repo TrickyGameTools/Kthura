@@ -1,5 +1,10 @@
 #pragma once
+// June19
+#include <june19.hpp>
+
+// Kthura Editor
 #include "../headers/Config.hpp"
+
 
 
 namespace KthuraEdit {
