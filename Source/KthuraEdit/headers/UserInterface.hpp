@@ -8,6 +8,8 @@ namespace KthuraEdit {
 		static bool _initialized;
 	public:
 
+		static void Crash(std::string m);
+
 		// Notify
 		static void Start();
 		static bool Run();
