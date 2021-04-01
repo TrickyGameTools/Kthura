@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Projects\Applications\VisualStudio\VC\June19\src;E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\lib\x64;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\lib\x64;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\lib_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -151,6 +151,14 @@
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp" />
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp" />
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_button.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_core.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_label.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_picture.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp" />
@@ -169,6 +177,15 @@
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\VC\June19\src\june19.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_button.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_core.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_label.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_picture.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />

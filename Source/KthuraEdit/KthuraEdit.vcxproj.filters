@@ -25,6 +25,9 @@
     <Filter Include="Header Files\TQSG">
       <UniqueIdentifier>{09071924-3e86-4986-9c4e-b8b5dac1769e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\June19">
+      <UniqueIdentifier>{06d807f6-cd52-4ed7-814e-3e3acd411fd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -84,6 +87,30 @@
     <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp">
       <Filter>Header Files\TQSG</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_button.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_core.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_label.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_picture.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -100,6 +127,33 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp">
       <Filter>Header Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_button.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_core.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_label.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_picture.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp">
+      <Filter>Source Files\June19</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
