@@ -73,7 +73,8 @@ function private:clearreleases{
 function private:PackAssets{
 	write-host "  Packing: " -nonewline -Foregroundcolor Yellow
 	write-host "Assets" -ForeGroundColor Cyan
-    $result = jcr6 add -i ../Assets ../Releases/KthuraEdit.jcr
+    #$result = jcr6 add -i ../Assets ../Releases/KthuraEdit.jcr
+    $result = jcr6_add -doj -cm zlib -fc zlib -i ../Assets ../Releases/KthuraEdit.jcr
     if (-Not $?) {
        write-output $result
        write-host "ERROR PACKING" -ForegroundColor Red
