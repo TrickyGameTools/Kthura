@@ -55,7 +55,7 @@ namespace KthuraEdit {
 	UI::UI(std::string name) {
 		_Name = name;
 	}
-	UI::UI() { Crash("Invalid UI definition"); }
+	UI::UI() { }
 
 	void UI::Crash(std::string m) {
 		std::cout << "ERROR! " << m << std::endl;
@@ -68,6 +68,7 @@ namespace KthuraEdit {
 		st = Upper(st);
 		if (Stage.count(st)) Crash("Dupe stage: " + st);
 		Stage[st] = UI{st};
+		Stage[st].MainGadget = CreateGroup(0, 0, TQSG_ScreenWidth(), TQSG_ScreenHeight() - 36,WorkScreen());
 	}
 
 	UI* UI::GetStage(std::string st) {
@@ -131,6 +132,9 @@ namespace KthuraEdit {
 			GridMenu = Scr->AddMenu("Grid"),
 			LayerMenu = Scr->AddMenu("Layers"),
 			DebugMenu = Scr->AddMenu("Debug");
+
+		// Stages
+		UI_MapStart(); // Must be last
 	}
 	bool UI::Run() {
 		auto go_on{ true };
