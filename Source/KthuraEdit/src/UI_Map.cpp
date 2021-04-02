@@ -26,9 +26,17 @@
 #include "..\headers\Config.hpp"
 #include "..\headers\UserInterface.hpp"
 #include "..\headers\UI_Map.hpp"
+
+using namespace june19;
+
 namespace KthuraEdit {
 
 	static bool GridMode{ true };
+	UI* UI_MapEdit{ nullptr };
+	static j19gadget* LayPanel{ nullptr };
+	static j19gadget* LayList{ nullptr };
+
+	static int FH() { return UI_MapEdit->MainGadget->Font()->TextHeight("ABC"); }
 
 	void AdeptStatus() {
 		auto st{ Config::Project };
@@ -36,5 +44,16 @@ namespace KthuraEdit {
 		if (GridMode) { st += "Grid mode"; }
 		st += "\t";
 		june19::j19gadget::StatusText(st);
+	}
+	
+	void UI_MapStart() {
+		// Start
+		UI::AddStage("Map");
+		UI::GoToStage("Map");
+		UI_MapEdit = UI::GetStage("Map");
+		auto MG = UI_MapEdit->MainGadget;
+		LayPanel = CreatePanel(0, 0, 125, MG->H(), MG);
+		LayPanel->BB = 255; LayPanel->BG = 0; LayPanel->BR = 180;
+		
 	}
 }

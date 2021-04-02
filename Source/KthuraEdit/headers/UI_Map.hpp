@@ -24,8 +24,11 @@
 // Version: 21.04.02
 // EndLic
 #pragma once
+#include "UserInterface.hpp"
 
 namespace KthuraEdit {
 
+	extern UI* UI_MapEdit;
 	void AdeptStatus();
+	void UI_MapStart();
 }
