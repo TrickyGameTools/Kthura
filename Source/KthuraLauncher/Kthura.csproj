@@ -87,6 +87,9 @@
     <Compile Include="..\..\..\TrickyUnits\GINI Is Not Ini.cs">
       <Link>Imported\Units\GINI Is Not Ini.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\GINIE.cs">
+      <Link>Imported\Units\GINIE.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\mkl.cs">
       <Link>Imported\Units\mkl.cs</Link>
     </Compile>

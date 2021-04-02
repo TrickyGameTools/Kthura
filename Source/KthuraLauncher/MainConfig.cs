@@ -27,7 +27,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Diagnostics;
 using TrickyUnits;
@@ -76,19 +76,33 @@ namespace Kthura
         }
         #endregion
 
-        static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI");
-        static TGINI Config = GINI.ReadFromFile(ConfigFile,true);
+        static public string ConfigFile => Dirry.C("$AppSupport$/KthuraMapEditor.Config.INI");
+        static public string ConfigFileOld => Dirry.C("$AppSupport$/KthuraMapEditor.Config.GINI"); // GINI is deprecated and most stuff I have where it matters it will be replaced with GINIE.
+        //static TGINI Config = GINI.ReadFromFile(ConfigFile,true);
+        static GINIE Config = null;
         static public string WorkSpace {
+            /*
             get => Config.C($"WorkSpace.{Platform}");
             set {
                 Config.D($"WorkSpace.{Platform}", value);
                 Config.SaveSource(ConfigFile);
             }
+            */
+            get => Config[Platform, "Workspace"];
+            set { Config[Platform, "Workspace"] = value.Replace("\\", "/"); }
         }
 
         static MainConfig() {
             Debug.WriteLine($"System detected as {Platform}/{ADP}/{Environment.OSVersion.Platform}");
-            Dirry.InitAltDrives(ADP);                        
+            Dirry.InitAltDrives(ADP);
+            Config = GINIE.FromFile(ConfigFile);
+            Config.AutoSaveSource=ConfigFile;
+            if ((!File.Exists(ConfigFile))  && File.Exists(ConfigFileOld)) {
+                var OCFG = GINI.ReadFromFile(ConfigFileOld);
+                Config[Platform, "Workspace"] = OCFG.C($"WorkSpace.{Platform}").Replace("\\", "/");
+                Config[Platform, "Imported"] = $"This data was imported on {DateTime.Now}. GINI is deprecated and will be discontinued. -- This filed is just a message and may be removed if you like.";
+                Debug.WriteLine($"GINI config converted to GINIE");
+            }
         }
 
     }
