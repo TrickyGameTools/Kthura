@@ -114,6 +114,9 @@
     <ClCompile Include="src\UI_Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_listbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="headers\UI_Map.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_listbox.hpp">
+      <Filter>Source Files\June19</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

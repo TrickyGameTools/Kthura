@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_core.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_label.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_listbox.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_picture.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_core.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_label.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_listbox.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_picture.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp" />
