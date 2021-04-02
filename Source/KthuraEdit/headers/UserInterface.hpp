@@ -40,6 +40,9 @@
 
 
 namespace KthuraEdit {
+
+	typedef void(*UIV)();
+
 	class UI;
 
 	class UI {
@@ -56,6 +59,9 @@ namespace KthuraEdit {
 		static void Crash(std::string m);
 
 		june19::j19gadget* MainGadget{ nullptr };
+		UIV PreJune{ nullptr };
+		UIV PostJune{ nullptr };
+
 		static void AddStage(std::string st);
 		static UI* GetStage(std::string st);
 		static UI* CurrentStage();
