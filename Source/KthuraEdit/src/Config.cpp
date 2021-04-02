@@ -23,10 +23,14 @@
 // 
 // Version: 21.04.01
 // EndLic
+
 // Myself
 #include "../headers/Config.hpp"
+#include "../headers/UserInterface.hpp"
 
 // Tricky's units
+#include <Dirry.hpp>
+#include <QuickStream.hpp>
 #include <QuickString.hpp>
 
 
@@ -46,6 +50,8 @@ using namespace TrickyUnits;
 
 namespace KthuraEdit {
 	// privates
+	GINIE Config::ProjectConfig;
+	GINIE Config::GlobalConfig;
 	jcr6::JT_Dir Config::_JCR;
 	std::string Config::_MyExe{ "" };
 	std::string Config::_MyExeDir{ "" };
@@ -67,6 +73,18 @@ namespace KthuraEdit {
 
 	std::string Config::MyAssets() {
 		return StripExt(_MyExe) + ".jcr";
+	}
+
+	std::string Config::WorkSpace() {
+		return GlobalConfig.Value(Platform(), "Workspace");		
+	}
+
+	std::string Config::ProjectFile() {
+		string ret{ WorkSpace() };
+		ret = TReplace(ret, '\\', '/');
+		if (right(ret, 1) != "/") ret += "/";
+		ret += Project+"/"+Project + ".Project.ini";
+		return ret;
 	}
 
 	jcr6::JT_Dir* Config::JCR() {
@@ -122,5 +140,15 @@ namespace KthuraEdit {
 			}
 
 		}
+	}
+
+	void Config::LoadProject() {
+		auto gcfgfile = Dirry("$AppSupport$/KthuraMapEditor.Config.Ini");
+		cout << "Loading global config: " << gcfgfile << endl;
+		if (!FileExists(gcfgfile)) UI::Crash("Global Config not found!");
+		GlobalConfig.FromFile(gcfgfile);
+		cout << "Loading Project: " << ProjectFile()<<endl;
+		if (!FileExists(ProjectFile())) UI::Crash("Project file not found!");
+		ProjectConfig.FromFile(ProjectFile());
 	}
 }

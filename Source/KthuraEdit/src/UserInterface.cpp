@@ -96,6 +96,9 @@ namespace KthuraEdit {
 		auto J{ Config::GetJCR() };
 		if (!J.Succesful) Crash("Failed to load " + Config::MyAssets() + "\n\n" + J.error);
 
+		// Project + Map
+		Config::LoadProject();
+
 		// Interface load
 		_initialized = true;
 		std::cout << "Staring User Interface\n";

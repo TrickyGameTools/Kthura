@@ -70,6 +70,7 @@ int main(int aantal_arg, char** arg) {
 	cout << "    Map: " << Config::MapFile << endl<<endl;
 	
 	InitJCR();
+	
 
 	UI::Start();
 	do {} while (UI::Run());

@@ -31,6 +31,8 @@
 #include <map>
 
 #include <jcr6_core.hpp>
+#include <GINIE.hpp>
+#include <Platform.hpp>
 
 
 
@@ -46,6 +48,8 @@ namespace KthuraEdit {
 		static std::string _MyExe;
 		static std::string _MyExeDir;
 		static jcr6::JT_Dir _JCR;
+		static TrickyUnits::GINIE GlobalConfig;
+		static TrickyUnits::GINIE ProjectConfig;
 	public:
 		static std::string Project;
 		static std::string MapFile;
@@ -56,11 +60,14 @@ namespace KthuraEdit {
 		static std::string MyExe();
 		static std::string MyExeDir();
 		static std::string MyAssets();
+		static std::string WorkSpace();
+		static std::string ProjectFile();
 		static jcr6::JT_Dir* JCR();
 
 		static Success GetJCR();
 
 		static void ParseArgs(int aantal_arg, char** arg);
+		static void LoadProject();
 	};
 
 }

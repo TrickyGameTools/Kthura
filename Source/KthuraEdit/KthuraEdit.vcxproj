@@ -170,6 +170,7 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />

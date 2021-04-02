@@ -117,6 +117,9 @@
     <ClCompile Include="..\..\..\VC\June19\src\june19_listbox.cpp">
       <Filter>Source Files\June19</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
