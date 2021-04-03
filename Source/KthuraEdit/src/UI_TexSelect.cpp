@@ -20,7 +20,13 @@ namespace KthuraEdit {
 	static void CreateSelector() {
 		UI::AddStage("PicTex");
 		auto prnt = UI::GetStage("PicText")->MainGadget;
-		CreatePicture(TQSG_ScreenWidth() - 300, 0, 300, prnt->H(), prnt);
+		Preview = CreatePicture(TQSG_ScreenWidth() / 2, 0, TQSG_ScreenWidth() / 2, prnt->H(), prnt);
+		TexList = CreateListBox(0, 0, prnt->W()-200, prnt->H(), prnt);
+		TexList->SetBackground(0, 0, 0, 0);
+		TexList->SetForeground(0, 255, 255, 255);
+		UsedTexList = CreateListBox(0, 0, prnt->W() - 200, prnt->H(), prnt);
+		UsedTexList->SetBackground(0, 0, 0, 0);
+		UsedTexList->SetForeground(255, 180, 0, 255);
 	}
 
 	void GoToTex(june19::j19gadget* g, june19::j19action a) {
