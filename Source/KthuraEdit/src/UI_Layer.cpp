@@ -30,7 +30,10 @@ namespace KthuraEdit {
 				RenewLayers();
 			} else {
 				// Rename Layer
-
+				WorkMap.RenameLayer(CurrentLayer, LTextFld->Text);
+				CurrentLayer = LTextFld->Text;
+				UI::GoToStage("Map");
+				RenewLayers();
 			}
 		}
 	}

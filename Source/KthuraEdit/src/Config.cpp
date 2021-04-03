@@ -177,7 +177,7 @@ namespace KthuraEdit {
 		CurrentLayer = MapConfig.Value("Layer", "Current");
 		for (auto lscan : WorkMap.Layers) {
 			if (CurrentLayer == "") { CurrentLayer = lscan.first; MapConfig.Value("Layer", "Current", CurrentLayer); }
-			cout << "= Layer \"" << lscan.first << "\"; Objects: " << lscan.second.Objects.size();
+			cout << "= Layer \"" << lscan.first << "\"; Objects: " << lscan.second->Objects.size();
 			if (CurrentLayer == lscan.first) cout << "; Current Layer";
 			cout << endl;
 		}

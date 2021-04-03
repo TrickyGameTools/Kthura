@@ -147,6 +147,7 @@ namespace KthuraEdit {
 		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
 		LayerMenu->AddItem("New Layer", NewLayer, SDLK_n);
+		LayerMenu->AddItem("Rename Layer", ChangeLayer, SDLK_KP_5);
 		// Stages
 		UI_MapStart(); // Must be last
 	}
