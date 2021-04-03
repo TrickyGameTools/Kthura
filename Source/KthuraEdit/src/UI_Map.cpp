@@ -44,9 +44,10 @@
 #include <TrickySTOI.hpp>
 
 // Editor
-#include "..\headers\Config.hpp"
-#include "..\headers\UserInterface.hpp"
-#include "..\headers\UI_Map.hpp"
+#include "../headers/Config.hpp"
+#include "../headers/UserInterface.hpp"
+#include "../headers/UI_Map.hpp"
+#include "../headers/MapData.hpp"
 
 using namespace june19;
 using namespace TrickyUnits;
@@ -94,6 +95,7 @@ namespace KthuraEdit {
 	static j19gadget* DataPanel{ nullptr };
 	static j19gadget* DataTab{ nullptr };
 
+	static bool ShowGrid{ true };
 
 
 	static std::map<std::string, TTab> TabMap;
@@ -191,7 +193,8 @@ namespace KthuraEdit {
 	}
 
 	static void DrawMap() {
-
+		if (ShowGrid) {
+		}
 	}
 	
 

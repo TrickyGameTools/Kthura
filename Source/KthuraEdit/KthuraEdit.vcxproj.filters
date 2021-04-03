@@ -135,6 +135,9 @@
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp">
       <Filter>Source Files\Kthura Libraries</Filter>
     </ClCompile>
+    <ClCompile Include="src\MapData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp">
       <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MapData.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

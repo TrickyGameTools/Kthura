@@ -158,9 +158,16 @@ namespace KthuraEdit {
 		cout << "Searching for map: " << Config::FullMapFile() << endl;
 		if (!FileExists(Config::FullMapFile())) {
 			cout << "= Creating new map\n";
+			WorkMap.NewLayer("__BASE");
 		} else {
 			cout << "= Loading map\n";
 			WorkMap.Load(Config::FullMapFile(), Config::JCRPrefix);
+		}
+		for (auto lscan : WorkMap.Layers) {
+			if (CurrentLayer == "") CurrentLayer = lscan.first;
+			cout << "= Layer \"" << lscan.first << "\"; Objects: " << lscan.second.Objects.size();
+			if (CurrentLayer == lscan.first) cout << "; Current Layer";
+			cout << endl;
 		}
 	}
 }
