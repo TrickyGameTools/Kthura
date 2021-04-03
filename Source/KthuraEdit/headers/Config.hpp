@@ -55,6 +55,8 @@ namespace KthuraEdit {
 		static std::string MapFile;
 		static std::string JCRPrefix;
 
+		static TrickyUnits::GINIE MapConfig;
+
 		static std::map<std::string, std::string> ArgConfig;
 
 		static std::string MyExe();
@@ -62,6 +64,7 @@ namespace KthuraEdit {
 		static std::string MyAssets();
 		static std::string WorkSpace();
 		static std::string ProjectFile();
+		static std::string ProjectDir();
 		static std::string FullMapFile();
 		static jcr6::JT_Dir* JCR();
 

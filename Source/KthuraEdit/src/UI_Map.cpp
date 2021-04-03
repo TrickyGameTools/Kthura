@@ -246,5 +246,5 @@ namespace KthuraEdit {
 #endif
 	}
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
-	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; }
+	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); }
 }

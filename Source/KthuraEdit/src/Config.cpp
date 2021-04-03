@@ -51,6 +51,7 @@ using namespace TrickyUnits;
 
 namespace KthuraEdit {
 	// privates
+	GINIE Config::MapConfig;
 	GINIE Config::ProjectConfig;
 	GINIE Config::GlobalConfig;
 	jcr6::JT_Dir Config::_JCR;
@@ -86,6 +87,10 @@ namespace KthuraEdit {
 		if (right(ret, 1) != "/") ret += "/";
 		ret += Project+"/"+Project + ".Project.ini";
 		return ret;
+	}
+
+	std::string Config::ProjectDir() {
+		return ExtractDir(ProjectFile());
 	}
 
 	std::string Config::FullMapFile() {
@@ -163,8 +168,15 @@ namespace KthuraEdit {
 			cout << "= Loading map\n";
 			WorkMap.Load(Config::FullMapFile(), Config::JCRPrefix);
 		}
+		auto TSD{ ProjectDir() + "/Tex Settings" };;
+		auto TSF{ TSD + "/" + MapFile + ".ini" };
+		if (!DirectoryExists(TSD)) { MakeDir(TSD); cout << "= Creating " << TSD << endl; }
+		cout << "= Loading config:" << TSF<<" (creating new if non-existent)\n";
+		MapConfig.FromFile(TSF, true);
+		MapConfig.AutoSave = TSF;
+		CurrentLayer = MapConfig.Value("Layer", "Current");
 		for (auto lscan : WorkMap.Layers) {
-			if (CurrentLayer == "") CurrentLayer = lscan.first;
+			if (CurrentLayer == "") { CurrentLayer = lscan.first; MapConfig.Value("Layer", "Current", CurrentLayer); }
 			cout << "= Layer \"" << lscan.first << "\"; Objects: " << lscan.second.Objects.size();
 			if (CurrentLayer == lscan.first) cout << "; Current Layer";
 			cout << endl;
