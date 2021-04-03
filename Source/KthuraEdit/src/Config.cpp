@@ -27,6 +27,7 @@
 // Myself
 #include "../headers/Config.hpp"
 #include "../headers/UserInterface.hpp"
+#include "../headers/MapData.hpp"
 
 // Tricky's units
 #include <Dirry.hpp>
@@ -155,5 +156,11 @@ namespace KthuraEdit {
 		if (!FileExists(ProjectFile())) UI::Crash("Project file not found!");
 		ProjectConfig.FromFile(ProjectFile());
 		cout << "Searching for map: " << Config::FullMapFile() << endl;
+		if (!FileExists(Config::FullMapFile())) {
+			cout << "= Creating new map\n";
+		} else {
+			cout << "= Loading map\n";
+			WorkMap.Load(Config::FullMapFile(), Config::JCRPrefix);
+		}
 	}
 }
