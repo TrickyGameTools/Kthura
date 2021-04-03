@@ -189,6 +189,10 @@ namespace KthuraEdit {
 		TB->ValTag = DataLabel("Tag", CreateButton("...", 0, 0, Tab)); TB->ValTag->Enabled = false;
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
 	}
+
+	static void DrawMap() {
+
+	}
 	
 
 	void AdeptStatus() {
@@ -204,6 +208,7 @@ namespace KthuraEdit {
 		UI::AddStage("Map");
 		UI::GoToStage("Map");
 		UI_MapEdit = UI::GetStage("Map");
+		UI_MapEdit->PreJune = DrawMap;
 		auto MG = UI_MapEdit->MainGadget;
 		// Layers
 		LayPanel = CreatePanel(0, 0, 125, MG->H(), MG);
