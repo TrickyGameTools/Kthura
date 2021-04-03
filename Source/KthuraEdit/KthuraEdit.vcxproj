@@ -183,6 +183,7 @@
     <ClCompile Include="src\MapData.cpp" />
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
+    <ClCompile Include="src\UI_TexSelect.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +209,9 @@
     <ClInclude Include="headers\MapData.hpp" />
     <ClInclude Include="headers\UI_Layer.hpp" />
     <ClInclude Include="headers\UI_Map.hpp" />
+    <ClInclude Include="headers\UI_TexSelect.hpp" />
     <ClInclude Include="headers\UserInterface.hpp" />
+    <ClInclude Include="src\UI_TexSelect.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

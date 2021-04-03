@@ -141,6 +141,9 @@
     <ClCompile Include="src\UI_Layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI_TexSelect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -211,6 +214,12 @@
     </ClInclude>
     <ClInclude Include="headers\UI_Layer.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_TexSelect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI_TexSelect.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
