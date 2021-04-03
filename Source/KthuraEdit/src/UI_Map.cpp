@@ -194,6 +194,9 @@ namespace KthuraEdit {
 
 	static void DrawMap() {
 		if (ShowGrid) {
+			TQSG_Color(80, 80, 80);
+			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
+			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
 		}
 	}
 	
