@@ -147,10 +147,13 @@ namespace KthuraEdit {
 		UI_MapStart(); // Must be last
 	}
 	bool UI::Run() {
+		auto CS{ CurrentStage() };
 		auto go_on{ true };
 		TQSG_Cls();
-		Screen()->Draw();
+		if (CS->PreJune) CS->PreJune();
 		TQSE_Poll();
+		Screen()->Draw();
+		if (CS->PostJune) CS->PostJune();
 		if (TQSE_Quit()) go_on = false;
 #ifdef QUICK_QUIT
 		if (TQSE_KeyHit(SDLK_ESCAPE)) go_on = false;
