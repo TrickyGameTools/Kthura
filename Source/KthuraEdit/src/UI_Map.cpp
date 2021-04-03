@@ -244,7 +244,13 @@ namespace KthuraEdit {
 		for (auto T : TabMap) T.second.Tab->H(DataTab->H());
 		RadioTab(TabMap["TiledArea"].RadioToMe, j19action::Check);
 #endif
+		RenewLayers();
 	}
+	void RenewLayers() {
+		LayList->ClearItems();
+		for (auto lay : WorkMap.Layers) LayList->AddItem(lay.first);
+	}
+
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
 	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); }
 }
