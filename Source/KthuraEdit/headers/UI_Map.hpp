@@ -31,4 +31,6 @@ namespace KthuraEdit {
 	extern UI* UI_MapEdit;
 	void AdeptStatus();
 	void UI_MapStart();
+	void ToggleShowGrid(june19::j19gadget* g,june19::j19action a);
+	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a);
 }

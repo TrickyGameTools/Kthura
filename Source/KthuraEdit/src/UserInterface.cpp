@@ -142,7 +142,9 @@ namespace KthuraEdit {
 			LayerMenu = Scr->AddMenu("Layers"),
 			OptionsMenu = Scr->AddMenu("Options"),
 			DebugMenu = Scr->AddMenu("Debug");
-
+		std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
+		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
+		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
 		// Stages
 		UI_MapStart(); // Must be last
 	}

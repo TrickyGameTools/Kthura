@@ -89,13 +89,13 @@ namespace KthuraEdit {
 	int TTab::y{ 0 };
 
 	static bool GridMode{ true };
+	static bool ShowGrid{ true };
 	UI* UI_MapEdit{ nullptr };
 	static j19gadget* LayPanel{ nullptr };
 	static j19gadget* LayList{ nullptr };
 	static j19gadget* DataPanel{ nullptr };
 	static j19gadget* DataTab{ nullptr };
 
-	static bool ShowGrid{ true };
 
 
 	static std::map<std::string, TTab> TabMap;
@@ -245,4 +245,6 @@ namespace KthuraEdit {
 		RadioTab(TabMap["TiledArea"].RadioToMe, j19action::Check);
 #endif
 	}
+	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
+	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; }
 }
