@@ -157,6 +157,7 @@ namespace KthuraEdit {
 		TB->ValKind = DataLabel("Kind", CreateLabel(KV, 0, 0, 0, 0, Tab),true);
 		TB->ValTex = DataLabel("Texture", CreateButton("...", 0, 0, Tab));
 		TB->ValTex->Enabled = (caption != "Rect" && caption != "Zone");
+		TB->ValTex->HData = caption; // The texture selector will use this to identify the tab used.
 		DuoDataLabel("Coords", TB->ValX, TB->ValY);
 		TB->ValX->Enabled = false; TB->ValY->Enabled = false;
 		DuoDataLabel("Insert", TB->InsertX, TB->InsertY);
