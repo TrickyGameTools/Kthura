@@ -53,7 +53,7 @@ namespace KthuraEdit {
 	public:
 		static std::string Project;
 		static std::string MapFile;
-		static std::string StartOnLayer;
+		static std::string JCRPrefix;
 
 		static std::map<std::string, std::string> ArgConfig;
 
@@ -62,6 +62,7 @@ namespace KthuraEdit {
 		static std::string MyAssets();
 		static std::string WorkSpace();
 		static std::string ProjectFile();
+		static std::string FullMapFile();
 		static jcr6::JT_Dir* JCR();
 
 		static Success GetJCR();

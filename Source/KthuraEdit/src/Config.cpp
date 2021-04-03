@@ -59,7 +59,7 @@ namespace KthuraEdit {
 	// public
 	std::string Config::Project{ "" };
 	std::string Config::MapFile{ "" };
-	std::string Config::StartOnLayer{ "" };
+	std::string Config::JCRPrefix{ "" };
 
 	std::map<std::string, std::string> Config::ArgConfig{};
 	
@@ -85,6 +85,10 @@ namespace KthuraEdit {
 		if (right(ret, 1) != "/") ret += "/";
 		ret += Project+"/"+Project + ".Project.ini";
 		return ret;
+	}
+
+	std::string Config::FullMapFile() {
+		return ProjectConfig.Value("Paths." + Platform(), "Maps") + "/" + MapFile;
 	}
 
 	jcr6::JT_Dir* Config::JCR() {
@@ -130,7 +134,7 @@ namespace KthuraEdit {
 					MapFile = arg[i];
 					break;
 				case 2:
-					StartOnLayer = arg[i];
+					JCRPrefix = arg[i];
 					break;
 				default:
 					CLIERR("Unknown argument #" << i << " (" << pcnt << ")");
@@ -150,5 +154,6 @@ namespace KthuraEdit {
 		cout << "Loading Project: " << ProjectFile()<<endl;
 		if (!FileExists(ProjectFile())) UI::Crash("Project file not found!");
 		ProjectConfig.FromFile(ProjectFile());
+		cout << "Searching for map: " << Config::FullMapFile() << endl;
 	}
 }

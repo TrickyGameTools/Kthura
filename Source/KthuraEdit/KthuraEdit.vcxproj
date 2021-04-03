@@ -160,6 +160,10 @@
     <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Core.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Draw.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp" />
@@ -190,6 +194,11 @@
     <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Draw.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />

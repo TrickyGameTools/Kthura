@@ -34,6 +34,9 @@
 // Units
 #include <QuickString.hpp>
 
+// Kthura
+#include <Kthura_Core.hpp>
+
 // TQSG
 #include <TQSE.hpp>
 #include <TQSG.hpp>
@@ -45,7 +48,7 @@ using namespace june19;
 
 namespace KthuraEdit {
 
-	
+	static void Panic4Kthura(std::string s) { UI::Crash(s); }
 
 	bool UI::_initialized{ false };
 	TQSG_AutoImage UI::Mouse{ nullptr };
@@ -91,6 +94,9 @@ namespace KthuraEdit {
 	}
 
 	void UI::Start() {
+
+		// Set Kthura Panic
+		NSKthura::Kthura::Panic = Panic4Kthura;
 		
 		// JCR6
 		auto J{ Config::GetJCR() };
@@ -134,6 +140,7 @@ namespace KthuraEdit {
 			MenuFile = Scr->AddMenu("File"),
 			GridMenu = Scr->AddMenu("Grid"),
 			LayerMenu = Scr->AddMenu("Layers"),
+			OptionsMenu = Scr->AddMenu("Options"),
 			DebugMenu = Scr->AddMenu("Debug");
 
 		// Stages

@@ -28,6 +28,9 @@
     <Filter Include="Source Files\June19">
       <UniqueIdentifier>{06d807f6-cd52-4ed7-814e-3e3acd411fd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Kthura Libraries">
+      <UniqueIdentifier>{292784bd-39f6-4001-b0b4-07f17cb8d906}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -120,6 +123,18 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp">
       <Filter>Source Files\Units</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Core.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Draw.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -169,6 +184,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\June19\src\june19_listbox.hpp">
       <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Draw.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
