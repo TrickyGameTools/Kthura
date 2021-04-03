@@ -47,6 +47,7 @@
 #include "../headers/Config.hpp"
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_Map.hpp"
+#include "../headers/UI_Layer.hpp"
 #include "../headers/MapData.hpp"
 
 using namespace june19;

@@ -181,6 +181,7 @@
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MapData.cpp" />
+    <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
@@ -205,6 +206,7 @@
     <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />
     <ClInclude Include="headers\Config.hpp" />
     <ClInclude Include="headers\MapData.hpp" />
+    <ClInclude Include="headers\UI_Layer.hpp" />
     <ClInclude Include="headers\UI_Map.hpp" />
     <ClInclude Include="headers\UserInterface.hpp" />
   </ItemGroup>

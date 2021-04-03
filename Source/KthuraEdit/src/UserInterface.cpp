@@ -27,6 +27,7 @@
 // self
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_Map.hpp"
+#include "../headers/UI_Layer.hpp"
 
 // C++
 #include <iostream>
@@ -145,6 +146,7 @@ namespace KthuraEdit {
 		std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
 		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
+		LayerMenu->AddItem("New Layer", NewLayer, SDLK_n);
 		// Stages
 		UI_MapStart(); // Must be last
 	}

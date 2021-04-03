@@ -138,6 +138,9 @@
     <ClCompile Include="src\MapData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI_Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -204,6 +207,9 @@
       <Filter>Source Files\Kthura Libraries</Filter>
     </ClInclude>
     <ClInclude Include="headers\MapData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_Layer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
