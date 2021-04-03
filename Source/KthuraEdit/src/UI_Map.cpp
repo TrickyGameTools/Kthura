@@ -246,9 +246,15 @@ namespace KthuraEdit {
 #endif
 		RenewLayers();
 	}
+
 	void RenewLayers() {
+		using namespace std;
 		LayList->ClearItems();
-		for (auto lay : WorkMap.Layers) LayList->AddItem(lay.first);
+		for (auto lay : WorkMap.Layers) {
+			LayList->AddItem(lay.first);
+			//cout << "Layer: " << lay.first << endl;
+		}
+		for (unsigned long long i = 0; i <= LayList->NumItems(); i++) if (LayList->ItemText(i) == CurrentLayer) LayList->SelectItem(i);
 	}
 
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
