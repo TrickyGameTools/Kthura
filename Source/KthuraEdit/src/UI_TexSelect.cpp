@@ -39,7 +39,7 @@ namespace KthuraEdit {
 		int sety{ prnt->H() -30};
 		Cancel = CreateButton("Cancel", col, sety, prnt);
 		Cancel->SetForeground(255, 0, 0, 255);
-		Cancel->SetBackground(0, 255, 0, 255);
+		Cancel->SetBackground(25, 0, 0, 255);
 		Cancel->CBAction = ActCancel;
 		sety -= 30;
 		Okay = CreateButton("Okay", col, sety, prnt);
@@ -47,14 +47,14 @@ namespace KthuraEdit {
 		Okay->SetBackground(0, 25, 0, 255);
 		sety -= 20;
 		ButtonUsedOnly = CreateCheckBox("Used Only", col, sety, ListMargin, 25, prnt);
-		ButtonUsedOnly->SetForeground(255, 180, 0, 255);
+		ButtonUsedOnly->SetForeground(0, 180, 255, 255);
 		ButtonUsedOnly->checked = false;
 		sety -= 20;
-		ButtonTexData = CreateCheckBox("AutoTexData", col, sety, ListMargin, 25, prnt);
-		ButtonTexData->SetForeground(255, 180, 0, 255);
+		ButtonTexData = CreateCheckBox("AutoTxDta", col, sety, ListMargin, 25, prnt);
+		ButtonTexData->SetForeground(0, 180, 255, 255);
 		ButtonTexData->checked = true;
 		sety -= 20;
-		ButtonChainType = CreateCheckBox("AutoObjKind",col,sety,ListMargin,25,prnt);
+		ButtonChainType = CreateCheckBox("AutoObKnd",col,sety,ListMargin,25,prnt);
 		ButtonChainType->SetForeground(0, 180, 255, 0);
 		ButtonChainType->checked = true;
 	}
