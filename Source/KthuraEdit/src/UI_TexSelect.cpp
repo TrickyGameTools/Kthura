@@ -19,6 +19,8 @@ namespace KthuraEdit {
 		* ButtonTexData{ nullptr },
 		* ButtonUsedOnly{ nullptr };
 
+	static void ActCancel(j19gadget* e, j19action a) { UI::GoToStage("Map"); }
+
 
 	static void CreateSelector() {
 		UI::AddStage("PicTex");
@@ -36,6 +38,7 @@ namespace KthuraEdit {
 		Cancel = CreateButton("Cancel", col, sety, prnt);
 		Cancel->SetForeground(255, 0, 0, 255);
 		Cancel->SetBackground(0, 255, 0, 255);
+		Cancel->CBAction = ActCancel;
 		sety -= 30;
 		Okay = CreateButton("Okay", col, sety, prnt);
 		Okay->SetForeground(0, 255, 0, 255);
