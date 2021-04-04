@@ -8,6 +8,7 @@ using namespace TrickyUnits;
 namespace KthuraEdit {
 
 	static const int ListMargin = 200;
+	std::string WorkTabName;
 
 	static j19gadget
 		* Preview{ nullptr },
@@ -23,8 +24,8 @@ namespace KthuraEdit {
 
 
 	static void CreateSelector() {
-		UI::AddStage("PicTex");
-		auto prnt = UI::GetStage("PicText")->MainGadget;
+		UI::AddStage("PickTex");
+		auto prnt = UI::GetStage("PickText")->MainGadget;
 		auto col = prnt->W() - ListMargin;
 		Preview = CreatePicture(TQSG_ScreenWidth() / 2, 0, TQSG_ScreenWidth() / 2, prnt->H(), prnt);
 		TexList = CreateListBox(0, 0, prnt->W()-ListMargin, prnt->H(), prnt);
@@ -58,5 +59,8 @@ namespace KthuraEdit {
 	}
 
 	void GoToTex(june19::j19gadget* g, june19::j19action a) {
+		WorkTabName = g->HData;
+		if (!Preview) CreateSelector();
+		UI::GetStage("PickTex");
 	}
 }

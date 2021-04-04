@@ -48,6 +48,7 @@
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
+#include "../headers/UI_TexSelect.hpp"
 #include "../headers/MapData.hpp"
 
 using namespace june19;
@@ -156,6 +157,7 @@ namespace KthuraEdit {
 		auto KV{ caption }; if (caption == "Modify") KV = "";
 		TB->ValKind = DataLabel("Kind", CreateLabel(KV, 0, 0, 0, 0, Tab),true);
 		TB->ValTex = DataLabel("Texture", CreateButton("...", 0, 0, Tab));
+		TB->ValTex->CBAction = GoToTex;
 		TB->ValTex->Enabled = (caption != "Rect" && caption != "Zone");
 		TB->ValTex->HData = caption; // The texture selector will use this to identify the tab used.
 		DuoDataLabel("Coords", TB->ValX, TB->ValY);
