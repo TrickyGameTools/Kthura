@@ -32,6 +32,7 @@ namespace KthuraEdit {
 	void AdeptStatus();
 	void UI_MapStart();
 	void RenewLayers();
+	void SetTex(std::string Tex,std::string Tab="");
 	void ToggleShowGrid(june19::j19gadget* g,june19::j19action a);
 	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a);
 }

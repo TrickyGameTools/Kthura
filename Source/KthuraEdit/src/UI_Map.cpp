@@ -92,6 +92,7 @@ namespace KthuraEdit {
 
 	static bool GridMode{ true };
 	static bool ShowGrid{ true };
+	static std::string ChosenTex{ "" };
 	UI* UI_MapEdit{ nullptr };
 	static j19gadget* LayPanel{ nullptr };
 	static j19gadget* LayList{ nullptr };
@@ -259,6 +260,14 @@ namespace KthuraEdit {
 			//cout << "Layer: " << lay.first << endl;
 		}
 		for (unsigned long long i = 0; i <= LayList->NumItems(); i++) if (LayList->ItemText(i) == CurrentLayer) LayList->SelectItem(i);
+	}
+
+	void SetTex(std::string Tex,std::string tab) { 
+		ChosenTex = Tex; 
+		if (tab != "") {
+			for (auto& tb : TabMap) tb.second.RadioToMe->checked = tab == tb.first;
+			RadioTab(TabMap[tab].RadioToMe, j19action::Check);
+		}
 	}
 
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
