@@ -47,7 +47,7 @@ namespace KthuraEdit {
 		sety -= 20;
 		ButtonUsedOnly = CreateCheckBox("Used Only", col, sety, ListMargin, 25, prnt);
 		ButtonUsedOnly->SetForeground(255, 180, 0, 255);
-		ButtonTexData->checked = false;
+		ButtonUsedOnly->checked = false;
 		sety -= 20;
 		ButtonTexData = CreateCheckBox("AutoTexData", col, sety, ListMargin, 25, prnt);
 		ButtonTexData->SetForeground(255, 180, 0, 255);
