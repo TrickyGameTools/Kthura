@@ -1,6 +1,7 @@
 #include <june19.hpp>
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_TexSelect.hpp"
+#include "../headers/MapData.hpp"
 
 using namespace june19;
 using namespace TrickyUnits;
@@ -62,9 +63,11 @@ namespace KthuraEdit {
 	}
 
 	void ScanTex() {
+		auto tdir{ Config::Textures() };
 		TexList->ClearItems();
 		UsedTexList->ClearItems();
-		for (auto& e : Config::Textures()->Entries()) {
+		WorkMap.TexDir = tdir;
+		for (auto& e : tdir->Entries()) {
 			TexList->AddItem(e.second.Entry());
 			// TODO: Scan for used (since the map editor itself is not yet operative this cannot easily be debugged)
 		}
