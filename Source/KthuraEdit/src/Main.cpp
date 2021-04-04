@@ -37,6 +37,7 @@
 #include <jcr6_core.hpp>
 #include <jcr6_zlib.hpp>
 #include <jcr6_jxsda.hpp>
+#include <jcr6_realdir.hpp>
 
 // SDL2 (must even though not used here be there, due to main replacement in SDL2)
 #include <SDL.h>
@@ -50,7 +51,7 @@ void InitJCR() {
 	init_JCR6();
 	init_zlib();
 	init_jxsda();
-}
+	InitRealDir();
 
 int main(int aantal_arg, char** arg) {
 	using namespace std;
