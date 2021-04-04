@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp" />
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_realdir.cpp" />
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_button.cpp" />
     <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp" />

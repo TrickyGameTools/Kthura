@@ -147,6 +147,9 @@
     <ClCompile Include="src\UI_TexSelect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_realdir.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
