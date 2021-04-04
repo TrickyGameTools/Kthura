@@ -55,6 +55,7 @@ namespace KthuraEdit {
 	GINIE Config::ProjectConfig;
 	GINIE Config::GlobalConfig;
 	jcr6::JT_Dir Config::_JCR;
+	jcr6::JT_Dir Config::_TexJCR;
 	std::string Config::_MyExe{ "" };
 	std::string Config::_MyExeDir{ "" };
 
@@ -98,9 +99,14 @@ namespace KthuraEdit {
 	}
 
 	jcr6::JT_Dir* Config::Textures() {
-		bool Merge{Upper(ProjectConfig.Value("Paths."+Platform(),"Maps"))=="YES"};
-
-		return nullptr;
+		bool Merge{Upper(ProjectConfig.Value("Paths."+Platform(),"TexMerge"))=="YES"};
+		if (Merge) {
+			UI::Crash("Merge mode not yet available"); // This will be there! I am too dependent on this one myself.
+		} else {
+			_TexJCR = jcr6::Dir(ProjectConfig.Value("Paths." + Platform(), "TexDir"));
+			
+		}
+		return &_TexJCR;
 	}
 
 	jcr6::JT_Dir* Config::JCR() {
