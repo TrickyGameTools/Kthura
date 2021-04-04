@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Kthura Libraries">
       <UniqueIdentifier>{292784bd-39f6-4001-b0b4-07f17cb8d906}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\JCR6">
+      <UniqueIdentifier>{9fd50fe0-a02a-429c-a023-f81b41915698}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -217,6 +220,18 @@
     </ClInclude>
     <ClInclude Include="headers\UI_TexSelect.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_core.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_jxsda.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_zlib.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_realdir.hpp">
+      <Filter>Header Files\JCR6</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

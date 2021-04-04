@@ -48,6 +48,7 @@ namespace KthuraEdit {
 		static std::string _MyExe;
 		static std::string _MyExeDir;
 		static jcr6::JT_Dir _JCR;
+		static jcr6::JT_Dir _TexJCR;
 		static TrickyUnits::GINIE GlobalConfig;
 		static TrickyUnits::GINIE ProjectConfig;
 	public:
@@ -66,6 +67,7 @@ namespace KthuraEdit {
 		static std::string ProjectFile();
 		static std::string ProjectDir();
 		static std::string FullMapFile();
+		static jcr6::JT_Dir* Textures();
 		static jcr6::JT_Dir* JCR();
 
 		static Success GetJCR();

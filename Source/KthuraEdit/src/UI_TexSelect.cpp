@@ -30,10 +30,10 @@ namespace KthuraEdit {
 		auto col = prnt->W() - ListMargin;
 		Preview = CreatePicture(TQSG_ScreenWidth() / 2, 0, TQSG_ScreenWidth() / 2, prnt->H(), prnt);
 		TexList = CreateListBox(0, 0, prnt->W()-ListMargin, prnt->H(), prnt);
-		TexList->SetBackground(0, 0, 0, 0);
+		TexList->SetBackground(0, 10, 10, 50);
 		TexList->SetForeground(0, 255, 255, 255);
 		UsedTexList = CreateListBox(0, 0, col, prnt->H(), prnt);
-		UsedTexList->SetBackground(0, 0, 0, 0);
+		UsedTexList->SetBackground(10, 5, 0, 50);
 		UsedTexList->SetForeground(255, 180, 0, 255);
 		UsedTexList->Visible = false;
 		int sety{ prnt->H() -30};
@@ -47,7 +47,7 @@ namespace KthuraEdit {
 		Okay->SetBackground(0, 25, 0, 255);
 		sety -= 20;
 		ButtonUsedOnly = CreateCheckBox("Used Only", col, sety, ListMargin, 25, prnt);
-		ButtonUsedOnly->SetForeground(0, 180, 255, 255);
+		ButtonUsedOnly->SetForeground(255, 180, 0, 255);
 		ButtonUsedOnly->checked = false;
 		sety -= 20;
 		ButtonTexData = CreateCheckBox("AutoTxDta", col, sety, ListMargin, 25, prnt);
@@ -57,6 +57,10 @@ namespace KthuraEdit {
 		ButtonChainType = CreateCheckBox("AutoObKnd",col,sety,ListMargin,25,prnt);
 		ButtonChainType->SetForeground(0, 180, 255, 0);
 		ButtonChainType->checked = true;
+	}
+
+	void ScanTex() {
+
 	}
 
 	void GoToTex(june19::j19gadget* g, june19::j19action a) {

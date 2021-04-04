@@ -97,6 +97,12 @@ namespace KthuraEdit {
 		return ProjectConfig.Value("Paths." + Platform(), "Maps") + "/" + MapFile;
 	}
 
+	jcr6::JT_Dir* Config::Textures() {
+		bool Merge{Upper(ProjectConfig.Value("Paths."+Platform(),"Maps"))=="YES"};
+
+		return nullptr;
+	}
+
 	jcr6::JT_Dir* Config::JCR() {
 		return &_JCR;
 	}

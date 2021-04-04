@@ -187,6 +187,10 @@
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_core.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_jxsda.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_realdir.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_zlib.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_button.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp" />
