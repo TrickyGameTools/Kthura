@@ -25,7 +25,7 @@ namespace KthuraEdit {
 
 	static void CreateSelector() {
 		UI::AddStage("PickTex");
-		auto prnt = UI::GetStage("PickText")->MainGadget;
+		auto prnt = UI::GetStage("PickTex")->MainGadget;
 		auto col = prnt->W() - ListMargin;
 		Preview = CreatePicture(TQSG_ScreenWidth() / 2, 0, TQSG_ScreenWidth() / 2, prnt->H(), prnt);
 		TexList = CreateListBox(0, 0, prnt->W()-ListMargin, prnt->H(), prnt);
