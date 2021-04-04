@@ -24,6 +24,7 @@ namespace KthuraEdit {
 
 
 	static void CreateSelector() {
+		std::cout << "Creating Selector Screen\n";
 		UI::AddStage("PickTex");
 		auto prnt = UI::GetStage("PickTex")->MainGadget;
 		auto col = prnt->W() - ListMargin;
@@ -59,8 +60,9 @@ namespace KthuraEdit {
 	}
 
 	void GoToTex(june19::j19gadget* g, june19::j19action a) {
-		WorkTabName = g->HData;
 		if (!Preview) CreateSelector();
-		UI::GetStage("PickTex");
+		WorkTabName = g->HData;
+		std::cout << "Go to Texture Selector (" << WorkTabName << ")\n";
+		UI::GoToStage("PickTex");
 	}
 }
