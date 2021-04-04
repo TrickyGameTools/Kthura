@@ -21,6 +21,7 @@ namespace KthuraEdit {
 		* ButtonUsedOnly{ nullptr };
 
 	static void ActCancel(j19gadget* e, j19action a) { UI::GoToStage("Map"); }
+	static void ActButUsedOnly(j19gadget* e, j19action a) { UsedTexList->Visible = e->checked; TexList->Visible = !e->checked; }
 
 
 	static void CreateSelector() {
@@ -49,6 +50,7 @@ namespace KthuraEdit {
 		ButtonUsedOnly = CreateCheckBox("Used Only", col, sety, ListMargin, 25, prnt);
 		ButtonUsedOnly->SetForeground(255, 180, 0, 255);
 		ButtonUsedOnly->checked = false;
+		ButtonUsedOnly->CBDraw = ActButUsedOnly;
 		sety -= 20;
 		ButtonTexData = CreateCheckBox("AutoTxDta", col, sety, ListMargin, 25, prnt);
 		ButtonTexData->SetForeground(0, 180, 255, 255);
@@ -60,13 +62,19 @@ namespace KthuraEdit {
 	}
 
 	void ScanTex() {
-
+		TexList->ClearItems();
+		UsedTexList->ClearItems();
+		for (auto& e : Config::Textures()->Entries()) {
+			TexList->AddItem(e.second.Entry());
+			// TODO: Scan for used (since the map editor itself is not yet operative this cannot easily be debugged)
+		}
 	}
 
 	void GoToTex(june19::j19gadget* g, june19::j19action a) {
 		if (!Preview) CreateSelector();
 		WorkTabName = g->HData;
 		std::cout << "Go to Texture Selector (" << WorkTabName << ")\n";
+		ScanTex();
 		UI::GoToStage("PickTex");
 	}
 }

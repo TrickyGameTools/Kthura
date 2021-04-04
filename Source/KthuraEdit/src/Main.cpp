@@ -52,6 +52,7 @@ void InitJCR() {
 	init_zlib();
 	init_jxsda();
 	InitRealDir();
+}
 
 int main(int aantal_arg, char** arg) {
 	using namespace std;
