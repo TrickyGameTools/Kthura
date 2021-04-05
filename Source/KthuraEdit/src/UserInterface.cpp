@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.03
+// Version: 21.04.05
 // EndLic
 
 // self
@@ -37,6 +37,7 @@
 
 // Kthura
 #include <Kthura_Core.hpp>
+#include <Kthura_SDL_Driver.hpp>
 
 // TQSG
 #include <TQSE.hpp>
@@ -109,7 +110,11 @@ namespace KthuraEdit {
 		// Interface load
 		_initialized = true;
 		std::cout << "Staring User Interface\n";
-		if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile,0,0,true)) Crash("Init Kthura failed");
+		if (Config::FWindowed()) {
+			if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, 1800, 1000)) Crash("Init Graphics failed");
+		} else {
+			if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, 0, 0, true)) Crash("Init Graphics failed");
+		}
 		/*
 		TQSG_Cls(); TQSG_Flip();
 		int
@@ -124,6 +129,10 @@ namespace KthuraEdit {
 		HideMouse();
 		jcr6::JT_Dir* JD = Config::JCR();		
 		Mouse = TQSG_LoadAutoImage(JD, std::string("MousePointer.png"));
+
+		// Kthura
+		NSKthura::Kthura_Draw_SDL_Driver::Init();
+		
 
 		// Main screen config
 		AdeptStatus();
