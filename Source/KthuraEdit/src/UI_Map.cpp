@@ -397,6 +397,45 @@ namespace KthuraEdit {
 		}
 	}
 
+	static void Obstacle() {
+		int
+			x = Placement.x,
+			y = Placement.y;
+		if (GridMode) {
+			x += floor(GridX() / 2);
+			y += GridY();
+		}
+		int
+			dx = x + MapGroup->DrawX(),
+			dy = y + MapGroup->DrawY();
+		TQSG_ACol(127, 127, 127, 127);
+		TQSG_Line(dx - 10, dy, dx + 10, dy);
+		TQSG_Line(dx, dy - 10, dx, dy + 10);
+		if (ml && TQSE_MouseHit(1) && ChosenTex!="") {
+			auto GTab{ &TabMap["Obstacle"] };
+			auto O{ WorkMap.Layer(CurrentLayer)->RNewObject("Obstacle") };
+			O->Texture(ChosenTex);
+			O->X(x);
+			O->Y(y);
+			O->W(0);
+			O->H(0);
+			O->R(ToInt(GTab->ValColR->Text));
+			O->G(ToInt(GTab->ValColG->Text));
+			O->B(ToInt(GTab->ValColB->Text));
+			O->Alpha255(ToInt(GTab->ValAlpha->Text));
+			O->Visible(GTab->ValVisible->checked);
+			O->Impassible(GTab->ValImpassible->checked);
+			O->ForcePassible(GTab->ValForcePassible->checked);
+			O->ScaleX(ToInt(GTab->ValScaleX->Text));
+			O->ScaleY(ToInt(GTab->ValScaleY->Text));
+			//O->ScaleX(1000);
+			//O->ScaleY(1000);
+			O->Dominance(ToInt(GTab->ValDom->Text));
+			O->Labels(Labels);
+			O->RotationDegrees(ToInt(GTab->ValRotDeg->Text));
+		}
+	}
+
 
 	void DrawMap() {
 		auto place{ UpdatePlacement() };
@@ -410,7 +449,7 @@ namespace KthuraEdit {
 			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
 			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
 		}
-		KthuraDraw::DrawMap(WorkMap.Layers[CurrentLayer].get(), ScrollX, ScrollY, MapGroup->X(), MapGroup->Y());
+		KthuraDraw::DrawMap(WorkMap.Layers[CurrentLayer].get(), ScrollX, ScrollY, MapGroup->DrawX(), MapGroup->DrawY());
 
 		switch (CurrentTabID) {
 		case TabNum::NONE:
@@ -427,7 +466,8 @@ namespace KthuraEdit {
 		case TabNum::Zone:
 			WorkArea("Zone", place);
 			break;
-
+		case TabNum::Obstacles:
+			Obstacle();
 
 		}
 	}
