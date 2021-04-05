@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.03
+// Version: 21.04.05
 // EndLic
 
 
@@ -65,9 +65,22 @@ using namespace NSKthura;
 namespace KthuraEdit {
 
 #pragma region Work tabs
+
+	enum class TabNum {
+		NONE,
+		TiledArea,
+		StrechedArea,
+		Rect,
+		Zone,
+		Obstacles,
+		Other,
+		Modify
+	};
+
 	class TTab {
 	public:
 		static int y;
+		TabNum cID; // Used for casing!
 #ifdef UI_AltTab
 		j19gadget* RadioToMe{ nullptr };
 #endif
@@ -98,6 +111,9 @@ namespace KthuraEdit {
 		j19gadget* ValLabels{ nullptr };
 	};
 	int TTab::y{ 0 };
+	TabNum CurrentTabID{ TabNum::NONE };
+	std::string Labels{ "" };
+	
 #pragma endregion
 
 #pragma region Variables needed
@@ -117,6 +133,7 @@ namespace KthuraEdit {
 #pragma endregion
 
 #pragma region A few forwarding headers
+	static void DrawMap();
 #pragma endregion
 
 
@@ -142,7 +159,11 @@ namespace KthuraEdit {
 #ifdef UI_AltTab
 	static void RadioTab(j19gadget* source, j19action action) {
 		for (auto TB : TabMap) {
-			TB.second.Tab->Visible = TB.first == source->Caption;
+			if (TB.first == source->Caption) {
+				TB.second.Tab->Visible = true;
+				CurrentTabID = TB.second.cID;
+			} else { TB.second.Tab->Visible = false; }
+
 		}
 	}
 #endif
@@ -155,10 +176,23 @@ namespace KthuraEdit {
 		}
 	}
 
-	static void DataNewTab(std::string caption) {
+	static void ToggleImp(j19gadget* source, j19action) {
+		auto frc = (&TabMap[source->GetParent()->HData])->ValForcePassible;
+		frc->Enabled = !source->checked;
+		// TODO: Change object state if in modify mode
+	}
+	static void ToggleFrc(j19gadget* source, j19action) {
+		auto imp = (&TabMap[source->GetParent()->HData])->ValImpassible;
+		imp->Enabled = !source->checked;
+		// TODO: Change object state if in modify mode
+	}
+
+
+	static void DataNewTab(std::string caption,TabNum ncID) {
 		auto TB = &TabMap[caption];
 #ifdef UI_AltTab
 		auto Tab = CreatePanel(0, 0, DataTab->W(), 100, DataTab);
+		TB->cID = ncID;
 		TB->RadioToMe = CreateRadioButton(caption, 0, TTab::y, DataPanel->W(), 20, DataPanel);
 		TB->RadioToMe->CBAction = RadioTab;
 		if (TTab::y == 0) TB->RadioToMe->checked = true;
@@ -170,6 +204,7 @@ namespace KthuraEdit {
 #endif
 		std::cout << "Creating Data Tab: " << caption << "\n";
 		TB->Tab = Tab;
+		Tab->HData = caption;
 		Tab->FB = 255; Tab->FG = 0; Tab->FR = 180;
 		Tab->BB = 25; Tab->BG = 0; Tab->BR = 18;
 		if (caption == "Other") { CreateOther(); return; }		
@@ -196,7 +231,9 @@ namespace KthuraEdit {
 		TB->ValRotDeg->Enabled = caption == "Obstacle"; TB->ValRotRad->Enabled = false;
 		TB->ValRotDeg->CBAction = Deg2Rad;
 		TB->ValImpassible = DataLabel("Impassible", CreateCheckBox("", 0, 0, 0, 0, Tab));
-		TB->ValForcePassible = DataLabel("F Passible", CreateCheckBox("", 0, 0, 0, 0, Tab));
+		TB->ValImpassible->CBAction = ToggleImp;
+		TB->ValForcePassible = DataLabel("F Passible", CreateCheckBox("", 0, 0, 0, 0, Tab));		
+		TB->ValForcePassible->CBAction = ToggleFrc;
 		TB->ValImpassible->Enabled = (caption != "Obstacle");
 		TB->ValForcePassible->Enabled = (caption != "Obstacle");
 		TB->ValColR = DataLabel("Color.R", CreateTextfield(0, 0, 0, Tab)); TB->ValColR->Text = "255";
@@ -215,14 +252,6 @@ namespace KthuraEdit {
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
 	}
 
-	static void DrawMap() {
-		if (ShowGrid) {
-			TQSG_Color(80, 80, 80);
-			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
-			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
-		}
-		KthuraDraw::DrawMap(WorkMap.Layers[CurrentLayer].get(), ScrollX, ScrollY, MapGroup->X(),MapGroup->Y());
-	}
 	
 
 	void AdeptStatus() {
@@ -232,7 +261,8 @@ namespace KthuraEdit {
 		st += "\t";
 		june19::j19gadget::StatusText(st);
 	}
-	
+	typedef struct TBI { std::string s; TabNum i; } TBI;
+
 	void UI_MapStart() {
 		// Start
 		UI::AddStage("Map");
@@ -262,8 +292,9 @@ namespace KthuraEdit {
 		DataTab->FB = 255; DataTab->FG = 0; DataTab->FR = 180;
 		DataTab->BB = 25; DataTab->BG = 0; DataTab->BR = 18;
 #endif
-		auto Tabs = { "TiledArea","Obstacle","StrecthedArea","Rect","Zone" ,"Other","Modify"};
-		for (auto T : Tabs) DataNewTab(T);
+		//auto Tabs = std::map<std::string, TabNum>{ {"TiledArea",TabNum::TiledArea},{"Obstacle",TabNum::Obstacles},{"StrecthedArea",TabNum::StrechedArea},{"Rect",TabNum::Rect},{"Zone",TabNum::Zone} ,{"Other",TabNum::Other},{"Modify",TabNum::Modify} };
+		auto Tabs={ TBI{"TiledArea",TabNum::TiledArea},TBI{"Obstacle",TabNum::Obstacles},TBI{"StretchedArea",TabNum::StrechedArea},TBI{"Rect",TabNum::Rect},TBI{"Zone",TabNum::Zone} ,TBI{"Other",TabNum::Other},TBI{"Modify",TabNum::Modify} };
+		for (auto T : Tabs) DataNewTab(T.s,T.i);
 #ifdef UI_AltTab
 		for (auto T : TabMap) T.second.Tab->H(DataTab->H());
 		RadioTab(TabMap["TiledArea"].RadioToMe, j19action::Check);
@@ -291,12 +322,115 @@ namespace KthuraEdit {
 	}
 
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
-	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); 
+	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); }
 
 #pragma endregion
 
 
 #pragma region Actual Editor
+	SDL_Rect Placement{ -1,-1,-1,-1 };
+	SDL_Rect TruePlacement{ -1,-1,-1,-1 };
+	bool ml;
+
+	static bool UpdatePlacement(){
+		static bool
+			oml{ false };
+		int
+			x{ TQSE_MouseX()-MapGroup->DrawX() },
+			y{ TQSE_MouseY()-MapGroup->DrawY() };
+		if (GridMode) {
+			x = floor(x / WorkMap.Layers[CurrentLayer]->GridX) * WorkMap.Layers[CurrentLayer]->GridX;
+			y = floor(y / WorkMap.Layers[CurrentLayer]->GridY) * WorkMap.Layers[CurrentLayer]->GridY;
+		}
+		if ((!ml) && oml) { oml = false; return true; }
+		if (ml) {
+			TruePlacement.w = x - TruePlacement.x;
+			TruePlacement.h = y - TruePlacement.y;
+			Placement = TruePlacement;
+			if (TruePlacement.w < 0) { Placement.x = TruePlacement.x + TruePlacement.w; Placement.w = abs(TruePlacement.w); }
+			if (TruePlacement.h < 0) { Placement.y = TruePlacement.y + TruePlacement.h; Placement.h = abs(TruePlacement.h); }
+		} else {
+			TruePlacement.x = x;
+			TruePlacement.y = y;
+			Placement = TruePlacement;
+		}
+		oml = ml;
+		TQSG_ACol(255, 180, 0, 255);
+		std::string dbgp{ "Placement (" + std::to_string(Placement.x) + "," + std::to_string(Placement.y) + ")  " + std::to_string(Placement.w) + "x" + std::to_string(Placement.h)+" ["+std::to_string((int)CurrentTabID)+"]" };
+		
+		if (ml) dbgp += " D";
+		MapGroup->Font()->Draw(dbgp.c_str(), MapGroup->DrawX(), MapGroup->DrawY());
+		return false;
+	}
+
+	static void WorkArea(std::string Tab, bool place) {
+		if (ml) {
+			TQSG_ACol(100, 100, 100, 100);
+			TQSG_Rect(Placement.x + MapGroup->DrawX(), Placement.y + MapGroup->DrawY(), Placement.w, Placement.h);
+		}
+		if (place) {
+			if (Placement.w && Placement.h) {
+				if ((Tab == "StrechedArea" || Tab == "TiledArea") && ChosenTex == "") return;
+				std::cout << "Creating area based object (" << Tab << ")\n";
+				if (!TabMap.count(Tab)) UI::Crash("No Kthura Edit Tab called '" + Tab + "'"); 
+				auto GTab{ &TabMap[Tab] };
+				auto O{ WorkMap.Layer(CurrentLayer)->RNewObject(Tab) };
+				O->Texture(ChosenTex);
+				O->X(Placement.x);
+				O->Y(Placement.y);
+				O->W(Placement.w);
+				O->H(Placement.h);
+				O->R(ToInt(GTab->ValColR->Text));
+				O->G(ToInt(GTab->ValColG->Text));
+				O->B(ToInt(GTab->ValColB->Text));
+				O->Alpha255(ToInt(GTab->ValAlpha->Text));
+				O->Visible(GTab->ValVisible->checked);
+				O->Impassible(GTab->ValImpassible->checked);
+				O->ForcePassible(GTab->ValForcePassible->checked);
+				//O->ScaleX(ToInt(GTab->ValScaleX->Text));
+				//O->ScaleY(ToInt(GTab->ValScaleY->Text));
+				O->ScaleX(1000);
+				O->ScaleY(1000);
+				O->Dominance(ToInt(GTab->ValDom->Text));
+				O->Labels(Labels);
+			}
+		}
+	}
+
+
+	void DrawMap() {
+		auto place{ UpdatePlacement() };
+		if (TQSE_MouseDown(1) && 
+			TQSE_MouseX()>MapGroup->DrawX() && 
+			TQSE_MouseX()<DataPanel->DrawX() &&			
+			TQSE_MouseY() > MapGroup->DrawY() &&
+			TQSE_MouseY() < MapGroup->DrawY() + MapGroup->H()) ml = true; else if (TQSE_MouseReleased(1)) ml = false;
+		if (ShowGrid) {
+			TQSG_Color(80, 80, 80);
+			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
+			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
+		}
+		KthuraDraw::DrawMap(WorkMap.Layers[CurrentLayer].get(), ScrollX, ScrollY, MapGroup->X(), MapGroup->Y());
+
+		switch (CurrentTabID) {
+		case TabNum::NONE:
+			CurrentTabID = TabNum::TiledArea;
+		case TabNum::TiledArea:
+			WorkArea("TiledArea", place);
+			break;
+		case TabNum::StrechedArea:
+			WorkArea("StretchedArea", place);
+			break;
+		case TabNum::Rect:
+			WorkArea("Rect", place);
+			break;
+		case TabNum::Zone:
+			WorkArea("Zone", place);
+			break;
+
+
+		}
+	}
 
 #pragma endregion
 }
