@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.03
+// Version: 21.04.05
 // EndLic
 
 // Myself
@@ -122,6 +122,10 @@ namespace KthuraEdit {
 		return Success{ true,"" };
 	}
 
+	bool Config::FWindowed() {
+		return Upper(ArgConfig["FORCEWINDOWED"])=="YES";
+	}
+
 	void Config::ParseArgs(int aantal_arg, char** arg) {
 		using namespace std;
 		_MyExe = arg[0]; 
@@ -179,7 +183,9 @@ namespace KthuraEdit {
 			cout << "= Loading map\n";
 			WorkMap.Load(Config::FullMapFile(), Config::JCRPrefix);
 		}
-		auto TSD{ ProjectDir() + "/Tex Settings" };;
+		cout << "Texture configure\n";
+		WorkMap.TexDir = Textures();
+		auto TSD{ ProjectDir() + "/Tex Settings" };
 		auto TSF{ TSD + "/" + MapFile + ".ini" };
 		if (!DirectoryExists(TSD)) { MakeDir(TSD); cout << "= Creating " << TSD << endl; }
 		cout << "= Loading config:" << TSF<<" (creating new if non-existent)\n";

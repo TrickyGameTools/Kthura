@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.03
+// Version: 21.04.05
 // EndLic
 #pragma once
 
@@ -71,6 +71,7 @@ namespace KthuraEdit {
 		static jcr6::JT_Dir* JCR();
 
 		static Success GetJCR();
+		static bool FWindowed();
 
 		static void ParseArgs(int aantal_arg, char** arg);
 		static void LoadProject();
