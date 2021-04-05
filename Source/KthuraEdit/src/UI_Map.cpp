@@ -24,6 +24,8 @@
 // Version: 21.04.03
 // EndLic
 
+
+#pragma region Macros
 #define UI_AltTab
 
 #define DuoDataLabel(cap,t1,t2)	{\
@@ -33,8 +35,9 @@
 	t1->FR = 255; t1->FG = 180; t1->FB = 0; t1->BG = 25; t1->BG = 18; t1->BB = 0; \
 	t2->FR = 255; t2->FG = 180; t2->FB = 0; t2->BG = 25; t2->BG = 18; t2->BB = 0; \
 }
+#pragma endregion
 
-
+#pragma region includes
 // C/C++
 #include <math.h>
 
@@ -50,12 +53,18 @@
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_TexSelect.hpp"
 #include "../headers/MapData.hpp"
+#pragma endregion
 
+#pragma region Pure evil (using namespaces)
 using namespace june19;
 using namespace TrickyUnits;
+using namespace NSKthura;
+#pragma endregion
+
 
 namespace KthuraEdit {
 
+#pragma region Work tabs
 	class TTab {
 	public:
 		static int y;
@@ -89,7 +98,9 @@ namespace KthuraEdit {
 		j19gadget* ValLabels{ nullptr };
 	};
 	int TTab::y{ 0 };
+#pragma endregion
 
+#pragma region Variables needed
 	static bool GridMode{ true };
 	static bool ShowGrid{ true };
 	static std::string ChosenTex{ "" };
@@ -98,11 +109,18 @@ namespace KthuraEdit {
 	static j19gadget* LayList{ nullptr };
 	static j19gadget* DataPanel{ nullptr };
 	static j19gadget* DataTab{ nullptr };
+	static j19gadget* MapGroup{ nullptr }; // Just needed as reference
 
 
 
 	static std::map<std::string, TTab> TabMap;
+#pragma endregion
 
+#pragma region A few forwarding headers
+#pragma endregion
+
+
+#pragma region User Interface itself
 	static int FH() { return UI_MapEdit->MainGadget->Font()->TextHeight("ABC"); }
 
 	static void CreateOther(){}
@@ -203,6 +221,7 @@ namespace KthuraEdit {
 			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
 			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
 		}
+		KthuraDraw::DrawMap(WorkMap.Layers[CurrentLayer].get(), ScrollX, ScrollY, MapGroup->X(),MapGroup->Y());
 	}
 	
 
@@ -249,6 +268,7 @@ namespace KthuraEdit {
 		for (auto T : TabMap) T.second.Tab->H(DataTab->H());
 		RadioTab(TabMap["TiledArea"].RadioToMe, j19action::Check);
 #endif
+		MapGroup = CreateGroup(LayPanel->W(), LayPanel->DrawY(), TQSG_ScreenWidth() - (LayPanel->W() + DataPanel->DrawX()), LayPanel->H(),MG);
 		RenewLayers();
 	}
 
@@ -271,5 +291,12 @@ namespace KthuraEdit {
 	}
 
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
-	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); }
+	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); 
+
+#pragma endregion
+
+
+#pragma region Actual Editor
+
+#pragma endregion
 }
