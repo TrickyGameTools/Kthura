@@ -36,4 +36,10 @@ namespace KthuraEdit {
 	void ToggleShowGrid(june19::j19gadget* g,june19::j19action a);
 	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a);
 	void MenuSave(june19::j19gadget* g, june19::j19action a);
+
+	void ScrollUp(june19::j19gadget* g, june19::j19action a);
+	void ScrollDn(june19::j19gadget* g, june19::j19action a);
+	void ScrollLe(june19::j19gadget* g, june19::j19action a);
+	void ScrollRi(june19::j19gadget* g, june19::j19action a);
+
 }

@@ -301,7 +301,7 @@ namespace KthuraEdit {
 		for (auto T : TabMap) T.second.Tab->H(DataTab->H());
 		RadioTab(TabMap["TiledArea"].RadioToMe, j19action::Check);
 #endif
-		MapGroup = CreateGroup(LayPanel->W(), LayPanel->DrawY(), TQSG_ScreenWidth() - (LayPanel->W() + DataPanel->DrawX()), LayPanel->H(),MG);
+		MapGroup = CreateGroup(LayPanel->W(), LayPanel->DrawY(), TQSG_ScreenWidth() - (LayPanel->W() + DataPanel->W()), LayPanel->H(),MG);
 		RenewLayers();
 	}
 
@@ -357,11 +357,11 @@ namespace KthuraEdit {
 			Placement = TruePlacement;
 		}
 		oml = ml;
-		TQSG_ACol(255, 180, 0, 255);
-		std::string dbgp{ "Placement (" + std::to_string(Placement.x) + "," + std::to_string(Placement.y) + ")  " + std::to_string(Placement.w) + "x" + std::to_string(Placement.h)+" ["+std::to_string((int)CurrentTabID)+"]" };
+		//TQSG_ACol(255, 180, 0, 255);
+		//std::string dbgp{ "Placement (" + std::to_string(Placement.x) + "," + std::to_string(Placement.y) + ")  " + std::to_string(Placement.w) + "x" + std::to_string(Placement.h)+" ["+std::to_string((int)CurrentTabID)+"]" };
 		
-		if (ml) dbgp += " D";
-		MapGroup->Font()->Draw(dbgp.c_str(), MapGroup->DrawX(), MapGroup->DrawY());
+		//if (ml) dbgp += " D";
+		//MapGroup->Font()->Draw(dbgp.c_str(), MapGroup->DrawX(), MapGroup->DrawY());
 		return false;
 	}
 
@@ -447,6 +447,9 @@ namespace KthuraEdit {
 			TQSE_MouseY() > MapGroup->DrawY() &&
 			TQSE_MouseY() < MapGroup->DrawY() + MapGroup->H()) ml = true; else if (TQSE_MouseReleased(1)) ml = false;
 		if (ShowGrid) {
+			TQSG_Color(255, 0, 0);
+			if (ScrollX < 0) TQSG_Rect(MapGroup->DrawX(), MapGroup->DrawY(), abs(ScrollX), MapGroup->H());
+			if (ScrollY < 0) TQSG_Rect(MapGroup->DrawX(), MapGroup->DrawY(), MapGroup->W(), abs(ScrollY));
 			TQSG_Color(80, 80, 80);
 			for (int x = ScrollX % GridX(); x <= TQSG_ScreenWidth(); x += GridX()) TQSG_Line(LayPanel->W() + x, 0, LayPanel->W() + x, TQSG_ScreenHeight());
 			for (int y = ScrollY % GridY(); y <= TQSG_ScreenHeight(); y += GridY())TQSG_Line(0, LayPanel->DrawY() + y, TQSG_ScreenWidth(), LayPanel->DrawY() + y);
@@ -473,6 +476,11 @@ namespace KthuraEdit {
 
 		}
 	}
+
+	void ScrollUp(june19::j19gadget* g, june19::j19action a) { ScrollY -= 16; }
+	void ScrollDn(june19::j19gadget* g, june19::j19action a) { ScrollY += 16; }
+	void ScrollLe(june19::j19gadget* g, june19::j19action a) { ScrollX -= 16; }
+	void ScrollRi(june19::j19gadget* g, june19::j19action a) { ScrollX += 16; }
 
 	void MenuSave(june19::j19gadget* g, june19::j19action a) {
 		std::cout << "Saving: " << Config::FullMapFile() << '\n';

@@ -151,6 +151,7 @@ namespace KthuraEdit {
 			MenuFile = Scr->AddMenu("File"),
 			GridMenu = Scr->AddMenu("Grid"),
 			LayerMenu = Scr->AddMenu("Layers"),
+			ScrollMenu = Scr->AddMenu("Scroll"),
 			OptionsMenu = Scr->AddMenu("Options"),
 			DebugMenu = Scr->AddMenu("Debug");
 		MenuFile->AddItem("Save", MenuSave, SDLK_s);
@@ -159,6 +160,10 @@ namespace KthuraEdit {
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
 		LayerMenu->AddItem("New Layer", NewLayer, SDLK_n);
 		LayerMenu->AddItem("Rename Layer", ChangeLayer, SDLK_KP_5);
+		ScrollMenu->AddItem("Down", ScrollDn, SDLK_DOWN);
+		ScrollMenu->AddItem("Left", ScrollLe, SDLK_LEFT);
+		ScrollMenu->AddItem("Up", ScrollUp, SDLK_UP);
+		ScrollMenu->AddItem("Right", ScrollRi, SDLK_RIGHT);
 		// Stages
 		UI_MapStart(); // Must be last
 	}
