@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.05
+// Version: 21.04.06
 // EndLic
 #pragma once
 #include "UserInterface.hpp"
@@ -35,4 +35,5 @@ namespace KthuraEdit {
 	void SetTex(std::string Tex,std::string Tab="");
 	void ToggleShowGrid(june19::j19gadget* g,june19::j19action a);
 	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a);
+	void MenuSave(june19::j19gadget* g, june19::j19action a);
 }

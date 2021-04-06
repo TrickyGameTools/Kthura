@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.05
+// Version: 21.04.06
 // EndLic
 
 
@@ -45,6 +45,9 @@
 // Tricky's Units
 #include <QuickString.hpp>
 #include <TrickySTOI.hpp>
+
+// Kthura
+#include <Kthura_Save.hpp>
 
 // Editor
 #include "../headers/Config.hpp"
@@ -126,7 +129,6 @@ namespace KthuraEdit {
 	static j19gadget* DataPanel{ nullptr };
 	static j19gadget* DataTab{ nullptr };
 	static j19gadget* MapGroup{ nullptr }; // Just needed as reference
-
 
 
 	static std::map<std::string, TTab> TabMap;
@@ -470,6 +472,11 @@ namespace KthuraEdit {
 			Obstacle();
 
 		}
+	}
+
+	void MenuSave(june19::j19gadget* g, june19::j19action a) {
+		std::cout << "Saving: " << Config::FullMapFile() << '\n';
+		KthuraSave(&WorkMap, Config::FullMapFile(),"");
 	}
 
 #pragma endregion

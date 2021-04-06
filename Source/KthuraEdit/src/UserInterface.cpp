@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.05
+// Version: 21.04.06
 // EndLic
 
 // self
@@ -103,6 +103,7 @@ namespace KthuraEdit {
 		// JCR6
 		auto J{ Config::GetJCR() };
 		if (!J.Succesful) Crash("Failed to load " + Config::MyAssets() + "\n\n" + J.error);
+		jcr6::JCRPanic = Panic4Kthura; // config is the same so why bother!
 
 		// Project + Map
 		Config::LoadProject();
@@ -152,7 +153,8 @@ namespace KthuraEdit {
 			LayerMenu = Scr->AddMenu("Layers"),
 			OptionsMenu = Scr->AddMenu("Options"),
 			DebugMenu = Scr->AddMenu("Debug");
-		std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
+		MenuFile->AddItem("Save", MenuSave, SDLK_s);
+		//std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
 		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
 		LayerMenu->AddItem("New Layer", NewLayer, SDLK_n);
@@ -181,5 +183,6 @@ namespace KthuraEdit {
 		if (!_initialized) return;
 		_initialized = false;
 		std::cout << "Closing User Interface\n";
+		MenuSave(nullptr, j19action::Unknown);
 	}
 }
