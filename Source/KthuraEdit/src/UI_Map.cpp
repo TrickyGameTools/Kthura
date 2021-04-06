@@ -170,6 +170,11 @@ namespace KthuraEdit {
 	}
 #endif
 
+	static void LayerSelected(j19gadget* source, j19action) {
+		if (source->ItemText() == "") return;
+		CurrentLayer = source->ItemText();
+	}
+
 	static void Deg2Rad(j19gadget* source, j19action action) {
 		int i = ToInt(source->Text);
 		double d = i * (M_PI / 180);
@@ -282,6 +287,7 @@ namespace KthuraEdit {
 		LayList->FR = 0;
 		LayList->FG = 255;
 		LayList->FB = 255;
+		LayList->CBAction = LayerSelected;
 		auto KthPic = CreatePicture(0, LayPanel->H() - 120, LayPanel->W(), 120, LayPanel, Pic_FullStretch);
 		KthPic->Image(*Config::JCR(), "Kthura.png"); 
 		// Work Panel
