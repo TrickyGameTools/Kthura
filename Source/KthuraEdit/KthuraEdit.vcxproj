@@ -164,6 +164,7 @@
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Core.cpp" />
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.cpp" />
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Draw.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Save.cpp" />
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp" />
     <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Draw.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Save.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp" />

@@ -150,6 +150,9 @@
     <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_realdir.cpp">
       <Filter>Source Files\JCR6</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Save.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_realdir.hpp">
       <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Save.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
