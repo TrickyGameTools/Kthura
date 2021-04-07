@@ -112,9 +112,12 @@ namespace KthuraEdit {
 		j19gadget* ValVisible{ nullptr };
 		j19gadget* ValTag{ nullptr };
 		j19gadget* ValLabels{ nullptr };
+		std::string Tex{ "" };
+		std::string Lab{ "" };
 	};
 	int TTab::y{ 0 };
 	TabNum CurrentTabID{ TabNum::NONE };
+	std::string CurrentTab{ "" };
 	std::string Labels{ "" };
 	
 #pragma endregion
@@ -164,6 +167,8 @@ namespace KthuraEdit {
 			if (TB.first == source->Caption) {
 				TB.second.Tab->Visible = true;
 				CurrentTabID = TB.second.cID;
+				CurrentTab = TB.first;
+				ChosenTex = TB.second.Tex;
 			} else { TB.second.Tab->Visible = false; }
 
 		}
@@ -327,6 +332,7 @@ namespace KthuraEdit {
 			for (auto& tb : TabMap) tb.second.RadioToMe->checked = tab == tb.first;
 			RadioTab(TabMap[tab].RadioToMe, j19action::Check);
 		}
+		TabMap[CurrentTab].Tex = Tex;
 	}
 
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
@@ -479,8 +485,11 @@ namespace KthuraEdit {
 			break;
 		case TabNum::Obstacles:
 			Obstacle();
-
+			break;
 		}
+		TQSG_ACol(255, 180, 0, 200);
+		//MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + MapGroup->W(), MapGroup->Y(), 1, 0);
+		MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + 5, MapGroup->Y()+5, 0, 0);
 	}
 
 	void ScrollUp(june19::j19gadget* g, june19::j19action a) { ScrollY -= 16; }
