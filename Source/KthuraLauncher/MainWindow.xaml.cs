@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2019
+// (c) Jeroen P. Broks, 2019, 2021
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.03
+// Version: 21.04.07
 // EndLic
 
 #define GINIE_Project
@@ -50,6 +50,7 @@ namespace Kthura {
         public MainWindow()
         {
             InitializeComponent();
+            CShell.Init(this,C_Command,C_Status,C_Output);
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             BDate.Content = $"Build date: {BuildDate.sBuildDate}";
             if (MainConfig.WorkSpace == "") {
@@ -184,7 +185,7 @@ namespace Kthura {
                 parameters += $"\"{LstMaps.SelectedItem.ToString()}\"";
             try {
                 var editor = $"{qstr.ExtractDir(MyExe)}/KthuraEdit.exe";
-                Process.Start(editor, parameters);
+                Process.Start(editor, parameters); // This will need to be done differently!
             } catch (Exception err) {
                 Debug.WriteLine($"Launching the editor failed!\n{err.Message}");
                 MessageBox.Show($"Launching the editor failed!\n{err.Message}");

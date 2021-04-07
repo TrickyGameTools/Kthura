@@ -207,6 +207,29 @@
                     <Label Content="Map Folder:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,132,0,0" Foreground="White" Cursor="Pen" Grid.Column="1"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="Console Output">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FF00B4E5" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid>
+                    <Grid.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="Black" Offset="0"/>
+                            <GradientStop Color="#FF647884" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Label Content="Command" Margin="0,0,1499,803" Foreground="#FFB4FF00"></Label>
+                    <TextBox x:Name="C_Command" IsReadOnly="True" Margin="77,0,0,803" Background="#FF001900" Foreground="Lime" FontFamily="Courier New" FontSize="20"></TextBox>
+                    <Label Content="Status" Margin="0,28,1499,775" Foreground="#FF00FFff" ></Label>
+                    <TextBox x:Name="C_Status" IsReadOnly="True" Margin="77,28,0,775" Background="#FF001219" Foreground="#FF00B4FF" Text="Ready" FontFamily="Courier New" FontSize="20"/>
+                    <Label Content="Output" Margin="0,56,1499,747" Foreground="#FFFFFF00"></Label>
+                    <TextBox x:Name="C_Output" IsReadOnly="True" Margin="77,56,0,10" Background="#FF191200" Foreground="#FFFFB400" FontFamily="Courier New" FontSize="20" Text="Welcome to Kthura"/>
+                </Grid>
+
+            </TabItem>
 
         </TabControl>
 
