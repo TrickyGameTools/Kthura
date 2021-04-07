@@ -25,6 +25,7 @@
 // EndLic
 #include <june19.hpp>
 #include <QuickString.hpp>
+#include "../headers/MapData.hpp"
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
 
@@ -133,6 +134,13 @@ namespace KthuraEdit {
 	}
 
 	void StringPage(std::string Tag) { TrueStringPage(Upper(Tag)); }
+
+	static void OkMeta(june19::j19gadget* g, june19::j19action a) {
+		for (auto f : Config::PrjMapMeta()) {
+			WorkMap.MetaData[f] = Pages["METADATA"]->TextFields[f]->Text;
+		}
+		UI::GoToStage("Map");
+	}
 	
 	void GoMeta(june19::j19gadget* g, june19::j19action a) {
 		static bool donebefore{ false };
@@ -143,8 +151,11 @@ namespace KthuraEdit {
 				std::cout << "Meta: Added field " << f << "\n";
 				Pages["METADATA"]->Add(f);
 			}
+			Pages["METADATA"]->Okay->CBAction = OkMeta;
 			donebefore = true;
 		}
+		for (auto f : Config::PrjMapMeta())
+			Pages["METADATA"]->TextFields[f]->Text = WorkMap.MetaData[f];
 		TQSE_Flush();
 		StringPage("METADATA");
 	}
