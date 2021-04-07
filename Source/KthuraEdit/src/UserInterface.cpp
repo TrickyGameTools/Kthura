@@ -28,6 +28,7 @@
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
+#include "../headers/UI_SeveralStrings.hpp"
 
 // C++
 #include <iostream>
@@ -155,6 +156,8 @@ namespace KthuraEdit {
 			OptionsMenu = Scr->AddMenu("Options"),
 			DebugMenu = Scr->AddMenu("Debug");
 		MenuFile->AddItem("Save", MenuSave, SDLK_s);
+		MenuFile->AddStrike();
+		MenuFile->AddItem("Edit Meta Data", GoMeta, SDLK_m);
 		//std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
 		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);

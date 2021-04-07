@@ -29,10 +29,10 @@ namespace KthuraEdit {
 		}
 
 		void Add(string Fld) {
-			auto w{ floor(Group->W() / 3) };
+			auto w{ floor(Group->W() / 4) };
 			auto l = CreateLabel(Fld, 0, _y, w, 25, Group);
 			l->SetForeground(0, 180, 255);
-			TextFields[Fld] = CreateTextfield(w, _y, w * 2, Group);
+			TextFields[Fld] = CreateTextfield(w, _y, w * 3, Group);
 			TextFields[Fld]->SetForeground(255, 180, 0);
 			TextFields[Fld]->SetBackground(25, 17, 0, 255);
 			_y += 25;
@@ -67,5 +67,26 @@ namespace KthuraEdit {
 				Pages["Labels"]->Add(Label);
 			}
 		}
+	}
+	static void TrueStringPage(string Tag) {
+		for (auto f : Pages) 
+			f.second->Group->Visible = f.first == Tag;
+		UI::GoToStage("StringDataPage");
+	}
+
+	void StringPage(std::string Tag) { TrueStringPage(Upper(Tag)); }
+	
+	void GoMeta(june19::j19gadget* g, june19::j19action a) {
+		static bool donebefore{ false };
+		New_StringPage("METADATA", "Map Meta Data", {});
+		if (!donebefore) {
+			std::cout << "Adding Meta data items\n";
+			for (auto f : Config::PrjMapMeta()) {
+				std::cout << "Meta: Added field " << f << "\n";
+				Pages["METADATA"]->Add(f);
+			}
+			donebefore = true;
+		}
+		StringPage("METADATA");
 	}
 }

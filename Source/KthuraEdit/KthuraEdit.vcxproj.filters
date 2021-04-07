@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Save.cpp">
       <Filter>Source Files\Kthura Libraries</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI_SeveralStrings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Save.hpp">
       <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_SeveralStrings.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -69,6 +69,7 @@ namespace KthuraEdit {
 		static std::string FullMapFile();
 		static jcr6::JT_Dir* Textures();
 		static jcr6::JT_Dir* JCR();
+		static std::vector<std::string> PrjMapMeta();
 
 		static Success GetJCR();
 		static bool FWindowed();

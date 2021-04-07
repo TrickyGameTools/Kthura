@@ -112,6 +112,10 @@ namespace KthuraEdit {
 		return &_JCR;
 	}
 
+	std::vector<string> Config::PrjMapMeta() {		
+		return ProjectConfig.List("Map", "GeneralData");
+	}
+
 	Success Config::GetJCR() {
 		using namespace jcr6;
 		std::cout << "Analysing: " << MyAssets() << std::endl;
