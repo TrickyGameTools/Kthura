@@ -13,6 +13,15 @@ static j19gadget* MS{ nullptr };
 
 namespace KthuraEdit {
 
+	class DPage;
+	map<string, shared_ptr<DPage>> Pages;
+
+	static void CorrectOkay(j19gadget* g, j19action a) { g->Y(g->GetParent()->H() - g->H()); g->Enabled = g->CBAction != nullptr; }
+	static void CorrectCancel(j19gadget* g, j19action a);
+	static void ActCancel(j19gadget* g, j19action a) { UI::GoToStage("Map"); }
+
+	
+
 	class DPage {
 	private:
 		int _y{ 30 };
@@ -20,12 +29,24 @@ namespace KthuraEdit {
 		std::string Caption{ "" };
 		j19gadget* Group{ nullptr };
 		j19gadget* LabelCaption{ nullptr };
+		j19gadget* Okay{ nullptr };
+		j19gadget* Cancel{ nullptr };
 		map<string, j19gadget*> TextFields;
 		DPage(string CPTN) {
 			Caption = CPTN;
 			Group = CreateGroup(MS->DrawX(), MS->DrawY(), MS->W(), MS->Y(), MS);
 			LabelCaption = CreateLabel(CPTN, 0, 0, Group->W(), Group->H(), Group, 2);
 			LabelCaption->SetForeground(255, 0, 0, 255);
+			Okay = CreateButton("Okay", 0, 0, MS);
+			Okay->CBDraw = CorrectOkay;
+			Okay->SetForeground(0, 255, 0);
+			Okay->SetBackground(0, 25, 0, 255);
+			Cancel = CreateButton("Cancel", 0, 0, MS);
+			Cancel->CBDraw = CorrectCancel;
+			Cancel->CBAction = ActCancel;
+			Cancel->SetForeground(255, 0, 0);
+			Cancel->SetBackground(25, 0, 0, 255);
+
 		}
 
 		void Add(string Fld) {
@@ -40,7 +61,19 @@ namespace KthuraEdit {
 
 		int y() { return _y; }
 	};
-	map<string, shared_ptr<DPage>> Pages;
+
+	void CorrectCancel(j19gadget* g, j19action a) {
+		static std::map<j19gadget*, j19gadget*> gOk{};
+		if (!gOk.count(g)) {
+			cout << "Tying a cancel button\n";
+			for (auto k : Pages) {
+				if (k.second->Cancel == g) gOk[g] = k.second->Okay;
+			}
+		}
+		if (!gOk.count(g)) return;
+		g->X(gOk[g]->X() + gOk[g]->W() + 2);
+		g->Y(gOk[g]->Y());
+	}
 
 	static void Init() {
 		UI::AddStage("StringDataPage");
@@ -87,6 +120,7 @@ namespace KthuraEdit {
 			}
 			donebefore = true;
 		}
+		TQSE_Flush();
 		StringPage("METADATA");
 	}
 }
