@@ -488,8 +488,8 @@ namespace KthuraEdit {
 			break;
 		}
 		TQSG_ACol(255, 180, 0, 200);
-		//MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + MapGroup->W(), MapGroup->Y(), 1, 0);
-		MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + 5, MapGroup->Y()+5, 0, 0);
+		MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + MapGroup->W(), MapGroup->DrawY(), 1, 0);
+		//MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + 5, MapGroup->DrawY() + 5, 0, 0);
 	}
 
 	void ScrollUp(june19::j19gadget* g, june19::j19action a) { ScrollY -= 16; }
