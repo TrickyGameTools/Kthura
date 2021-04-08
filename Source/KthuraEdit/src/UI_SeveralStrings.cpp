@@ -28,6 +28,7 @@
 #include "../headers/MapData.hpp"
 #include "../headers/UserInterface.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
+#include "../headers/UI_Map.hpp"
 
 
 
@@ -116,16 +117,41 @@ namespace KthuraEdit {
 		}
 	}
 
+	static string LG(int i) {
+		char Label[15]; //123456789012
+		sprintf_s(Label, "Label %02d: ", i);
+		return string(Label);
+	}
+
+	static void Act_Labels(j19gadget* g, j19action a) {
+		string labelstr{ "" };
+		auto PG = Pages["Labels"];
+		for (int i = 1; PG->TextFields.count(LG(i)); i++) {
+			auto V{ PG->TextFields[LG(i)]->Text };
+			if (V != "") {
+				if (labelstr != "") labelstr += ",";
+				labelstr += V;
+			}
+		}
+		if (g->HData == "Modify") {
+			UI::Crash("Modify not yet implemented");
+		} else {
+			SetLabels(labelstr,g->HData);
+		}
+		UI::GoToStage("Map");
+	}
+
 	void New_Labels() {
 		if (!MS) Init();
 		if (!Pages.count("Labels")) { // Please note, due to normally always making everything full caps, this cannot cause any conflicts.
 			Pages["Labels"] = make_shared<DPage>("Object Labels");
-			for (unsigned int i = 1; Pages["Labels"]->y() < MS->W() - 40; i++) { // I know this for-expression is beyond odd, but I know what I'm doing (I hope)
+			for (unsigned int i = 1; Pages["Labels"]->y() < MS->H() - (MS->DrawY()+80); i++) { // I know this for-expression is beyond odd, but I know what I'm doing (I hope)
 				char Label[15]; //123456789012
 				sprintf_s(Label, "Label %02d: ",i);
 				Pages["Labels"]->Add(Label);
 			}
 		}
+		Pages["Labels"]->Okay->CBAction = Act_Labels;
 	}
 	static void TrueStringPage(string Tag) {
 		for (auto f : Pages) 
@@ -158,5 +184,32 @@ namespace KthuraEdit {
 			Pages["METADATA"]->TextFields[f]->Text = WorkMap.MetaData[f];
 		TQSE_Flush();
 		StringPage("METADATA");
+	}
+
+	void GoLabel(june19::j19gadget* g, june19::j19action a) {
+		New_Labels();
+		auto PG = Pages["Labels"];
+		for (int i = 1; PG->TextFields.count(LG(i)); i++)
+			PG->TextFields[LG(i)]->Text = "";
+		if (g->HData == "Modify") {
+			UI::Crash("Modify not yet implemented");
+		} else {
+			Pages["Labels"]->Okay->HData = g->HData;
+			string labelstr{ "" };
+			auto labelsplit = Split(GetTabLabels(g->HData), ',');
+			for (int i = 0; i < labelsplit.size(); i++) {
+				if (PG->TextFields.count(LG(i+1))) {
+					PG->TextFields[LG(i+1)]->Text = labelsplit[i];
+				} else {
+					auto V{ PG->TextFields[LG(i)]->Text };
+					if (V != "") {
+						if (labelstr != "") labelstr += ",";
+						labelstr += V;
+					}
+				}
+				SetLabels(labelstr, g->HData);
+			}
+			TrueStringPage("Labels");
+		}
 	}
 }

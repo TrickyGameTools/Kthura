@@ -55,6 +55,7 @@
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_TexSelect.hpp"
+#include "../headers/UI_SeveralStrings.hpp"
 #include "../headers/MapData.hpp"
 #pragma endregion
 
@@ -262,11 +263,12 @@ namespace KthuraEdit {
 		TB->ValVisible = DataLabel("Visible", CreateCheckBox("", 0, 0, 0, 0, Tab)); TB->ValVisible->checked = true;
 		TB->ValTag = DataLabel("Tag", CreateButton("...", 0, 0, Tab)); TB->ValTag->Enabled = false;
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
+		TB->ValLabels->CBAction = GoLabel;
 		TB->ValLabels->HData = caption;
 	}
 
-	static void LabelCalc(TTab *Tb, std::string l) { Tb->ValLabels->Text = std::to_string(Split(l, ',').size()); }
-	static void LabelCalc(std::string t, std::string l) { LabelCalc(&TabMap[t], l); }
+	static void LabelCalc(TTab *Tb, std::string l) { Tb->ValLabels->Caption = std::to_string(Split(l, ',').size()); }
+	static void LabelCalc(std::string t, std::string l) { TabMap[t].ValLabels->Caption = std::to_string(Split(l, ',').size()); }
 	
 
 	void AdeptStatus() {
@@ -387,7 +389,7 @@ namespace KthuraEdit {
 		}
 		if (place) {
 			if (Placement.w && Placement.h) {
-				if ((Tab == "StrechedArea" || Tab == "TiledArea") && ChosenTex == "") return;
+				if ((Tab == "StretchedArea" || Tab == "TiledArea") && ChosenTex == "") return;
 				std::cout << "Creating area based object (" << Tab << ")\n";
 				if (!TabMap.count(Tab)) UI::Crash("No Kthura Edit Tab called '" + Tab + "'"); 
 				auto GTab{ &TabMap[Tab] };
@@ -409,7 +411,7 @@ namespace KthuraEdit {
 				O->ScaleX(1000);
 				O->ScaleY(1000);
 				O->Dominance(ToInt(GTab->ValDom->Text));
-				O->Labels(Labels);
+				O->Labels(GTab->Lab);
 			}
 		}
 	}
@@ -499,6 +501,22 @@ namespace KthuraEdit {
 	void ScrollDn(june19::j19gadget* g, june19::j19action a) { ScrollY += 16; }
 	void ScrollLe(june19::j19gadget* g, june19::j19action a) { ScrollX -= 16; }
 	void ScrollRi(june19::j19gadget* g, june19::j19action a) { ScrollX += 16; }
+
+	void SetLabels(std::string l, std::string tab) {
+		j19gadget* g;
+		std::string tb{ tab };
+		if (tb == "") tb == CurrentTab;
+		if (!TabMap.count(tb)) UI::Crash("Unknown worktab(" + tb + ") -- Internal error, please report!");
+		g = TabMap[tb].ValLabels;
+		if (!g) UI::Crash("Trying to edit label data but couldn't get the correct UI tab (internal error, please report)");
+		TabMap[tb].Lab = l;
+		LabelCalc(tb, l);
+		std::cout << "Labels set. Tab[" << tab << "] >> " << l << std::endl;
+	}
+
+	std::string GetTabLabels(std::string t) {
+		return TabMap[t].Lab;
+	}
 
 	void MenuSave(june19::j19gadget* g, june19::j19action a) {
 		std::cout << "Saving: " << Config::FullMapFile() << '\n';
