@@ -262,8 +262,11 @@ namespace KthuraEdit {
 		TB->ValVisible = DataLabel("Visible", CreateCheckBox("", 0, 0, 0, 0, Tab)); TB->ValVisible->checked = true;
 		TB->ValTag = DataLabel("Tag", CreateButton("...", 0, 0, Tab)); TB->ValTag->Enabled = false;
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
+		TB->ValLabels->HData = caption;
 	}
 
+	static void LabelCalc(TTab *Tb, std::string l) { Tb->ValLabels->Text = std::to_string(Split(l, ',').size()); }
+	static void LabelCalc(std::string t, std::string l) { LabelCalc(&TabMap[t], l); }
 	
 
 	void AdeptStatus() {
