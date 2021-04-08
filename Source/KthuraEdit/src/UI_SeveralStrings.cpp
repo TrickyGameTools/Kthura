@@ -23,6 +23,7 @@
 // 
 // Version: 21.04.07
 // EndLic
+
 #include <june19.hpp>
 #include <QuickString.hpp>
 #include "../headers/MapData.hpp"
