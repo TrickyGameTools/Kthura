@@ -485,7 +485,7 @@ namespace KthuraEdit {
 		TB.InsertY->Enabled = s && ModifyObject->EKind() == KthuraKind::TiledArea;
 		//TB.ValAlpha->Enabled = s && ModifyObject->EKind() != KthuraKind::Zone;
 		TB.ValAnimSpeed->Enabled = s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Obstacle || ModifyObject->EKind() == KthuraKind::Pic);
-		TB.ValColR->Enabled == s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Obstacle || ModifyObject->EKind() == KthuraKind::Pic || ModifyObject->EKind() == KthuraKind::Rect);
+		TB.ValColR->Enabled = s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Obstacle || ModifyObject->EKind() == KthuraKind::Pic || ModifyObject->EKind() == KthuraKind::Rect);
 		TB.ValColG->Enabled = TB.ValColR->Enabled;
 		TB.ValColB->Enabled = TB.ValColR->Enabled;
 		TB.ValAlpha->Enabled = TB.ValColR->Enabled;
@@ -504,6 +504,7 @@ namespace KthuraEdit {
 		TB.ValTag->Enabled = s;
 		TB.ValX->Enabled = s;
 		TB.ValY->Enabled = s;
+		TB.ValVisible->Enabled = s;
 		if (s)
 			TB.ValKind->Caption = ModifyObject->Kind();
 		else
@@ -515,6 +516,8 @@ namespace KthuraEdit {
 			m = HiObjID(),
 			x = Placement.x,
 			y = Placement.y;
+			//x = Placement.x - MapGroup->DrawX() + ScrollX,
+			//y = Placement.y - MapGroup->DrawY() + ScrollY;
 		/*
 		if (GridMode) {
 			x += floor(GridX() / 2);
@@ -539,11 +542,11 @@ namespace KthuraEdit {
 			static int d = 0; d = (d + 1) % 360;
 			double r = d * ( M_PI/180);
 			int
-				cr = floor(255 * sin(r)),
-				cg = floor(255 * cos(r)),
+				cr = floor(255 * abs(sin(r))),
+				cg = floor(255 * abs(cos(r))),
 				cb = 0;
 			TQSG_ACol(cr, cg, cb, 255);
-			SDL_Rect Rechthoek{ ModifyObject->X(),ModifyObject->Y(),ModifyObject->W(),ModifyObject->Y() };
+			SDL_Rect Rechthoek{ ModifyObject->X(),ModifyObject->Y(),ModifyObject->W(),ModifyObject->H() };
 			switch (ModifyObject->EKind()) {
 			case KthuraKind::Obstacle: 
 				Rechthoek.x = floor(ModifyObject->X() - ((ModifyObject->W()*(ModifyObject->ScaleX()/1000)) / 2));
@@ -566,6 +569,8 @@ namespace KthuraEdit {
 			}
 			Rechthoek.x += MapGroup->DrawX();
 			Rechthoek.y += MapGroup->DrawY();
+			Rechthoek.x -= ScrollX;
+			Rechthoek.y -= ScrollY;
 			TQSG_Rect(&Rechthoek,true);
 		}
 	}
