@@ -24,7 +24,9 @@
 // Version: 21.04.05
 // EndLic
 
+#include <math.h>
 #include "../headers/MapData.hpp"
+#include <algorithm>
 namespace KthuraEdit {
 
 
@@ -36,5 +38,14 @@ namespace KthuraEdit {
 
 	int GridX() { return WorkMap.Layer(CurrentLayer)->GridX; }
 	int GridY() { return WorkMap.Layer(CurrentLayer)->GridY; }
+
+	unsigned long long HiObjID() {
+		unsigned long long n = 0;
+		for (auto o : WorkMap.Layer(CurrentLayer)->Objects)
+			if (o->ID() > n) n = o->ID();
+		return n;
+	}
+
+	NSKthura::KthuraObject* ModifyObject{ nullptr };
 
 }

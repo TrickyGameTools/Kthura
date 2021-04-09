@@ -38,4 +38,7 @@ namespace KthuraEdit{
 
 	int GridX();
 	int GridY();
+
+	extern NSKthura::KthuraObject* ModifyObject;
+	unsigned long long HiObjID();
 }
