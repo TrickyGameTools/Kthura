@@ -44,7 +44,7 @@
 #include <TQSE.hpp>
 #include <TQSG.hpp>
 
-#define QUICK_QUIT
+#undef QUICK_QUIT
 
 using namespace TrickyUnits;
 using namespace june19;
@@ -95,6 +95,9 @@ namespace KthuraEdit {
 			si.second.MainGadget->Visible = si.first == st;
 		}
 	}
+
+	static bool go_on{ true };
+	static void dquit(j19gadget* g, j19action a) { go_on = false; }
 
 	void UI::Start() {
 
@@ -158,6 +161,8 @@ namespace KthuraEdit {
 		MenuFile->AddItem("Save", MenuSave, SDLK_s);
 		MenuFile->AddStrike();
 		MenuFile->AddItem("Edit Meta Data", GoMeta, SDLK_m);
+		MenuFile->AddStrike();
+		MenuFile->AddItem("Quit", dquit, SDLK_q);
 		//std::cout << "GridMenu=" << (unsigned long long)GridMenu << "\t"<<GridMenu->Caption<<std::endl;
 		GridMenu->AddItem("Toggle Grid", ToggleUseGrid, SDLK_g);
 		GridMenu->AddItem("Toggle GridShow", ToggleShowGrid, SDLK_d);
@@ -172,7 +177,8 @@ namespace KthuraEdit {
 	}
 	bool UI::Run() {
 		auto CS{ CurrentStage() };
-		auto go_on{ true };
+		//auto go_on{ true };
+		go_on = true;
 		TQSG_Cls();
 		if (CS->PreJune) CS->PreJune();
 		TQSE_Poll();

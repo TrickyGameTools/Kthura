@@ -64,7 +64,7 @@ namespace Kthura {
                 Pr.Close();
                 Running = false;
             } else {
-                var p = Pr.StandardOutput.ReadLine();
+                var p = Pr.StandardOutput.ReadLine();                
                 Outp.Text += $"{p}\n";
             }
         }

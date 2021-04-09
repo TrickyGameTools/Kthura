@@ -178,14 +178,15 @@ namespace Kthura {
 
         private void StartTheEditor_Click(object sender, RoutedEventArgs e) {            
             if (!StartTheEditor.IsEnabled) return;
-            var parameters = $"\"{LstProjects.SelectedItem.ToString()}\" ";
+            var parameters = $"-FORCEWINDOWED YES \"{LstProjects.SelectedItem.ToString()}\" ";
             if (LstMaps.SelectedItem.ToString() == "** New Map **")
                 parameters += $"\"{NewMap.Text}\"";
             else
                 parameters += $"\"{LstMaps.SelectedItem.ToString()}\"";
             try {
                 var editor = $"{qstr.ExtractDir(MyExe)}/KthuraEdit.exe";
-                Process.Start(editor, parameters); // This will need to be done differently!
+                //Process.Start(editor, parameters); // This will need to be done differently!
+                CShell.Start(editor, parameters);
             } catch (Exception err) {
                 Debug.WriteLine($"Launching the editor failed!\n{err.Message}");
                 MessageBox.Show($"Launching the editor failed!\n{err.Message}");

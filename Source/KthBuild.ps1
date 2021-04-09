@@ -34,7 +34,8 @@ function private:builddate{
 }
 
 function private:bld($packagedir,$packagename) {
-	$compiler = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe";
+	#$compiler = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe";
+	$compiler = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/MSBuild.exe"
 	$result = "---"
 	write-host "Compiling: " -nonewline -Foregroundcolor Yellow
 	write-host $packagename -ForeGroundColor Cyan
@@ -88,11 +89,14 @@ PackAssets
 bld "KthuraLauncher" "Launcher"
 cpy "Kthuralauncher/bin/Release/*.exe" "Launcher"
 bld "KthuraEdit" "Editor"
-cpy "KthuraEdit/bin/Windows/x86/Release/*.exe" "Editor Executables"
-cpy "KthuraEdit/bin/Windows/x86/Release/*.dll" "Editor Libraries"
-cpy "KthuraEdit/bin/Windows/x86/Release/*.xml" "Editor Data"
-cpy "KthuraEdit/bin/Windows/x86/Release/*.dylib" "Editor Dynamic Libraries"
-cpy "KthuraEdit/bin/Windows/x86/Release/*.config" "Editor Configuration"
+#old
+#cpy "KthuraEdit/bin/Windows/x86/Release/*.exe" "Editor Executables"
+#cpy "KthuraEdit/bin/Windows/x86/Release/*.dll" "Editor Libraries"
+#cpy "KthuraEdit/bin/Windows/x86/Release/*.xml" "Editor Data"
+#cpy "KthuraEdit/bin/Windows/x86/Release/*.dylib" "Editor Dynamic Libraries"
+#cpy "KthuraEdit/bin/Windows/x86/Release/*.config" "Editor Configuration"
+cpy "KthuraEdit/x64/Release/*.exe" "Editor Executables"
+cpy "KthuraEdit/x64/Release/*.dll" "Editor Dependency Libraries"
 if (Test-Path "KthuraTextEditor"){  #This "if" is needed since the TextEditor is optional!
 	bld "KthuraTextEditor" "Text Editor"
 	cpy "KthuraTextEditor/bin/Release/*.exe" "Text Editor Executables"
