@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.07
+// Version: 21.04.09
 // EndLic
 
 
@@ -56,6 +56,7 @@
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_TexSelect.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
+#include "../headers/UI_TagObject.hpp"
 #include "../headers/MapData.hpp"
 #pragma endregion
 
@@ -308,6 +309,8 @@ namespace KthuraEdit {
 			TB->ValImpassible->CBAction = ModImp;
 			TB->ValForcePassible->CBAction = ModFrc;
 			TB->ValVisible->CBAction = ModVis;
+
+			TB->ValTag->CBAction = Go_TagObject;
 		}
 	}
 
@@ -572,6 +575,7 @@ namespace KthuraEdit {
 			TB.ValScaleX->Text = to_string(ModifyObject->ScaleX());
 			TB.ValScaleY->Text = to_string(ModifyObject->ScaleY());
 			LabelCalc("Modify", ModifyObject->Labels());
+			if (ModifyObject->Tag() != "") TB.ValTag->Caption = ModifyObject->Tag(); else TB.ValTag->Caption = "...";
 		} else
 			TB.ValKind->Caption = "None";
 	}

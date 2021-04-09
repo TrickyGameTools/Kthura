@@ -186,6 +186,7 @@
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
     <ClCompile Include="src\UI_SeveralStrings.cpp" />
+    <ClCompile Include="src\UI_TagObject.cpp" />
     <ClCompile Include="src\UI_TexSelect.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp" />
     <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\headers\UI_TagObject.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp" />
     <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp" />
