@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.07
+// Version: 21.04.09
 // EndLic
 
 
@@ -455,6 +455,53 @@ namespace KthuraEdit {
 		}
 	}
 
+	static bool InObject(KthuraObject* O,int x, int y) {
+		switch (O->EKind()) {
+		case KthuraKind::Zone:
+		case KthuraKind::StretchedArea:
+		case KthuraKind::TiledArea:
+		case KthuraKind::Rect:
+			return x >= O->X() && y >= O->Y() && x <= O->X() + O->W() && y <= O->Y() + O->H();
+		case KthuraKind::Obstacle: {
+			double
+				tw = (double)O->W() * (O->ScaleX() / 1000),
+				th = (double)O->H() * (O->ScaleY() / 1000);
+			return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
+		}
+		case KthuraKind::Pic:
+			return x >= O->X() && y >= O->Y() && x <= KthuraDraw::DrawDriver->ObjectWidth(O) && y <= KthuraDraw::DrawDriver->ObjectHeight(O);		
+		case KthuraKind::CustomItem:
+			return x >= O->X() - 4 && x <= O->X() + 4 && y >= O->Y() - 4 && y <= O->Y() + 4;
+		default:
+			std::cout << "WARNING! I do not know how to check item " << (int)O->EKind() << " (" << O->Kind() << "). Version conflict?\n";
+			return false;
+		}
+	}
+
+	static void ClickModify() {
+		int
+			m = HiObjID(),
+			x = Placement.x,
+			y = Placement.y;
+		/*
+		if (GridMode) {
+			x += floor(GridX() / 2);
+			y += GridY();
+		}
+		int
+			dx = x + MapGroup->DrawX(),
+			dy = y + MapGroup->DrawY(),
+			*/
+		if (TQSE_MouseHit(1)) {
+			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {
+				if (InObject(o.get(), x, y)) {
+					ModifyObject = o;
+				}
+			}
+		}
+	
+	}
+
 
 	void DrawMap() {
 		auto place{ UpdatePlacement() };
@@ -490,6 +537,9 @@ namespace KthuraEdit {
 			break;
 		case TabNum::Obstacles:
 			Obstacle();
+			break;
+		case TabNum::Modify:
+			ClickModify();
 			break;
 		}
 		TQSG_ACol(255, 180, 0, 200);
