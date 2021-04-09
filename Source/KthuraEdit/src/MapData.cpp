@@ -46,6 +46,6 @@ namespace KthuraEdit {
 		return n;
 	}
 
-	NSKthura::KthuraObject* ModifyObject{ nullptr };
+	std::shared_ptr<NSKthura::KthuraObject> ModifyObject{ nullptr };
 
 }

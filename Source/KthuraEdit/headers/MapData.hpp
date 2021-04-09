@@ -39,6 +39,6 @@ namespace KthuraEdit{
 	int GridX();
 	int GridY();
 
-	extern NSKthura::KthuraObject* ModifyObject;
+	extern std::shared_ptr<NSKthura::KthuraObject> ModifyObject;
 	unsigned long long HiObjID();
 }
