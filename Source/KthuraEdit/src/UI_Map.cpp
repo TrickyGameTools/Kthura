@@ -150,6 +150,9 @@ namespace KthuraEdit {
 	qtf(ModInsY, inserty);
 	qtf(ModW, W);
 	qtf(ModH, H);
+	qtf(ModDom, Dominance);
+	qtf(ModScaleX, ScaleX);
+	qtf(ModScaleY, ScaleY);
 #pragma endregion
 
 
@@ -197,6 +200,7 @@ namespace KthuraEdit {
 		for (auto m : TabMap) {
 			if (m.second.ValRotDeg == source) m.second.ValRotRad->Text = left(std::to_string(d),4);
 		}
+		if (source->HData == "Modify" && ModifyObject) ModifyObject->RotationDegrees(ToInt(source->Text));
 	}
 
 	static void ToggleImp(j19gadget* source, j19action) {
@@ -253,6 +257,7 @@ namespace KthuraEdit {
 		DuoDataLabel("Rotate", TB->ValRotDeg, TB->ValRotRad);
 		TB->ValRotDeg->Enabled = caption == "Obstacle"; TB->ValRotRad->Enabled = false;
 		TB->ValRotDeg->CBAction = Deg2Rad;
+		TB->ValRotDeg->HData = caption;
 		TB->ValImpassible = DataLabel("Impassible", CreateCheckBox("", 0, 0, 0, 0, Tab));
 		TB->ValImpassible->CBAction = ToggleImp;
 		TB->ValForcePassible = DataLabel("F Passible", CreateCheckBox("", 0, 0, 0, 0, Tab));		
@@ -282,6 +287,9 @@ namespace KthuraEdit {
 			TB->InsertY->CBAction = ModInsY;
 			TB->ValW->CBAction = ModW;
 			TB->ValH->CBAction = ModH;
+			TB->ValDom->CBAction = ModDom;
+			TB->ValScaleX->CBAction = ModScaleX;
+			TB->ValScaleY->CBAction = ModScaleY;
 		}
 	}
 
@@ -373,8 +381,8 @@ namespace KthuraEdit {
 		static bool
 			oml{ false };
 		int
-			x{ TQSE_MouseX()-MapGroup->DrawX() },
-			y{ TQSE_MouseY()-MapGroup->DrawY() };
+			x{ TQSE_MouseX()-MapGroup->DrawX()+ScrollX },
+			y{ TQSE_MouseY()-MapGroup->DrawY()+ScrollY };
 		if (GridMode) {
 			x = floor(x / WorkMap.Layers[CurrentLayer]->GridX) * WorkMap.Layers[CurrentLayer]->GridX;
 			y = floor(y / WorkMap.Layers[CurrentLayer]->GridY) * WorkMap.Layers[CurrentLayer]->GridY;
@@ -481,9 +489,11 @@ namespace KthuraEdit {
 		case KthuraKind::Rect:
 			return x >= O->X() && y >= O->Y() && x <= O->X() + O->W() && y <= O->Y() + O->H();
 		case KthuraKind::Obstacle: {
-			double
-				tw = (double)O->W() * (O->ScaleX() / 1000),
-				th = (double)O->H() * (O->ScaleY() / 1000);
+			float
+				tw = ((float)KthuraDraw::DrawDriver->ObjectWidth(O)) * O->TrueScaleX(),
+				th = ((float)KthuraDraw::DrawDriver->ObjectHeight(O)) * O->TrueScaleY();
+			std::cout << "Obstacle Check: " << tw << "x" << th << std::endl;
+			std::cout << "- True Scale " << O->TrueScaleX() << "x" << O->TrueScaleY()<<std::endl;
 			return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
 		}
 		case KthuraKind::Pic:
@@ -586,10 +596,12 @@ namespace KthuraEdit {
 			SDL_Rect Rechthoek{ ModifyObject->X(),ModifyObject->Y(),ModifyObject->W(),ModifyObject->H() };
 			switch (ModifyObject->EKind()) {
 			case KthuraKind::Obstacle: 
-				Rechthoek.x = floor(ModifyObject->X() - ((ModifyObject->W()*(ModifyObject->ScaleX()/1000)) / 2));
-				Rechthoek.y = ModifyObject->Y() - floor(ModifyObject->H()*(ModifyObject->ScaleY()/1000));
-				Rechthoek.w = floor((ModifyObject->W() * (ModifyObject->ScaleX() / 1000)) / 2);
-				Rechthoek.h = floor(ModifyObject->H() * (ModifyObject->ScaleY() / 1000));
+				Rechthoek.x = floor(ModifyObject->X() - ((KthuraDraw::DrawDriver->ObjectWidth(ModifyObject)*(ModifyObject->ScaleX()/1000)) / 2));
+				Rechthoek.y = ModifyObject->Y() - floor(KthuraDraw::DrawDriver->ObjectHeight(ModifyObject)*(ModifyObject->ScaleY()/1000));
+				//Rechthoek.w = floor((KthuraDraw::DrawDriver->ObjectWidth(ModifyObject) * (ModifyObject->ScaleX() / 1000) / 2));
+				Rechthoek.w = floor(((float)KthuraDraw::DrawDriver->ObjectWidth(ModifyObject)) * ModifyObject->TrueScaleX());
+				Rechthoek.h = floor(((float)KthuraDraw::DrawDriver->ObjectHeight(ModifyObject)) * ModifyObject->TrueScaleY());
+				//std::cout << "Object check -- Obstacle: (" << Rechthoek.x << "," << Rechthoek.y << ") " << Rechthoek.w << "x" << Rechthoek.h << std::endl;
 				break;
 			case KthuraKind::Pivot:
 			case KthuraKind::CustomItem:
