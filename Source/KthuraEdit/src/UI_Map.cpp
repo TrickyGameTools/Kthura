@@ -478,6 +478,38 @@ namespace KthuraEdit {
 		}
 	}
 
+	static void EnableModifyTab() {
+		auto s{ ModifyObject != nullptr };
+		auto TB = TabMap[CurrentTab];
+		TB.InsertX->Enabled = s && ModifyObject->EKind() == KthuraKind::TiledArea;
+		TB.InsertY->Enabled = s && ModifyObject->EKind() == KthuraKind::TiledArea;
+		//TB.ValAlpha->Enabled = s && ModifyObject->EKind() != KthuraKind::Zone;
+		TB.ValAnimSpeed->Enabled = s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Obstacle || ModifyObject->EKind() == KthuraKind::Pic);
+		TB.ValColR->Enabled == s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Obstacle || ModifyObject->EKind() == KthuraKind::Pic || ModifyObject->EKind() == KthuraKind::Rect);
+		TB.ValColG->Enabled = TB.ValColR->Enabled;
+		TB.ValColB->Enabled = TB.ValColR->Enabled;
+		TB.ValAlpha->Enabled = TB.ValColR->Enabled;
+		TB.ValDom->Enabled = s;
+		TB.ValImpassible->Enabled = s && (!ModifyObject->ForcePassible());
+		TB.ValForcePassible->Enabled = s && (!ModifyObject->Impassible());
+		TB.ValFrame->Enabled = TB.ValAnimSpeed->Enabled;
+		TB.ValH->Enabled = s && (ModifyObject->EKind() == KthuraKind::TiledArea || ModifyObject->EKind() == KthuraKind::Rect || ModifyObject->EKind() == KthuraKind::StretchedArea || ModifyObject->EKind() == KthuraKind::Zone);
+		TB.ValW->Enabled = TB.ValH->Enabled;
+		TB.ValLabels->Enabled = s;
+		TB.ValRotDeg->Enabled = s;
+		TB.ValRotRad->Enabled = false; // Radians can never be entered directly
+		TB.ValScaleX->Enabled = s && ModifyObject->EKind() == KthuraKind::Obstacle;
+		TB.ValScaleY->Enabled = s && ModifyObject->EKind() == KthuraKind::Obstacle;
+		TB.ValTex->Enabled = s;
+		TB.ValTag->Enabled = s;
+		TB.ValX->Enabled = s;
+		TB.ValY->Enabled = s;
+		if (s)
+			TB.ValKind->Caption = ModifyObject->Kind();
+		else
+			TB.ValKind->Caption = "None";
+	}
+
 	static void ClickModify() {
 		int
 			m = HiObjID(),
@@ -492,14 +524,17 @@ namespace KthuraEdit {
 			dx = x + MapGroup->DrawX(),
 			dy = y + MapGroup->DrawY(),
 			*/
+		bool hit{ false };
 		if (TQSE_MouseHit(1)) {
 			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {
 				if (InObject(o.get(), x, y)) {
 					ModifyObject = o;
+					hit = true;
 				}
 			}
+			if (!hit) ModifyObject = nullptr;
 		}
-
+		EnableModifyTab();
 	
 	}
 
