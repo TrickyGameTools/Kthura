@@ -58,6 +58,7 @@
 #include "../headers/UI_SeveralStrings.hpp"
 #include "../headers/UI_TagObject.hpp"
 #include "../headers/MapData.hpp"
+#include <TRandom.hpp>
 #pragma endregion
 
 #pragma region Pure evil (using namespaces)
@@ -141,7 +142,9 @@ namespace KthuraEdit {
 
 #pragma region A few forwarding headers
 	static void DrawMap();
+	static void ZoneFunction(KthuraObject* obj, int ix, int iy, int scrollx, int scrolly);
 #pragma endregion
+
 
 #pragma region Modify functions
 #define qtf(func,kthurafield) static void func(j19gadget* g, j19action k) { ModifyObject->kthurafield(ToInt(g->Text)); }
@@ -366,6 +369,7 @@ namespace KthuraEdit {
 #endif
 		MapGroup = CreateGroup(LayPanel->W(), LayPanel->DrawY(), TQSG_ScreenWidth() - (LayPanel->W() + DataPanel->W()), LayPanel->H(),MG);
 		RenewLayers();
+		KthuraDraw::DrawZone = ZoneFunction;
 	}
 
 	void RenewLayers() {
@@ -390,6 +394,17 @@ namespace KthuraEdit {
 	void ToggleShowGrid(j19gadget* g, j19action a) { ShowGrid = !ShowGrid; }
 	void ToggleUseGrid(june19::j19gadget* g, june19::j19action a) { GridMode = !GridMode; AdeptStatus(); }
 
+#pragma endregion
+
+#pragma region Specific Draw routines
+	void ZoneFunction(KthuraObject* obj, int ix, int iy, int scrollx, int scrolly) {
+		if (CurrentTabID == TabNum::Modify || CurrentTabID == TabNum::Zone) {
+			TQSG_ACol(obj->R(), obj->G(), obj->B(), 100);
+			TQSG_Rect(obj->X() + ix - scrollx, obj->Y() + iy - scrolly,obj->W(),obj->H());
+			TQSG_ACol(obj->R(), obj->G(), obj->B(), 255);
+			MapGroup->Font()->Draw(obj->Tag(), obj->X() + ix - scrollx, obj->Y() + iy - scrolly);
+		}
+	}
 #pragma endregion
 
 
@@ -459,6 +474,23 @@ namespace KthuraEdit {
 				O->ScaleY(1000);
 				O->Dominance(ToInt(GTab->ValDom->Text));
 				O->Labels(GTab->Lab);
+				if (Tab == "Zone") {
+					int i = 0;
+					std::string mTag;
+					do { mTag = "Zone #" + std::to_string(++i); } while (WorkMap.Layer(CurrentLayer)->HasTag(mTag));
+					O->Tag(mTag);
+					WorkMap.Remap();
+					int rr, rg, rb,rt;
+					do { 
+						rr = TRand(0, 255); 
+						rg = TRand(0, 255);
+						rb = TRand(0, 255);
+						rt = rr + rg + rb;
+					} while (rt < 500 && rt < 700);
+					O->R(rr);
+					O->G(rg);
+					O->B(rb);
+				}
 			}
 		}
 	}

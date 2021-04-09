@@ -159,6 +159,9 @@
     <ClCompile Include="src\UI_TagObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">

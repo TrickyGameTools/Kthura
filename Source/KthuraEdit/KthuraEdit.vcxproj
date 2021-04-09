@@ -179,6 +179,7 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
