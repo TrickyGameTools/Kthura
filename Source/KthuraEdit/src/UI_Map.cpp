@@ -535,7 +535,39 @@ namespace KthuraEdit {
 			if (!hit) ModifyObject = nullptr;
 		}
 		EnableModifyTab();
-	
+		if (ModifyObject) {
+			static int d = 0; d = (d + 1) % 360;
+			double r = d * ( M_PI/180);
+			int
+				cr = floor(255 * sin(r)),
+				cg = floor(255 * cos(r)),
+				cb = 0;
+			TQSG_ACol(cr, cg, cb, 255);
+			SDL_Rect Rechthoek{ ModifyObject->X(),ModifyObject->Y(),ModifyObject->W(),ModifyObject->Y() };
+			switch (ModifyObject->EKind()) {
+			case KthuraKind::Obstacle: 
+				Rechthoek.x = floor(ModifyObject->X() - ((ModifyObject->W()*(ModifyObject->ScaleX()/1000)) / 2));
+				Rechthoek.y = ModifyObject->Y() - floor(ModifyObject->H()*(ModifyObject->ScaleY()/1000));
+				Rechthoek.w = floor((ModifyObject->W() * (ModifyObject->ScaleX() / 1000)) / 2);
+				Rechthoek.h = floor(ModifyObject->H() * (ModifyObject->ScaleY() / 1000));
+				break;
+			case KthuraKind::Pivot:
+			case KthuraKind::CustomItem:
+				Rechthoek.x = ModifyObject->X() - 8;
+				Rechthoek.y = ModifyObject->Y() - 8;
+				Rechthoek.w = 16;
+				Rechthoek.h = 16;
+				break;
+			case KthuraKind::Pic: // No official support. Only there to make converted TeddyBear maps editable.
+				Rechthoek.w = KthuraDraw::DrawDriver->ObjectWidth(ModifyObject.get());
+				Rechthoek.h = KthuraDraw::DrawDriver->ObjectHeight(ModifyObject.get());
+				break;
+			// All area based kinds are already covered in the default definition, above.
+			}
+			Rechthoek.x += MapGroup->DrawX();
+			Rechthoek.y += MapGroup->DrawY();
+			TQSG_Rect(&Rechthoek,true);
+		}
 	}
 
 
