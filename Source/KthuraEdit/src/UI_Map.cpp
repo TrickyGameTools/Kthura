@@ -144,6 +144,7 @@ namespace KthuraEdit {
 
 #pragma region Modify functions
 #define qtf(func,kthurafield) static void func(j19gadget* g, j19action k) { ModifyObject->kthurafield(ToInt(g->Text)); }
+#define qcf(func,kthurafield) static void func(j19gadget* g, j19action k) { ModifyObject->kthurafield(g->checked); }
 	qtf(ModX, X);
 	qtf(ModY, Y);
 	qtf(ModInsX, insertx);
@@ -153,6 +154,15 @@ namespace KthuraEdit {
 	qtf(ModDom, Dominance);
 	qtf(ModScaleX, ScaleX);
 	qtf(ModScaleY, ScaleY);
+	qtf(ModR, R);
+	qtf(ModG, G);
+	qtf(ModB, B);
+	qtf(ModA, Alpha255);
+
+	qcf(ModImp, Impassible);
+	qcf(ModFrc, ForcePassible);
+	qcf(ModVis, Visible);
+
 #pragma endregion
 
 
@@ -290,6 +300,14 @@ namespace KthuraEdit {
 			TB->ValDom->CBAction = ModDom;
 			TB->ValScaleX->CBAction = ModScaleX;
 			TB->ValScaleY->CBAction = ModScaleY;
+			TB->ValAlpha->CBAction = ModA;
+			TB->ValColR->CBAction = ModR;
+			TB->ValColG->CBAction = ModG;
+			TB->ValColB->CBAction = ModB;
+
+			TB->ValImpassible->CBAction = ModImp;
+			TB->ValForcePassible->CBAction = ModFrc;
+			TB->ValVisible->CBAction = ModVis;
 		}
 	}
 
