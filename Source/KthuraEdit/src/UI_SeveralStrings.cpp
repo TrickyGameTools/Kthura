@@ -135,7 +135,8 @@ namespace KthuraEdit {
 			}
 		}
 		if (g->HData == "Modify") {
-			UI::Crash("Modify not yet implemented");
+			//UI::Crash("Modify not yet implemented");
+			ModifyObject->Labels(labelstr);
 		} else {
 			SetLabels(labelstr,g->HData);
 		}
@@ -192,10 +193,25 @@ namespace KthuraEdit {
 		auto PG = Pages["Labels"];
 		for (int i = 1; PG->TextFields.count(LG(i)); i++)
 			PG->TextFields[LG(i)]->Text = "";
+		Pages["Labels"]->Okay->HData = g->HData;
 		if (g->HData == "Modify") {
-			UI::Crash("Modify not yet implemented");
-		} else {
-			Pages["Labels"]->Okay->HData = g->HData;
+			//UI::Crash("Modify not yet implemented");
+			string labelstr{ "" };
+			auto labelsplit = Split(ModifyObject->Labels(), ',');
+			for (int i = 0; i < labelsplit.size(); i++) {
+				if (PG->TextFields.count(LG(i + 1))) {
+					PG->TextFields[LG(i + 1)]->Text = labelsplit[i];
+				} else {
+					auto V{ PG->TextFields[LG(i)]->Text };
+					if (V != "") {
+						if (labelstr != "") labelstr += ",";
+						labelstr += V;
+					}
+				}
+				//SetLabels(labelstr, g->HData);
+			}
+			TrueStringPage("Labels");
+		} else {			
 			string labelstr{ "" };
 			auto labelsplit = Split(GetTabLabels(g->HData), ',');
 			for (int i = 0; i < labelsplit.size(); i++) {
