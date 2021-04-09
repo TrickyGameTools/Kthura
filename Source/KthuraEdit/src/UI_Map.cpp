@@ -120,7 +120,7 @@ namespace KthuraEdit {
 	TabNum CurrentTabID{ TabNum::NONE };
 	std::string CurrentTab{ "" };
 	std::string Labels{ "" };
-	
+
 #pragma endregion
 
 #pragma region Variables needed
@@ -140,6 +140,16 @@ namespace KthuraEdit {
 
 #pragma region A few forwarding headers
 	static void DrawMap();
+#pragma endregion
+
+#pragma region Modify functions
+#define qtf(func,kthurafield) static void func(j19gadget* g, j19action k) { ModifyObject->kthurafield(ToInt(g->Text)); }
+	qtf(ModX, X);
+	qtf(ModY, Y);
+	qtf(ModInsX, insertx);
+	qtf(ModInsY, inserty);
+	qtf(ModW, W);
+	qtf(ModH, H);
 #pragma endregion
 
 
@@ -265,6 +275,14 @@ namespace KthuraEdit {
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
 		TB->ValLabels->CBAction = GoLabel;
 		TB->ValLabels->HData = caption;
+		if (caption == "Modify") {
+			TB->ValX->CBAction = ModX;
+			TB->ValY->CBAction = ModY;
+			TB->InsertX->CBAction = ModInsX;
+			TB->InsertY->CBAction = ModInsY;
+			TB->ValW->CBAction = ModW;
+			TB->ValH->CBAction = ModH;
+		}
 	}
 
 	static void LabelCalc(TTab *Tb, std::string l) { Tb->ValLabels->Caption = std::to_string(Split(l, ',').size()); }
@@ -479,6 +497,7 @@ namespace KthuraEdit {
 	}
 
 	static void EnableModifyTab() {
+		using namespace std;
 		auto s{ ModifyObject != nullptr };
 		auto TB = TabMap[CurrentTab];
 		TB.InsertX->Enabled = s && ModifyObject->EKind() == KthuraKind::TiledArea;
@@ -505,9 +524,27 @@ namespace KthuraEdit {
 		TB.ValX->Enabled = s;
 		TB.ValY->Enabled = s;
 		TB.ValVisible->Enabled = s;
-		if (s)
+		if (s) {
 			TB.ValKind->Caption = ModifyObject->Kind();
-		else
+
+			TB.InsertX->Text = to_string(ModifyObject->insertx());
+			TB.InsertY->Text = to_string(ModifyObject->inserty());
+			TB.ValAnimSpeed->Text = to_string(ModifyObject->AnimSpeed());
+			TB.ValColR->Text = to_string(ModifyObject->R());
+			TB.ValColG->Text = to_string(ModifyObject->G());
+			TB.ValColB->Text = to_string(ModifyObject->B());
+			TB.ValAlpha->Text = to_string(ModifyObject->Alpha255());
+			TB.ValDom->Text = to_string(ModifyObject->Dominance());
+			TB.ValFrame->Text = to_string(ModifyObject->AnimFrame());
+			TB.ValX->Text = to_string(ModifyObject->X());
+			TB.ValY->Text = to_string(ModifyObject->Y());
+			TB.ValW->Text = to_string(ModifyObject->W());
+			TB.ValH->Text = to_string(ModifyObject->H());
+			TB.ValRotDeg->Text = to_string(ModifyObject->RotationDegrees()); Deg2Rad(TB.ValRotDeg, j19action::Type);
+			TB.ValScaleX->Text = to_string(ModifyObject->ScaleX());
+			TB.ValScaleY->Text = to_string(ModifyObject->ScaleY());
+			LabelCalc("Modify", ModifyObject->Labels());
+		} else
 			TB.ValKind->Caption = "None";
 	}
 
@@ -528,7 +565,7 @@ namespace KthuraEdit {
 			dy = y + MapGroup->DrawY(),
 			*/
 		bool hit{ false };
-		if (TQSE_MouseHit(1)) {
+		if (TQSE_MouseHit(1) && TQSE_MouseX()>MapGroup->DrawX() && TQSE_MouseX()<MapGroup->DrawX()+MapGroup->W() && TQSE_MouseY()>MapGroup->DrawY() && TQSE_MouseY()<MapGroup->DrawY()+MapGroup->H()) {
 			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {
 				if (InObject(o.get(), x, y)) {
 					ModifyObject = o;
