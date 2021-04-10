@@ -29,6 +29,7 @@
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
+#include "../headers/UI_BlockMap.hpp"
 
 // C++
 #include <iostream>
@@ -172,6 +173,7 @@ namespace KthuraEdit {
 		ScrollMenu->AddItem("Left", ScrollLe, SDLK_LEFT);
 		ScrollMenu->AddItem("Up", ScrollUp, SDLK_UP);
 		ScrollMenu->AddItem("Right", ScrollRi, SDLK_RIGHT);
+		DebugMenu->AddItem("View BlockMap", ShowBlockMap, SDLK_b);
 		// Stages
 		UI_MapStart(); // Must be last
 	}

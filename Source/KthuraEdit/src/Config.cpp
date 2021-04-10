@@ -37,6 +37,8 @@
 
 // C++
 #include <iostream>
+#include <FileList.hpp>
+
 
 using namespace TrickyUnits;
 
@@ -101,7 +103,16 @@ namespace KthuraEdit {
 	jcr6::JT_Dir* Config::Textures() {
 		bool Merge{ Upper(ProjectConfig.Value("Paths." + Platform(),"TexMerge")) == "YES" };
 		if (Merge) {
-			UI::Crash("Merge mode not yet available"); // This will be there! I am too dependent on this one myself.
+			_TexJCR = jcr6::JT_Dir(); // Make sure it's all empty!
+			//UI::Crash("Merge mode not yet available"); // This will be there! I am too dependent on this one myself.
+			for (auto scdir : ProjectConfig.List("Paths." + Platform(), "TexMaps")) {
+				auto Lijstje = FileList(scdir,DirWant::Directories);
+				for (auto LD : Lijstje) {
+					cout << "Tex Merge Mode -> Adding: " << LD << endl;
+					auto jt = jcr6::Dir(scdir + "/" + LD);
+					_TexJCR.PatchDir(jt);
+				}
+			}
 		} else {
 			_TexJCR = jcr6::Dir(ProjectConfig.Value("Paths." + Platform(), "TexDir"));			
 		}

@@ -162,6 +162,9 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp">
       <Filter>Source Files\Units</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI_Blockmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -255,6 +258,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\VC\Kthura\headers\UI_TagObject.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_BlockMap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
