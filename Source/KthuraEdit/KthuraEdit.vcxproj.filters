@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Units">
+      <UniqueIdentifier>{49fab12f-dbc9-443d-a6c5-5d21a4446366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\JCR6">
+      <UniqueIdentifier>{94d0bf44-794b-4445-b6b5-da760307a006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TQSG">
+      <UniqueIdentifier>{7459a254-961b-48b8-be2f-9a0db809f8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TQSG">
+      <UniqueIdentifier>{09071924-3e86-4986-9c4e-b8b5dac1769e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\June19">
+      <UniqueIdentifier>{06d807f6-cd52-4ed7-814e-3e3acd411fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Kthura Libraries">
+      <UniqueIdentifier>{292784bd-39f6-4001-b0b4-07f17cb8d906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\JCR6">
+      <UniqueIdentifier>{9fd50fe0-a02a-429c-a023-f81b41915698}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Bye.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dijkstra.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dirry.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\FileList.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp">
+      <Filter>Header Files\TQSG</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_button.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_core.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_label.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_picture.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\June19\src\june19_listbox.cpp">
+      <Filter>Source Files\June19</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Core.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Draw.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MapData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_TexSelect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_realdir.cpp">
+      <Filter>Source Files\JCR6</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Save.cpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_SeveralStrings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_TagObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\Config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UserInterface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp">
+      <Filter>Source Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp">
+      <Filter>Header Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp">
+      <Filter>Header Files\TQSG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_button.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_core.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_label.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_picture.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_Map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\June19\src\june19_listbox.hpp">
+      <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Draw.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\MapData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_Layer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_TexSelect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_core.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_jxsda.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_zlib.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_realdir.hpp">
+      <Filter>Header Files\JCR6</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Save.hpp">
+      <Filter>Source Files\Kthura Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI_SeveralStrings.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\VC\Kthura\headers\UI_TagObject.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{abe45ced-6170-4681-8d2e-3c17da7aeb1b}</ProjectGuid>
+    <RootNamespace>KthuraEdit</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>E:\Projects\Applications\VisualStudio\VC\June19\src;E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\lib\x64;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\lib\x64;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\lib_release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>zlib.lib;SDL2.lib;SDL2main.lib;SDL2_Image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>powershell dll-copy.ps1</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Make sure all dll files are present</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_core.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_jxsda.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_realdir.cpp" />
+    <ClCompile Include="..\..\..\VC\JCR6\src\jcr6_zlib.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_button.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_checkbox.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_core.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_label.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_listbox.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_picture.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_radio.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_tabber.cpp" />
+    <ClCompile Include="..\..\..\VC\June19\src\june19_textfield.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Core.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Draw.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_Save.cpp" />
+    <ClCompile Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.cpp" />
+    <ClCompile Include="..\..\..\VC\TQSG\TQSE.cpp" />
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG.cpp" />
+    <ClCompile Include="..\..\..\VC\TQSG\TQSG_Console.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Bye.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dijkstra.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Dirry.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\FileList.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\GINIE.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\JXSDA.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\MD5.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\Platform.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MapData.cpp" />
+    <ClCompile Include="src\UI_Layer.cpp" />
+    <ClCompile Include="src\UI_Map.cpp" />
+    <ClCompile Include="src\UI_SeveralStrings.cpp" />
+    <ClCompile Include="src\UI_TagObject.cpp" />
+    <ClCompile Include="src\UI_TexSelect.cpp" />
+    <ClCompile Include="src\UserInterface.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_core.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_jxsda.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_realdir.hpp" />
+    <ClInclude Include="..\..\..\VC\JCR6\headers\jcr6_zlib.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_button.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_checkbox.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_core.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_label.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_listbox.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_picture.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_radio.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_tabber.hpp" />
+    <ClInclude Include="..\..\..\VC\June19\src\june19_textfield.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\headers\UI_TagObject.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Core.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Dijkstra.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Draw.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_Save.hpp" />
+    <ClInclude Include="..\..\..\VC\Kthura\src\Kthura_SDL_Driver.hpp" />
+    <ClInclude Include="..\..\..\VC\TQSG\TQSE.hpp" />
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp" />
+    <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />
+    <ClInclude Include="headers\Config.hpp" />
+    <ClInclude Include="headers\MapData.hpp" />
+    <ClInclude Include="headers\UI_Layer.hpp" />
+    <ClInclude Include="headers\UI_Map.hpp" />
+    <ClInclude Include="headers\UI_SeveralStrings.hpp" />
+    <ClInclude Include="headers\UI_TexSelect.hpp" />
+    <ClInclude Include="headers\UserInterface.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

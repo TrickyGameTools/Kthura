@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 
+// (c) Jeroen P. Broks, 2019, 2021
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,35 +21,28 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 19.04.11
+// Version: 21.04.07
 // EndLic
+
+#define GINIE_Project
 
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
 using System.Text.RegularExpressions;
 using TrickyUnits;
 
-namespace Kthura
-{
+namespace Kthura {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        bool NieuwSysteem = false;
 
         static public string MyExe => System.Reflection.Assembly.GetEntryAssembly().Location;
 
@@ -57,6 +50,7 @@ namespace Kthura
         public MainWindow()
         {
             InitializeComponent();
+            CShell.Init(this,C_Command,C_Status,C_Output);
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             BDate.Content = $"Build date: {BuildDate.sBuildDate}";
             if (MainConfig.WorkSpace == "") {
@@ -99,6 +93,45 @@ namespace Kthura
             var prjtex = CrPrjTextureFolders.Text.Split(';');
             if (prjtexmerge) prjtex = qstr.RemPrefix(CrPrjTextureFolders.Text, "@MERGE@").Split(';');
             if (CrPrjTextureFolders.Text == "*InProject*") { prjtex = new string[] { $"{prjdir}/Textures/" }; }
+#if GINIE_Project
+            var Paths = $"Paths.{MainConfig.Platform}";
+            GINIE OutPrj = GINIE.FromSource($"[meta]\nCreated={DateTime.Now}\n");
+            prjfile = $"{prjdir}/{prjname}.Project.INI";
+            if (File.Exists(prjdir)) {
+                Afgekeurd($"Hey!\nThere is a file named {prjdir}!\n\nRemove it first please (files do not belong in the workspace root)!");
+                return;
+            }
+            if (Directory.Exists(prjdir)) {
+                Afgekeurd("There already appears to be a project directory with that name.\nEither remove or rename that project, or pick a different name for this project!");
+                return;
+            }
+            Directory.CreateDirectory(prjdir);
+            OutPrj.AutoSaveSource = prjfile;
+            try {
+                OutPrj["Meta", "Project"] = prjname;
+                OutPrj.List("Map", "Special");
+                if (CrPrjMapFolder.Text == "*InProject*") {
+                    var td = $"{prjdir}/Maps";
+                    Directory.CreateDirectory(td);
+                    OutPrj[Paths, "Maps"] = td;
+                } else
+                    OutPrj[Paths, "Maps"] = CrPrjMapFolder.Text.Replace("\\", "/");
+                OutPrj.List("Map", "GeneralData");
+                foreach (string m in prjmeta) OutPrj.List("Map", "GeneralData").Add(m.Trim());
+                if (prjtexmerge) 
+                    OutPrj[Paths, "TexMerge"] = "YES";
+                else 
+                    OutPrj[Paths, "TexMerge"] = "NO";
+                if (CrPrjTextureFolders.Text == "*InProject*") {
+                    Directory.CreateDirectory($"{prjdir}/Textures/");
+                    OutPrj.List(Paths, "Textures").Add($"{prjdir}/Textures");
+                } else {
+                    foreach (string f in prjtex) OutPrj.List(Paths,"Textures").Add(f.Trim());
+                }
+            } catch (Exception E) {
+                Afgekeurd($"Creating a new project failed!\n\n{E.Message}");
+            }
+#else
             TGINI Project = new TGINI();
             Project.D("Project", prjname);
             Project.D("Maps", CrPrjMapFolder.Text);
@@ -128,7 +161,7 @@ namespace Kthura
             } catch (Exception E) {
                 Afgekeurd($"Creating a new project failed!\n\n{E.Message}");
             }
-
+#endif
         }
 
         private void LstProjects_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -145,14 +178,15 @@ namespace Kthura
 
         private void StartTheEditor_Click(object sender, RoutedEventArgs e) {            
             if (!StartTheEditor.IsEnabled) return;
-            var parameters = $"\"{LstProjects.SelectedItem.ToString()}\" ";
+            var parameters = $"-FORCEWINDOWED YES \"{LstProjects.SelectedItem.ToString()}\" ";
             if (LstMaps.SelectedItem.ToString() == "** New Map **")
                 parameters += $"\"{NewMap.Text}\"";
             else
                 parameters += $"\"{LstMaps.SelectedItem.ToString()}\"";
             try {
                 var editor = $"{qstr.ExtractDir(MyExe)}/KthuraEdit.exe";
-                Process.Start(editor, parameters);
+                //Process.Start(editor, parameters); // This will need to be done differently!
+                CShell.Start(editor, parameters);
             } catch (Exception err) {
                 Debug.WriteLine($"Launching the editor failed!\n{err.Message}");
                 MessageBox.Show($"Launching the editor failed!\n{err.Message}");
@@ -176,7 +210,7 @@ namespace Kthura
             canstart = canstart && LstProjects.SelectedItem != null;
             canstart = canstart && LstMaps.SelectedItem != null;
             canstart = canstart && (LstMaps.SelectedItem.ToString() != "** New Map **" || NewMap.Text != "");
-            StartTheEditor.IsEnabled = canstart;
+            StartTheEditor.IsEnabled = canstart && NieuwSysteem;
             StartTheEditor.Visibility = b2v[canstart];
         }
         #endregion
@@ -194,11 +228,22 @@ namespace Kthura
             if (LstProjects.SelectedItem == null) return; // Crash prevention
             try {
                 var prj = LstProjects.SelectedItem.ToString();
-                Debug.WriteLine($"Scanning projecT: {prj}");
+                Debug.WriteLine($"Scanning project: {prj}");
+                var projectfile = $"{MainConfig.WorkSpace}/{prj}/{prj}.Project.ini";
                 var prjfile = $"{MainConfig.WorkSpace}/{prj}/{prj}.Project.GINI";
-                TGINI Project = GINI.ReadFromFile(prjfile);
-                if (Project==null) { MessageBox.Show($"Reading {prjfile} failed!", "Project scanning errorr", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-                var maps = FileList.GetDir(Project.C("Maps"));
+                string[] maps = null;
+                if (File.Exists(projectfile)) {
+                    GINIE PRJ = GINIE.FromFile(projectfile);
+                    maps = FileList.GetDir(PRJ[$"Paths.{MainConfig.Platform}", "Maps"]);
+                    StartTheEditor.IsEnabled = true;
+                    NieuwSysteem = true;
+                } else if (File.Exists(prjfile)) {
+                    TGINI Project = GINI.ReadFromFile(prjfile);
+                    if (Project == null) { MessageBox.Show($"Reading {prjfile} failed!", "Project scanning error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                    maps = FileList.GetDir(Project.C("Maps"));
+                    StartTheEditor.IsEnabled = false;
+                    NieuwSysteem = false;
+                }
                 LstMaps.Items.Clear();
                 LstMaps.Items.Add("** New Map **");
                 foreach (string m in maps) LstMaps.Items.Add(m);
@@ -210,5 +255,3 @@ namespace Kthura
         #endregion
     }
 }
-
-

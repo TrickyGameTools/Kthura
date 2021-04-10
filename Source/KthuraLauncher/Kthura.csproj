@@ -84,8 +84,14 @@
     <Compile Include="..\..\..\TrickyUnits\FileList.cs">
       <Link>Imported\Units\FileList.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\TrickyUnits\FormConfirm.cs">
+      <Link>Imported\Units\FormConfirm.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\TrickyUnits\GINI Is Not Ini.cs">
       <Link>Imported\Units\GINI Is Not Ini.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\TrickyUnits\GINIE.cs">
+      <Link>Imported\Units\GINIE.cs</Link>
     </Compile>
     <Compile Include="..\..\..\TrickyUnits\mkl.cs">
       <Link>Imported\Units\mkl.cs</Link>
@@ -101,6 +107,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="builddate.cs" />
+    <Compile Include="CShell.cs" />
     <Compile Include="MainConfig.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
