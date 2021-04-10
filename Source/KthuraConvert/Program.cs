@@ -33,19 +33,22 @@ namespace KthuraConvert {
                     Print($"  = Entry {e.Entry} was packed with lzma, which is not (yet) supported in the new Kthura. So a repack is in order");
                 }
             }
-            if (modified) {
+            //if (modified) {
+            if (true) { 
                 Print("= Repacking in zlib");
-                var ed = new SortedDictionary<string, string>();
+                var ed = new SortedDictionary<string, byte[]>();
                 foreach (var e in jd.Entries.Values) {
                     Print($"  = Reading: {e.Entry}");
-                    ed[e.Entry] = jd.LoadString(e.Entry);
+                    ed[e.Entry] = jd.JCR_B(e.Entry);
                 }
-                ed["Options"] = $"[IGNORECASE]\nLABELS = NO\nTAGS = NO\n\n[Save]\nStorage=zlib";
+                var st= $"[IGNORECASE]\nLABELS=NO\nTAGS=NO\n\n[Save]\nStorage=zlib\n";
+                ed["Options"] = new byte[st.Length];
+                for (int i = 0; i < st.Length; ++i) ed["Options"][i] = (byte)st[i];
                 Print("= Saving new map");
                 var jc = new TJCRCreate(mapfile,"zlib");
                 foreach(var e in ed) {
                     Print($"  = Writing: {e.Key}");
-                    jc.AddString(e.Value, e.Key, "zlib");
+                    jc.AddBytes(e.Value, e.Key, "zlib");
                 }
                 Print("= Finalizing");
                 jc.Close();
