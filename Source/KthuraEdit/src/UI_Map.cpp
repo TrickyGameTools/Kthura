@@ -667,7 +667,7 @@ namespace KthuraEdit {
 			case KthuraKind::Pic: // No official support. Only there to make converted TeddyBear maps editable.
 				Rechthoek.w = KthuraDraw::DrawDriver->ObjectWidth(ModifyObject.get());
 				Rechthoek.h = KthuraDraw::DrawDriver->ObjectHeight(ModifyObject.get());
-				break;
+				break;			
 			// All area based kinds are already covered in the default definition, above.
 			}
 			Rechthoek.x += MapGroup->DrawX();

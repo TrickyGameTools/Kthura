@@ -23,7 +23,8 @@
 // 
 // Version: 21.04.10
 // EndLic
-???// This is only a quick tool to make sure all maps of my ongoing projects are ready for the new editor!
+
+// This is only a quick tool to make sure all maps of my ongoing projects are ready for the new editor!
 
 using System;
 using System.Collections.Generic;
@@ -58,8 +59,8 @@ namespace KthuraConvert {
                     Print($"  = Entry {e.Entry} was packed with lzma, which is not (yet) supported in the new Kthura. So a repack is in order");
                 }
             }
-            //if (modified) {
-            if (true) { 
+            if (modified) {
+            //if (true) { 
                 Print("= Repacking in zlib");
                 var ed = new SortedDictionary<string, byte[]>();
                 foreach (var e in jd.Entries.Values) {

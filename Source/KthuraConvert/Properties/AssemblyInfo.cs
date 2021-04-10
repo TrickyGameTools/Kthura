@@ -23,7 +23,7 @@
 // 
 // Version: 21.04.10
 // EndLic
-???using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KthuraConvert")]
-[assembly: AssemblyCopyright("Copyright ??  2021")]
+[assembly: AssemblyCopyright("Copyright (c)  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
