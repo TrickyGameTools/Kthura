@@ -189,6 +189,7 @@
     <ClCompile Include="src\UI_Map.cpp" />
     <ClCompile Include="src\UI_SeveralStrings.cpp" />
     <ClCompile Include="src\UI_TagObject.cpp" />
+    <ClCompile Include="src\UI_TagOverview.cpp" />
     <ClCompile Include="src\UI_TexSelect.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
@@ -223,6 +224,7 @@
     <ClInclude Include="headers\UI_Layer.hpp" />
     <ClInclude Include="headers\UI_Map.hpp" />
     <ClInclude Include="headers\UI_SeveralStrings.hpp" />
+    <ClInclude Include="headers\UI_TagOverview.hpp" />
     <ClInclude Include="headers\UI_TexSelect.hpp" />
     <ClInclude Include="headers\UserInterface.hpp" />
   </ItemGroup>

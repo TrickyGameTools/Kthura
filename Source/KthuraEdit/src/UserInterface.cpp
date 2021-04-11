@@ -30,6 +30,8 @@
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
 #include "../headers/UI_BlockMap.hpp"
+#include "../headers/UI_TagObject.hpp"
+#include "../headers/UI_TagOverview.hpp"
 
 // C++
 #include <iostream>
@@ -174,6 +176,7 @@ namespace KthuraEdit {
 		ScrollMenu->AddItem("Up", ScrollUp, SDLK_UP);
 		ScrollMenu->AddItem("Right", ScrollRi, SDLK_RIGHT);
 		DebugMenu->AddItem("View BlockMap", ShowBlockMap, SDLK_b);
+		DebugMenu->AddItem("Tag Overview",ShowTags,SDLK_z);
 		// Stages
 		UI_MapStart(); // Must be last
 	}
