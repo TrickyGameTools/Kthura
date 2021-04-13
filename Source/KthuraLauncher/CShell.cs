@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.10
+// Version: 21.04.13
 // EndLic
 using System;
 using System.Diagnostics;
@@ -63,7 +63,7 @@ namespace Kthura {
                     Stat.Text = $"Process ended with exit code {Pr.ExitCode}";
                 Pr.Close();
                 Running = false;
-            } else {
+            } else {                
                 var p = Pr.StandardOutput.ReadLine();                
                 Outp.Text += $"{p}\n";
             }
