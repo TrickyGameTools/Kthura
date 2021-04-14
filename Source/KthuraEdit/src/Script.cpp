@@ -1,14 +1,17 @@
 // Lua
 #include "../headers/QuickLuaInclude.hpp"
-#include "../headers/Script.hpp"
 
 // Kthura
+#include "../headers/QuickLuaInclude.hpp"
+#include "../headers/Script.hpp"
+#include "../headers/UserInterface.hpp"
 #include "../headers/Config.hpp"
 
 // Stuff
 #include <jcr6_core.hpp>
 
 using namespace jcr6;
+using namespace std;
 
 static lua_State* LState{ nullptr };
 static JT_Dir LDir;
@@ -16,7 +19,58 @@ static JT_Dir LDir;
 
 namespace KthuraEdit {
 
+	static void JCRScriptPatch(string f){
+		cout << "Adding script library directory: " << f << endl;
+		auto jd = Dir(f);
+		LDir.PatchDir(jd);
+	}
+
+	static void JCRScriptPatchList(vector<string> *Lst){
+		for (auto &d : *Lst) JCRScriptPatch(d);
+	}
+
+	static int Script_Paniek(lua_State* L) {
+		std::string Trace = "";
+		// /* DEBUG
+		cout << lua_gettop(L) << "\n";
+		for (int i = 1; i <= lua_gettop(L); i++) {
+			cout << "Arg #" << i << "\t";
+			switch (lua_type(L, i)) {
+			case LUA_TSTRING:
+				cout << "String \"" << luaL_checkstring(L, i);
+				Trace += luaL_checkstring(L, i); Trace += "\n";
+				break;
+			case LUA_TNUMBER:
+				cout << "Number " << luaL_checknumber(L, i);
+			case LUA_TFUNCTION:
+				cout << "Function";
+			default:
+				cout << "Unknown: " << lua_type(L, i);
+				break;
+			}
+			cout << "\n";
+		}
+		// */
+		// Normally this should not happen, but just in case!
+		// The "Lua Panic!" prefix is to make sure I know this happened.
+		//auto err = luaL_checkstring(L, 1);
+		std::string Paniek = "Lua Panic!\n\n";
+		//Paniek += err;
+		UI::Crash(Paniek+"\n\nLua Dump:\n" + Trace);
+		return 0;
+	}
+
 	void InitScript() {
+		JCRScriptPatchList(&Config::ScriptLibPath());
+		cout << "Initiating scripting engine\n";
+		LState = luaL_newstate();
+		luaL_openlibs(LState);
+		lua_atpanic (LState, Script_Paniek);
+
+	}
+
+	void DoneScript() {
+		lua_close(LState);
 	}
 
 }

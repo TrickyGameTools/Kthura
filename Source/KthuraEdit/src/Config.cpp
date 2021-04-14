@@ -28,6 +28,7 @@
 #include "../headers/Config.hpp"
 #include "../headers/UserInterface.hpp"
 #include "../headers/MapData.hpp"
+#include "../headers/Script.hpp"
 
 // Tricky's units
 #include <Dirry.hpp>
@@ -127,6 +128,10 @@ namespace KthuraEdit {
 		return ProjectConfig.List("Map", "GeneralData");
 	}
 
+	std::vector<std::string> Config::ScriptLibPath() {
+		return GlobalConfig.List(Platform(), "ScriptLibraries");
+	}
+
 	Success Config::GetJCR() {
 		using namespace jcr6;
 		std::cout << "Analysing: " << MyAssets() << std::endl;
@@ -187,6 +192,8 @@ namespace KthuraEdit {
 		cout << "Loading global config: " << gcfgfile << endl;
 		if (!FileExists(gcfgfile)) UI::Crash("Global Config not found!");
 		GlobalConfig.FromFile(gcfgfile);
+		cout << "Analysing library config\n";
+		InitScript();
 		cout << "Loading Project: " << ProjectFile()<<endl;
 		if (!FileExists(ProjectFile())) UI::Crash("Project file not found!");
 		ProjectConfig.FromFile(ProjectFile());
