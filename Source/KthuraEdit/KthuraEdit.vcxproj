@@ -81,8 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Projects\Applications\VisualStudio\VC\June19\src;E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\lib\x64;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\lib\x64;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\lib_release;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Projects\Applications\VisualStudio\VC\3rdparty\Lua\lua-5.4.0\raw\src;E:\Projects\Applications\VisualStudio\VC\June19\src;E:\Projects\Applications\VisualStudio\VC\TQSG;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\include;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\include;E:\Projects\Applications\VisualStudio\VC\JCR6\headers;E:\Projects\Applications\VisualStudio\VC\TrickyUnits\Headers;E:\Projects\Applications\VisualStudio\VC\Kthura\src;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Projects\Applications\VisualStudio\VC\3rdparty\Lua\lua-5.4.0\Lua Library\x64\Release;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2-2.0.12\lib\x64;E:\Projects\Applications\VisualStudio\VC\3rdparty\SDL2_image-2.0.5\lib\x64;E:\Projects\Applications\VisualStudio\VC\Apollo Game Engine\packages\zlib-msvc14-x64.1.2.11.7795\build\native\lib_release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,7 +138,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>zlib.lib;SDL2.lib;SDL2main.lib;SDL2_Image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zlib.lib;SDL2.lib;SDL2main.lib;SDL2_Image.lib;Lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>powershell dll-copy.ps1</Command>
@@ -184,6 +184,7 @@
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MapData.cpp" />
+    <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\UI_Blockmap.cpp" />
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
@@ -220,6 +221,8 @@
     <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />
     <ClInclude Include="headers\Config.hpp" />
     <ClInclude Include="headers\MapData.hpp" />
+    <ClInclude Include="headers\QuickLuaInclude.hpp" />
+    <ClInclude Include="headers\Script.hpp" />
     <ClInclude Include="headers\UI_BlockMap.hpp" />
     <ClInclude Include="headers\UI_Layer.hpp" />
     <ClInclude Include="headers\UI_Map.hpp" />

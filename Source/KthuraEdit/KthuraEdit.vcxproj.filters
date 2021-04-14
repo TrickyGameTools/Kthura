@@ -168,6 +168,9 @@
     <ClCompile Include="src\UI_TagOverview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -267,6 +270,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\UI_TagOverview.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Script.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\QuickLuaInclude.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
