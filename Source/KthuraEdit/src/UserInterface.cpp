@@ -26,6 +26,7 @@
 
 // self
 #include "../headers/UserInterface.hpp"
+#include "../headers/Script.hpp"
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
@@ -203,5 +204,6 @@ namespace KthuraEdit {
 		_initialized = false;
 		std::cout << "Closing User Interface\n";
 		MenuSave(nullptr, j19action::Unknown);
+		DoneScript();
 	}
 }
