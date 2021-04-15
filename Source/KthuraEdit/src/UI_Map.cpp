@@ -545,8 +545,8 @@ namespace KthuraEdit {
 			float
 				tw = ((float)KthuraDraw::DrawDriver->ObjectWidth(O)) * O->TrueScaleX(),
 				th = ((float)KthuraDraw::DrawDriver->ObjectHeight(O)) * O->TrueScaleY();
-			std::cout << "Obstacle Check: " << tw << "x" << th << std::endl;
-			std::cout << "- True Scale " << O->TrueScaleX() << "x" << O->TrueScaleY()<<std::endl;
+			//std::cout << "Obstacle Check: " << tw << "x" << th << std::endl;
+			//std::cout << "- True Scale " << O->TrueScaleX() << "x" << O->TrueScaleY()<<std::endl;
 			return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
 		}
 		case KthuraKind::Pic:
