@@ -900,6 +900,10 @@ namespace NSKthura {
                                 assert(obj != null, "ALPHA: No object");
                                 obj.Alpha1000 = (int)(qstr.ToDouble(value) * 1000);
                                 break;
+                            case "ALPHA255":
+                                assert(obj != null, "ALPHA: No object");
+                                obj.Alpha255 = qstr.ToInt(value);
+                                break;
                             case "VISIBLE":
                                 assert(obj != null, "VISIBLE: No object");
                                 obj.Visible = qstr.ToInt(value) == 1;
