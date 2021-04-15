@@ -1,0 +1,28 @@
+QuickMeta Kth
+
+	index
+		switch key
+			case "ComeOnBrian"
+				// Merely a test (and Easter Egg if you want!
+				return "Always look on the bright side of life!"
+			default
+				return Lua["KTH_"..(key:upper)())]
+		end
+	end
+	
+	newindex
+		switch key
+			case "Yoda"
+				Print("Fear leads to anger!\nAnger leads to hate!\nAnd hate leads to suffering!")
+			default
+				Print("ERROR! Cannot assing any value to "..key.."! (Either read-only or non-existent)")
+		end
+	end
+	
+end
+
+Init
+	// Test!
+	Lua.Kth=Kth // This will work out for people who prefer "pure" Lua.
+	Print("= Basis script loaded succesfully")
+End
