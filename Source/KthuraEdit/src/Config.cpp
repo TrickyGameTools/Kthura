@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.13
+// Version: 21.04.17
 // EndLic
 
 // Myself
@@ -96,6 +96,9 @@ namespace KthuraEdit {
 	std::string Config::ProjectDir() {
 		return ExtractDir(ProjectFile());
 	}
+
+	std::string Config::NeilScript() { return TReplace(ProjectFile(), ".Project.ini", ".Script.neil"); }
+	std::string Config::LuaScript() { return TReplace(ProjectFile(), ".Project.ini", ".Script.lua"); }
 
 	std::string Config::FullMapFile() {
 		return ProjectConfig.Value("Paths." + Platform(), "Maps") + "/" + MapFile;

@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.10
+// Version: 21.04.17
 // EndLic
 #pragma once
 
@@ -66,6 +66,8 @@ namespace KthuraEdit {
 		static std::string WorkSpace();
 		static std::string ProjectFile();
 		static std::string ProjectDir();
+		static std::string NeilScript();
+		static std::string LuaScript();
 		static std::string FullMapFile();
 		static jcr6::JT_Dir* Textures();
 		static jcr6::JT_Dir* JCR();

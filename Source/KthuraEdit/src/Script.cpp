@@ -1,3 +1,28 @@
+// Lic:
+// Kthura Map Editor
+// Scripting Engine
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2021
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 21.04.17
+// EndLic
 // Lua
 #include "../headers/QuickLuaInclude.hpp"
 
@@ -9,17 +34,23 @@
 
 // Stuff
 #include <jcr6_core.hpp>
+#include <QuickString.hpp>
+#include <QuickStream.hpp>
 
 using namespace jcr6;
 using namespace std;
+using namespace TrickyUnits;
 
 
 
 namespace KthuraEdit {
 
 #pragma region Local variables
-static lua_State* LState{ nullptr };
-static JT_Dir LDir;
+	enum class ScriptKind { Unknown, Auto, Neil, Lua };
+	static ScriptKind LKind{ ScriptKind::Unknown };
+	static lua_State* LState{ nullptr };
+	static string LFile{ "<???>" };
+	static JT_Dir LDir;
 #pragma endregion
 
 
@@ -66,6 +97,34 @@ static JT_Dir LDir;
 	}
 #pragma endregion
 
+#pragma region Execution
+	static void ExeString(std::string source, std::string Chunk="",ScriptKind Kind=ScriptKind::Auto) {
+		std::string work = "--[[Kthura Script Load String]]\n";
+		if (Kind == ScriptKind::Auto) Kind = LKind;
+		if (Chunk == "") Chunk = LFile;
+		switch (Kind) {
+		case ScriptKind::Lua:
+			work += "local success,workfunc = xpcall(load,Panic,\"" + bsdec(source) + "\",\"" + Chunk + "\")\n";
+			break;
+		case ScriptKind::Neil:
+			work += "local success,workfunc = xpcall(Neil.Load,Panic,\"" + bsdec(source) + "\",\"" + Chunk + "\")\n";
+			break;
+		default:
+			UI::Crash("State Type has not been recognized: " + to_string((int)LKind));
+		}
+		work += "\n\nlocal e\n";
+		work += "success,e=xpcall(workfunc,Panic)\n";
+		// cout << "<LOADED SCRIPT>\n" << work << "</LOADED SCRIPT>\n";
+		luaL_loadstring(LState, work.c_str());
+		lua_call(LState, 0, 0);
+	}
+#pragma endregion
+
+#pragma region APIs (KSA = Kthura Script API)
+	static int KSA_Test(lua_State* L) { cout << "Testing! Testing! One! Two! Three!\n"; return 0; }
+	static int KSA_Crash(lua_State* L) { UI::Crash(luaL_checkstring(L, 1)); }
+#pragma endregion
+
 #pragma region Init & Done
 	void InitScript() {
 		JCRScriptPatchList(&Config::ScriptLibPath());
@@ -80,10 +139,45 @@ static JT_Dir LDir;
 		luaL_openlibs(LState);
 		cout << "= Setting up panic\n";
 		lua_atpanic (LState, Script_Paniek);
+		cout << "= Setting up APIs\n";
+		lua_register(LState, "KTH_TEST", KSA_Test);
+		lua_register(LState, "KTH_CRASH", KSA_Crash);
 		cout << "= Loading Neil\n";
-		auto Neil{ Config::JCR()->String("Script/Neil.lua") };
+		auto Neil{ "--[[NEIL]]\t\tlocal function LoadNeil()\t\t"+Config::JCR()->String("Script/Neil.lua")+"\n\nend\nNeil = LoadNeil()" };
 		luaL_loadstring(LState, Neil.c_str());
 		lua_call(LState, 0, 0);
+		cout << "= Compiling Panic Escape\n";
+		auto PanicScript{
+			"--[[ Panic ]]\n"
+			"function Panic(errormessage)\n"
+			"\tKth.Crash(errormessage..\"\\n\\n\"..debug.traceback())\n"
+			"end\n"
+			//"print(type(Panic)..' Panic')\n" // debug
+		};
+		//cout << "<Panic>\n" << PanicScript << "\n</Panic>\n";
+		luaL_loadstring(LState, PanicScript);
+		lua_call(LState, 0, 0);
+		cout << "= Compiling base script\n";
+		auto BaseScript{ Config::JCR()->String("Script/BasisScript.Neil") };
+		ExeString(BaseScript, "Base Script", ScriptKind::Neil);
+		// cout << FileExists(Config::NeilScript()) << ". " << Config::NeilScript() << endl;
+		if (FileExists(Config::NeilScript())) {
+			LFile = Config::NeilScript();
+			LKind = ScriptKind::Neil;
+			cout << "= Loading Neil Script: " << LFile << endl;
+			auto scr{ LoadString(Config::NeilScript()) };
+			cout << "= Compiling" << endl;
+			ExeString(scr);
+		} else if (FileExists(Config::LuaScript())) {
+			LFile = Config::NeilScript();
+			LKind = ScriptKind::Lua;
+			cout << "= Loading Lua Script: " << LFile << endl;
+			auto scr{ LoadString(Config::NeilScript()) };
+			cout << "= Compiling" << endl;
+			ExeString(scr);
+		} else {
+			ExeString("Init\nCout(\"= No script available!\\n\")\nEnd", "CORE SCRIPT", ScriptKind::Neil); // Seems a bit awkward, but this way I could at least if Neil scripting works at all.
+		}
 
 	}
 
