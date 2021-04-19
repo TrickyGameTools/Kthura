@@ -80,6 +80,7 @@ namespace KthuraEdit {
 		}
 		ListKind->ClearItems();
 		ListTag->ClearItems();
+		TagMap.clear();
 		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
 			if (o->Tag() != "")
 				TagMap[o->Kind()].push_back(o->Tag());

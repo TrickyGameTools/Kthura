@@ -27,6 +27,7 @@
 
 #pragma region Macros
 #define UI_AltTab
+#define UI_SimpleMarker
 
 #define DuoDataLabel(cap,t1,t2)	{\
 	auto temp = DataLabel(cap, CreateGroup(0, 0, 0, 0, Tab));\
@@ -330,6 +331,49 @@ namespace KthuraEdit {
 	}
 	typedef struct TBI { std::string s; TabNum i; } TBI;
 
+	void DrawMarker(int x, int y, unsigned int size) {
+		using namespace std;
+#ifdef UI_SimpleMarker
+		TQSG_Line(x - size, y, x + size, y);
+		TQSG_Line(x, y - size, x, y + size);
+		TQSG_Rect(x - size, y - size, (size * 2) + 1, (size * 2) + 1, true);
+#else
+		static map<unsigned int, unsigned int> sizmap;
+		static map<unsigned int, TQSG_AutoImage> mrkmap;
+		unsigned int sz{ 200 };
+		if ((!sizmap.count(size)) && size<200) {
+			for (int i = 4; i < 200; i++) {
+				if (i >= size && Config::JCR()->EntryExists("Markers/" + to_string(i)+".png")) {
+					sz = i;
+					break;
+				}
+			}
+		}
+		if (!mrkmap.count(sz)) {
+			mrkmap[sz] = TQSG_LoadAutoImage("Markers/" + to_string(sz) + ".png"); 
+			mrkmap[sz]->HotCenter(); 
+			cout << "Loaded marker for size: " << sz << ".\n";
+		}
+		SetScale(1, 1);
+		mrkmap[sz]->Draw(x, y);
+		//TQSG_Line(x, 0, x, TQSG_ScreenHeight()); TQSG_Line(0, y, TQSG_ScreenWidth(), y); // debug
+		//cout << "Marker [" << sz << "] (" << x << "," << y << ")\n";
+#endif
+	}
+
+	void DrawExit(KthuraObject* o, int ix, int iy, int scrollx, int scrolly) {
+		auto
+			dx{ (o->X() + ix) - scrollx },
+			dy{ (o->Y() + iy) - scrolly },
+			mx{ TQSE_MouseX() },
+			my{ TQSE_MouseY() };
+		TQSG_ACol(180, 255, 0, 255);
+		DrawMarker(dx, dy);
+		if (mx > dx - 8 && mx < dx + 8 && my > dy - 8 && my < dy + 8)
+			UI_MapEdit->MainGadget->Font()->Draw(o->Tag(), dx, dy + 9, 2, 0);
+		//std::cout << "DrawExit." << o->Tag() << ": (" << o->X() + ix - scrollx << "," << o->Y() + iy - scrolly << ")" << std::endl;
+	}
+
 	void UI_MapStart() {
 		// Start
 		UI::AddStage("Map");
@@ -370,6 +414,7 @@ namespace KthuraEdit {
 		MapGroup = CreateGroup(LayPanel->W(), LayPanel->DrawY(), TQSG_ScreenWidth() - (LayPanel->W() + DataPanel->W()), LayPanel->H(),MG);
 		RenewLayers();
 		KthuraDraw::DrawZone = ZoneFunction;
+		KthuraDraw::DrawExit = DrawExit;
 	}
 
 	void RenewLayers() {

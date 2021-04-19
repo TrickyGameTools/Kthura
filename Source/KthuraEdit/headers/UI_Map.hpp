@@ -42,6 +42,8 @@ namespace KthuraEdit {
 	void ScrollLe(june19::j19gadget* g, june19::j19action a);
 	void ScrollRi(june19::j19gadget* g, june19::j19action a);
 
+	void DrawMarker(int x, int y, unsigned int size=8);
+
 	void SetLabels(std::string l, std::string tab="");
 	std::string GetTabLabels(std::string t);
 

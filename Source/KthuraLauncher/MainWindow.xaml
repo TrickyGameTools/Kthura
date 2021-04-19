@@ -226,7 +226,7 @@
                     <Label Content="Status" Margin="0,28,1499,775" Foreground="#FF00FFff" ></Label>
                     <TextBox x:Name="C_Status" IsReadOnly="True" Margin="77,28,0,775" Background="#FF001219" Foreground="#FF00B4FF" Text="Ready" FontFamily="Courier New" FontSize="20"/>
                     <Label Content="Output" Margin="0,56,1499,747" Foreground="#FFFFFF00"></Label>
-                    <TextBox x:Name="C_Output" IsReadOnly="True" Margin="77,56,0,10" Background="#FF191200" Foreground="#FFFFB400" FontFamily="Courier New" FontSize="20" Text="Welcome to Kthura"/>
+                    <TextBox x:Name="C_Output" HorizontalScrollBarVisibility="Visible"         VerticalScrollBarVisibility="Visible"                             IsReadOnly="True" Margin="77,56,0,10" Background="#FF191200" Foreground="#FFFFB400" FontFamily="Courier New" FontSize="20" Text="Welcome to Kthura"/>
                 </Grid>
 
             </TabItem>

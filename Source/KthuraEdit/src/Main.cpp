@@ -27,6 +27,7 @@
 #include <iostream>
 
 // Kthura Editor
+#include "../headers/builddate.hpp"
 #include "../headers/Config.hpp"
 #include "../headers/UserInterface.hpp"
 
@@ -58,7 +59,8 @@ int main(int aantal_arg, char** arg) {
 	using namespace std;
 	using namespace KthuraEdit;
 	using namespace TrickyUnits;
-	cout << "Kthura Map Editor - Build " <<  __TIMESTAMP__ << "\n";
+	//cout << "Kthura Map Editor - Build " <<  __TIMESTAMP__ << "\n";
+	cout << "Kthura Map Editor - Build " << KthuraEditorBuildDate << "\n";
 	cout << "Coded by: Tricky\n";
 	cout << "(c) 2021 Jeroen P. Broks - Released under the terms of the GPL3\n\n";
 	Config::ParseArgs( aantal_arg, arg);
