@@ -21,16 +21,22 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.17
+// Version: 21.04.20
 // EndLic
 // Lua
 #include "../headers/QuickLuaInclude.hpp"
 
 // Kthura
+#include <Kthura.hpp>
+
+// Kthura Editor
+#include "../headers//MapData.hpp"
 #include "../headers/QuickLuaInclude.hpp"
 #include "../headers/Script.hpp"
 #include "../headers/UserInterface.hpp"
 #include "../headers/Config.hpp"
+
+#include "../headers/UI_Map.hpp"
 
 // Stuff
 #include <jcr6_core.hpp>
@@ -40,6 +46,7 @@
 using namespace jcr6;
 using namespace std;
 using namespace TrickyUnits;
+using namespace NSKthura;
 
 
 
@@ -123,6 +130,27 @@ namespace KthuraEdit {
 #pragma region APIs (KSA = Kthura Script API)
 	static int KSA_Test(lua_State* L) { cout << "Testing! Testing! One! Two! Three!\n"; return 0; }
 	static int KSA_Crash(lua_State* L) { UI::Crash(luaL_checkstring(L, 1)); }
+	static int KSA_Color(lua_State* L) { TQSG_Color(luaL_optinteger(L, 1, 255), luaL_optinteger(L, 2, 255), luaL_optinteger(L, 3, 255)); return 0; }
+	static int KSA_ColorHSV(lua_State* L) { TQSG_ColorHSV(luaL_optinteger(L, 1, 0), luaL_optnumber(L, 2, 1), luaL_optnumber(L, 3, 1)); return 0; }
+	static int KSA_ObjMarker(lua_State* L) {
+		KthuraObject* O{ nullptr };
+		if (lua_isnumber(L, 1)) {
+			auto I = luaL_checkinteger(L, 1);
+			auto IM{ &WorkMap.Layer(CurrentLayer)->GetIDMap() };
+			if (!IM->count(I)) { UI::Crash("No object with ID number " + to_string(I)); return 0; }
+			O = (*IM)[I];
+		} else if (lua_isstring(L, 1)) {
+			auto T{ luaL_checkstring(L,1) };
+			if (!WorkMap.Layer(CurrentLayer)->HasTag(T)) { UI::Crash(string("No object with Tag ") + T); return 0; }
+			O = WorkMap.Layer(CurrentLayer)->TagMap(T);
+		} else {
+			UI::Crash("Illegal function call!");
+			return 0;
+		}
+		int size = luaL_optinteger(L, 2, 8);
+		AutoDrawMarker(O->X(), O->Y());
+		return 0;
+	}
 #pragma endregion
 
 #pragma region Init & Done
@@ -142,6 +170,9 @@ namespace KthuraEdit {
 		cout << "= Setting up APIs\n";
 		lua_register(LState, "KTH_TEST", KSA_Test);
 		lua_register(LState, "KTH_CRASH", KSA_Crash);
+		lua_register(LState, "KTH_COLOR", KSA_Color);
+		lua_register(LState, "KTH_COLORHSV", KSA_ColorHSV);
+		lua_register(LState, "KTH_OBJMARKER", KSA_ObjMarker);
 		cout << "= Loading Neil\n";
 		auto Neil{ "--[[NEIL]]\t\tlocal function LoadNeil()\t\t"+Config::JCR()->String("Script/Neil.lua")+"\n\nend\nNeil = LoadNeil()" };
 		luaL_loadstring(LState, Neil.c_str());
