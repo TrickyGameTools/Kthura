@@ -494,7 +494,7 @@ namespace KthuraEdit {
 	static void WorkArea(std::string Tab, bool place) {
 		if (ml) {
 			TQSG_ACol(100, 100, 100, 100);
-			TQSG_Rect(Placement.x + MapGroup->DrawX(), Placement.y + MapGroup->DrawY(), Placement.w, Placement.h);
+			TQSG_Rect(Placement.x + MapGroup->DrawX()-ScrollX, Placement.y + MapGroup->DrawY()-ScrollY, Placement.w, Placement.h);
 		}
 		if (place) {
 			if (Placement.w && Placement.h) {
@@ -772,10 +772,10 @@ namespace KthuraEdit {
 		//MapGroup->Font()->Draw(ChosenTex, MapGroup->DrawX() + 5, MapGroup->DrawY() + 5, 0, 0);
 	}
 
-	void ScrollUp(june19::j19gadget* g, june19::j19action a) { ScrollY -= 16; }
-	void ScrollDn(june19::j19gadget* g, june19::j19action a) { ScrollY += 16; }
-	void ScrollLe(june19::j19gadget* g, june19::j19action a) { ScrollX -= 16; }
-	void ScrollRi(june19::j19gadget* g, june19::j19action a) { ScrollX += 16; }
+	void ScrollUp(june19::j19gadget* g, june19::j19action a) { ScrollY -= 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.Y", std::to_string(ScrollY)); }
+	void ScrollDn(june19::j19gadget* g, june19::j19action a) { ScrollY += 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.Y", std::to_string(ScrollY)); }
+	void ScrollLe(june19::j19gadget* g, june19::j19action a) { ScrollX -= 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.X", std::to_string(ScrollX)); }
+	void ScrollRi(june19::j19gadget* g, june19::j19action a) { ScrollX += 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.X", std::to_string(ScrollX)); }
 
 	void SetLabels(std::string l, std::string tab) {
 		j19gadget* g;
