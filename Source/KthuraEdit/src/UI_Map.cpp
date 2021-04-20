@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.17
+// Version: 21.04.20
 // EndLic
 
 
@@ -361,6 +361,8 @@ namespace KthuraEdit {
 #endif
 	}
 
+	void AutoDrawMarker(int x, int y, unsigned int size) { DrawMarker(x + MapGroup->DrawX() - ScrollX, y + MapGroup->DrawY() - ScrollY); }
+
 	void DrawExit(KthuraObject* o, int ix, int iy, int scrollx, int scrolly) {
 		auto
 			dx{ (o->X() + ix) - scrollx },
@@ -597,7 +599,9 @@ namespace KthuraEdit {
 		case KthuraKind::Pic:
 			return x >= O->X() && y >= O->Y() && x <= KthuraDraw::DrawDriver->ObjectWidth(O) && y <= KthuraDraw::DrawDriver->ObjectHeight(O);		
 		case KthuraKind::CustomItem:
-			return x >= O->X() - 4 && x <= O->X() + 4 && y >= O->Y() - 4 && y <= O->Y() + 4;
+		case KthuraKind::Pivot:
+		case KthuraKind::Exit:
+			return x >= O->X() - 8 && x <= O->X() + 8 && y >= O->Y() - 8 && y <= O->Y() + 8;
 		default:
 			std::cout << "WARNING! I do not know how to check item " << (int)O->EKind() << " (" << O->Kind() << "). Version conflict?\n";
 			return false;
