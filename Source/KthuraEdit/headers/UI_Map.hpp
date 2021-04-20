@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.10
+// Version: 21.04.20
 // EndLic
 #pragma once
 #include "UserInterface.hpp"
@@ -43,6 +43,7 @@ namespace KthuraEdit {
 	void ScrollRi(june19::j19gadget* g, june19::j19action a);
 
 	void DrawMarker(int x, int y, unsigned int size=8);
+	void AutoDrawMarker(int x, int y, unsigned int size = 8); // Will take UI and scroll in mind!
 
 	void SetLabels(std::string l, std::string tab="");
 	std::string GetTabLabels(std::string t);
