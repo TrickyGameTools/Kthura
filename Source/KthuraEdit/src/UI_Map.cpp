@@ -207,6 +207,7 @@ namespace KthuraEdit {
 	static void LayerSelected(j19gadget* source, j19action) {
 		if (source->ItemText() == "") return;
 		CurrentLayer = source->ItemText();
+		WorkMap.Options.Value("Jeroen_Editor", "Layer", CurrentLayer);
 	}
 
 	static void Deg2Rad(j19gadget* source, j19action action) {
