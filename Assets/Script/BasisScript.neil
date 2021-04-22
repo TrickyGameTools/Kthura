@@ -6,7 +6,7 @@ QuickMeta Kth
 				// Merely a test (and Easter Egg if you want!
 				return "Always look on the bright side of life!"
 			default
-				return Lua["KTH_"..(key:upper)())]
+				return Lua["KTH_"..(key:upper())]
 		end
 	end
 	
@@ -21,6 +21,28 @@ QuickMeta Kth
 	
 end
 
+class KthuraObject
+	static table ObjList = {}
+	readonly Int ID
+	
+	Constructor(int aID)
+		ID = aID
+	end
+	
+	static var GetObjByID(int ID)
+		ObjList[ID] = ObjList[ID] || new KthuraObject(ID)
+		return ObjList[ID]
+	end
+	
+	void Marker(int R=255,int G=255,int B=255,Int Size=8)
+		Kth.Color(R,G,B)
+		Kth.ObjMarker(ID,Size)
+	End
+	
+end
+
+global delegate Panic = Lua.KTH_CRASH
+
 Init
 	// Test!
 	#pure
@@ -29,7 +51,8 @@ Init
 			return true,func(...)
 		end
 	#endpure
-	Lua.Panic=Panic
+	Lua.Panic=Lua.KTH_CRASH
 	Lua.Kth=Kth // This will work out for people who prefer "pure" Lua.
+	Lua.KthuraObject = KthuraObject
 	Print("= Basis script loaded succesfully")
 End

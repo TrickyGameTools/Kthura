@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.20
+// Version: 21.04.22
 // EndLic
 
 
@@ -362,7 +362,7 @@ namespace KthuraEdit {
 #endif
 	}
 
-	void AutoDrawMarker(int x, int y, unsigned int size) { DrawMarker(x + MapGroup->DrawX() - ScrollX, y + MapGroup->DrawY() - ScrollY); }
+	void AutoDrawMarker(int x, int y, unsigned int size) { DrawMarker(x + MapGroup->DrawX() - ScrollX, y + MapGroup->DrawY() - ScrollY,size); }
 
 	void DrawExit(KthuraObject* o, int ix, int iy, int scrollx, int scrolly) {
 		auto

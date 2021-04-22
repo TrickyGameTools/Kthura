@@ -21,10 +21,11 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.17
+// Version: 21.04.22
 // EndLic
 #pragma once
-
+#include <string>
+#include <vector>
 
 
 namespace KthuraEdit {
@@ -32,4 +33,6 @@ namespace KthuraEdit {
 
 	void InitScript();
 	void DoneScript();
+
+	void CallBack(std::string f, std::vector<std::string> p = std::vector<std::string>());
 }

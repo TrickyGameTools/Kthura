@@ -21,8 +21,13 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.20
+// Version: 21.04.22
 // EndLic
+
+
+// C++
+#include <string>
+
 // Lua
 #include "../headers/QuickLuaInclude.hpp"
 
@@ -114,13 +119,16 @@ namespace KthuraEdit {
 			work += "local success,workfunc = xpcall(load,Panic,\"" + bsdec(source) + "\",\"" + Chunk + "\")\n";
 			break;
 		case ScriptKind::Neil:
-			work += "local success,workfunc = xpcall(Neil.Load,Panic,\"" + bsdec(source) + "\",\"" + Chunk + "\")\n";
+			cout << "= Neil translation\n";
+			work += "local success,workfunc = xpcall(Neil.Load,KTH_CRASH,\"" + bsdec(source) + "\",\"" + Chunk + "\")\n";
 			break;
 		default:
 			UI::Crash("State Type has not been recognized: " + to_string((int)LKind));
 		}
 		work += "\n\nlocal e\n";
 		work += "success,e=xpcall(workfunc,Panic)\n";
+		work += "print(' = Success: '..tostring(success))\n";
+		work += "if not(success) then print('ERROR:',e) KTH_CRASH(e) end\n";
 		// cout << "<LOADED SCRIPT>\n" << work << "</LOADED SCRIPT>\n";
 		luaL_loadstring(LState, work.c_str());
 		lua_call(LState, 0, 0);
@@ -148,14 +156,22 @@ namespace KthuraEdit {
 			return 0;
 		}
 		int size = luaL_optinteger(L, 2, 8);
-		AutoDrawMarker(O->X(), O->Y());
+		AutoDrawMarker(O->X(), O->Y(),size);
 		return 0;
+	}
+#pragma endregion
+
+#pragma region CallBacks	
+	void DrawCustomItem(KthuraObject* o, int x, int y, int sx, int sy) {
+		auto wgroup{ TReplace(o->Kind(), "$", "CSPOT_") };
+		CallBack(wgroup + ".Draw",{"$KthuraObject(" + to_string(o->ID()) + ")"});
 	}
 #pragma endregion
 
 #pragma region Init & Done
 	void InitScript() {
 		JCRScriptPatchList(&Config::ScriptLibPath());
+		KthuraDraw::DrawCSpot = DrawCustomItem;
 		cout << "Initiating scripting engine\n";
 		LState = luaL_newstate();
 		if (LState == NULL) {
@@ -214,6 +230,39 @@ namespace KthuraEdit {
 
 	void DoneScript() {
 		lua_close(LState);
+	}
+
+	void RawCall(std::string function, std::string parameters, int retvalues=0) {
+	std:string work = "--[[RawCall]]\nif type(" + function + ")~='function' then\n\tKth.Crash(\"Callback error:\\n" + function + " is not a function but a \"..type(" + function + ")..\"\\n\\n \")\nelse\n\tlocal s,e=xpcall(" + function + ", Panic, " + parameters + ")\nreturn s\nend";
+		//cout << "<RAWCALL>\n" << work << "\n</RAWCALL>\n";
+		if (!LState) {
+			UI::Crash("RawCall to NULL state\n\nRawCall(\"" + function + "\",\"" + parameters + "\"," + std::to_string(retvalues) + "):\n\n<Work>\n" + work + "</work>");
+			return;
+		}
+		//cout << "<RawCall>\n" << work << "\n</RawCall>\n";
+		luaL_loadstring(LState, work.c_str());
+		lua_call(LState, 0, 0, retvalues);
+	}
+
+	void CallBack(std::string f, std::vector<std::string> p) {
+		std::string Para{ "" };
+		for(auto PR:p) { 
+			if (Para != "") Para += ", ";
+			if (prefixed(PR, "$"))
+				Para += right(PR, PR.size() - 1);
+			else
+				Para += "\"" + PR + "\"";
+		}
+		switch (LKind) {
+		case ScriptKind::Lua:
+			RawCall(f,Para);
+			break;
+		case ScriptKind::Neil:
+			RawCall("Neil.Globals." + f, Para);
+			break;
+		default:
+			UI::Crash("Unknown Script kind: " + std::to_string((int)LKind));
+		}
 	}
 #pragma endregion
 }
