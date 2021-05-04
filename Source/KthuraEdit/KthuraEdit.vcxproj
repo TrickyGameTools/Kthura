@@ -182,6 +182,7 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
     <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Convert.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MapData.cpp" />
     <ClCompile Include="src\Script.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="..\..\..\VC\TQSG\TQSG.hpp" />
     <ClInclude Include="..\..\..\VC\TQSG\TQSG_Console.hpp" />
     <ClInclude Include="headers\Config.hpp" />
+    <ClInclude Include="headers\Convert.hpp" />
     <ClInclude Include="headers\MapData.hpp" />
     <ClInclude Include="headers\QuickLuaInclude.hpp" />
     <ClInclude Include="headers\Script.hpp" />
