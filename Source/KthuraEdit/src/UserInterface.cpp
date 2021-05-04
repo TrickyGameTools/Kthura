@@ -25,7 +25,9 @@
 // EndLic
 
 // self
+#include "../headers/builddate.hpp"
 #include "../headers/UserInterface.hpp"
+#include "../headers/Convert.hpp"
 #include "../headers/Script.hpp"
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
@@ -120,7 +122,7 @@ namespace KthuraEdit {
 		_initialized = true;
 		std::cout << "Staring User Interface\n";
 		if (Config::FWindowed()) {
-			if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, 1800, 1000)) Crash("Init Graphics failed");
+			if (!TQSG_Init("Kthura Map Editor - " + std::string(KthuraEditorBuildDate) + " - " + Config::Project + " - " + Config::MapFile, 1800, 1000)) Crash("Init Graphics failed");
 		} else {
 			if (!TQSG_Init("Kthura Map Editor - " + Config::Project + " - " + Config::MapFile, 0, 0, true)) Crash("Init Graphics failed");
 		}
@@ -178,6 +180,7 @@ namespace KthuraEdit {
 		ScrollMenu->AddItem("Right", ScrollRi, SDLK_RIGHT);
 		DebugMenu->AddItem("View BlockMap", ShowBlockMap, SDLK_b);
 		DebugMenu->AddItem("Tag Overview",ShowTags,SDLK_z);
+		DebugMenu->AddItem("PNG to JPBF", PNG2JPBF, SDLK_F12);
 		// Stages
 		UI_MapStart(); // Must be last
 	}
