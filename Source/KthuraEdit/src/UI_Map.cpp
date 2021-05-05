@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.22
+// Version: 21.05.05
 // EndLic
 
 
@@ -60,6 +60,7 @@
 #include "../headers/UI_TagObject.hpp"
 #include "../headers/MapData.hpp"
 #include <TRandom.hpp>
+#include <algorithm>
 #pragma endregion
 
 #pragma region Pure evil (using namespaces)
@@ -658,6 +659,11 @@ namespace KthuraEdit {
 			TB.ValScaleY->Text = to_string(ModifyObject->ScaleY());
 			LabelCalc("Modify", ModifyObject->Labels());
 			if (ModifyObject->Tag() != "") TB.ValTag->Caption = ModifyObject->Tag(); else TB.ValTag->Caption = "...";
+			TB.ValVisible->checked = ModifyObject->Visible();
+			TB.ValImpassible->checked = ModifyObject->Impassible();
+			TB.ValForcePassible->checked = ModifyObject->ForcePassible();
+			TB.ValImpassible->Enabled = s && (!ModifyObject->ForcePassible());
+			TB.ValForcePassible->Enabled = s && (!ModifyObject->Impassible());
 		} else
 			TB.ValKind->Caption = "None";
 	}
@@ -777,6 +783,20 @@ namespace KthuraEdit {
 	void ScrollDn(june19::j19gadget* g, june19::j19action a) { ScrollY += 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.Y", std::to_string(ScrollY)); }
 	void ScrollLe(june19::j19gadget* g, june19::j19action a) { ScrollX -= 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.X", std::to_string(ScrollX)); }
 	void ScrollRi(june19::j19gadget* g, june19::j19action a) { ScrollX += 16; WorkMap.Options.Value("Jeroen_Editor", "Scroll.X", std::to_string(ScrollX)); }
+
+	void NextObject(june19::j19gadget* g, june19::j19action a) {
+		if (!ModifyObject) return;
+		auto ci{ ModifyObject->ID() };
+		auto mi{ ci }; for (auto o : WorkMap.Layer(CurrentLayer)->Objects) mi = std::max(mi, o->ID());
+		auto ni{ ci };
+		auto im{ WorkMap.Layer(CurrentLayer)->GetIDMap() };
+		KthuraShObject no{ nullptr };
+		do {
+			ni++; if (ni > mi) ni = 0;
+			no = WorkMap.Layer(CurrentLayer)->FindShObjByID(ni);
+		} while (!no);
+		ModifyObject = no;
+	}
 
 	void SetLabels(std::string l, std::string tab) {
 		j19gadget* g;
