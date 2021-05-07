@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.05.05
+// Version: 21.05.06
 // EndLic
 
 // self
@@ -181,6 +181,7 @@ namespace KthuraEdit {
 		DebugMenu->AddItem("View BlockMap", ShowBlockMap, SDLK_b);
 		DebugMenu->AddItem("Tag Overview",ShowTags,SDLK_z);
 		DebugMenu->AddItem("PNG to JPBF", PNG2JPBF, SDLK_F12);
+		DebugMenu->AddItem("Optimize To Origin", OptimizeToOrigin, SDLK_F2);
 		DebugMenu->AddItem("Next Object", NextObject, SDLK_TAB);
 		// Stages
 		UI_MapStart(); // Must be last

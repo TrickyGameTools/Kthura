@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.05.05
+// Version: 21.05.06
 // EndLic
 #include <iostream>
 #include <TQSE.hpp>
@@ -64,4 +64,44 @@ namespace KthuraEdit {
 
 		}
 	}
+
+
+	static void UnOrigin() {
+		std::cout<< "UnOrigin Request done!\n";
+		int 
+			mx = 0, 
+			my = 0;
+		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
+			if (mx > o->X()) mx = o->X();
+			if (my > o->Y()) my = o->Y();
+		}
+		if (mx == 0 && my == 0) { std::cout << "Nothing underorigin, so let's get outta here!\n"; return; }
+		//DBG.Log($"UnderOrigin Objects found. {Math.Abs(mx)} x-dist UnderOrigin, and {Math.Abs(my)} y=dist UnderOrigin. Let's fix that!");
+		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
+			o->X(o->X() - mx);
+			o->Y(o->Y() - my);
+			// Please note, since mx and my always contain a negative number, you get --, which will always generate a + in mathematics.
+		}
+	}
+
+	void OptimizeToOrigin(june19::j19gadget *g,june19::j19action a) {
+		UnOrigin();
+		std:: cout << "OptimizeOrigin Request done!\n";
+		int 
+			mx = -1, 
+			my = -1;
+		for(auto o : WorkMap.Layer(CurrentLayer)->Objects) {
+			if (mx > o->X() || mx < 0) mx = o->X();
+			if (my > o->Y() || my < 0) my = o->Y();
+		}
+		if (mx < 0) mx = 0;
+		if (my < 0) my = 0;
+		if (mx == 0 && my == 0) {std::cout << "Nothing wrong, so let's get outta here!\n"; return; }
+		//DBG.Log($"Origin WhiteSpace found. {Math.Abs(mx)} x-dist from Origin, and {Math.Abs(my)} y=dist from Origin. Let's fix that!");
+		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
+			o->X(o->X() - mx);
+			o->Y(o->Y() - my);
+		}
+	}
+
 }

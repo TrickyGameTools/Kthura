@@ -21,10 +21,11 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.05.05
+// Version: 21.05.06
 // EndLic
 #pragma once
 #include <june19_core.hpp>
 namespace KthuraEdit {
 	void PNG2JPBF(june19::j19gadget* g, june19::j19action a);
+	void OptimizeToOrigin(june19::j19gadget *g, june19::j19action a);
 }
