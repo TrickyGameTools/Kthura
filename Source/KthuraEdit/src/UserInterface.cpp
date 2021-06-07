@@ -181,6 +181,7 @@ namespace KthuraEdit {
 		DebugMenu->AddItem("View BlockMap", ShowBlockMap, SDLK_b);
 		DebugMenu->AddItem("Tag Overview",ShowTags,SDLK_z);
 		DebugMenu->AddItem("PNG to JPBF", PNG2JPBF, SDLK_F12);
+		DebugMenu->AddItem("Remove \"Rotten\" Objects", RemoveRottenObjects, SDLK_INSERT);
 		DebugMenu->AddItem("Optimize To Origin", OptimizeToOrigin, SDLK_F2);
 		DebugMenu->AddItem("Next Object", NextObject, SDLK_TAB);
 		// Stages
