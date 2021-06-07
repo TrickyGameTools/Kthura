@@ -104,4 +104,28 @@ namespace KthuraEdit {
 		}
 	}
 
+	void RemoveRottenObjects(june19::j19gadget* g, june19::j19action a) {
+		using namespace std;
+		using namespace NSKthura;
+		vector<int> Victims;
+		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
+			switch (o->EKind()) {
+			case KthuraKind::Rect:
+			case KthuraKind::TiledArea:
+			case KthuraKind::StretchedArea:
+			case KthuraKind::Zone:
+				if (o->W() <= 0 || o->H() <= 0) {
+					Victims.push_back(o->ID());
+					cout << "Object #" << o->ID() << " (" << o->Kind() << ") is \"Rotten\" and will be killed\n";
+				}
+				break;
+			}
+		}
+		// KILL!
+		for (auto Victim : Victims) {
+			WorkMap.Layer(CurrentLayer)->Kill(Victim);
+			cout << "Killed: " << Victim << endl;
+		}
+	}
+
 }
