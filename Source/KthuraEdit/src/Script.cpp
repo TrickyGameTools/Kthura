@@ -223,6 +223,7 @@ namespace KthuraEdit {
 			cout << "= Compiling" << endl;
 			ExeString(scr);
 		} else {
+			cout << "No scripts found '" << Config::NeilScript() << "' / " << Config::NeilScript() << "\n";
 			ExeString("Init\nCout(\"= No script available!\\n\")\nEnd", "CORE SCRIPT", ScriptKind::Neil); // Seems a bit awkward, but this way I could at least if Neil scripting works at all.
 		}
 

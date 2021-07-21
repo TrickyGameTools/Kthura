@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.10
+// Version: 21.06.23
 // EndLic
 #include <june19.hpp>
 #include "../headers/UserInterface.hpp"
@@ -111,12 +111,26 @@ namespace KthuraEdit {
 
 	void ScanTex() {
 		auto tdir{ Config::Textures() };
+		std::map<std::string, bool> BundleAdded{};			
 		TexList->ClearItems();
 		UsedTexList->ClearItems();
-		WorkMap.TexDir = tdir;
+		WorkMap.TexDir = tdir;		
 		for (auto& e : tdir->Entries()) {
-			TexList->AddItem(e.second.Entry());
-			// TODO: Scan for used (since the map editor itself is not yet operative this cannot easily be debugged)
+			auto Path{ ExtractDir(e.first) };
+			if (ExtractExt(Path) != "JFBF") {
+				if (ExtractExt(Path) == "JPBF") {
+					if (!BundleAdded[Path]) {
+						TexList->AddItem(ExtractDir(e.second.Entry()));
+						if(WorkMap.UsedTex(Path))
+							UsedTexList->AddItem(ExtractDir(e.second.Entry()));
+						BundleAdded[Path] = true;
+					}
+				} else if (ExtractExt(e.first) == "PNG") {
+					TexList->AddItem(e.second.Entry());
+					if (WorkMap.UsedTex(e.second.Entry()))
+						UsedTexList->AddItem(e.second.Entry());
+				}
+			}
 		}
 	}
 
