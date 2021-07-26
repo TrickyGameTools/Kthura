@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.17
+// Version: 21.07.25
 // EndLic
 
 // Myself
@@ -216,6 +216,7 @@ namespace KthuraEdit {
 		cout << "= Loading config:" << TSF<<" (creating new if non-existent)\n";
 		MapConfig.FromFile(TSF, true);
 		MapConfig.AutoSave = TSF;
+		if (WorkMap.Layers.count(MapConfig.Value("Layer", "Current")))
 		CurrentLayer = MapConfig.Value("Layer", "Current");
 		for (auto lscan : WorkMap.Layers) {
 			if (CurrentLayer == "") { CurrentLayer = lscan.first; MapConfig.Value("Layer", "Current", CurrentLayer); }
