@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.05.05
+// Version: 21.08.22
 // EndLic
 
 
@@ -58,6 +58,7 @@
 #include "../headers/UI_TexSelect.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
 #include "../headers/UI_TagObject.hpp"
+#include "../headers/UI_ObjectData.hpp"
 #include "../headers/MapData.hpp"
 #include <TRandom.hpp>
 #include <algorithm>
@@ -295,6 +296,10 @@ namespace KthuraEdit {
 		TB->ValVisible = DataLabel("Visible", CreateCheckBox("", 0, 0, 0, 0, Tab)); TB->ValVisible->checked = true;
 		TB->ValTag = DataLabel("Tag", CreateButton("...", 0, 0, Tab)); TB->ValTag->Enabled = false;
 		TB->ValLabels = DataLabel("Labels", CreateButton("0", 0, 0, Tab));
+		if (caption == "Modify") {
+			auto DataButt = DataLabel("Data", CreateButton("Modify", 0, 0, Tab)); 
+			DataButt->CBAction = GoToObjectData;
+		}
 		TB->ValLabels->CBAction = GoLabel;
 		TB->ValLabels->HData = caption;
 		if (caption == "Modify") {
@@ -685,9 +690,13 @@ namespace KthuraEdit {
 			dy = y + MapGroup->DrawY(),
 			*/
 		bool hit{ false };
+		int mxdom{ -1 };
 		if (TQSE_MouseHit(1) && TQSE_MouseX()>MapGroup->DrawX() && TQSE_MouseX()<MapGroup->DrawX()+MapGroup->W() && TQSE_MouseY()>MapGroup->DrawY() && TQSE_MouseY()<MapGroup->DrawY()+MapGroup->H()) {
-			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {
-				if (InObject(o.get(), x, y)) {
+			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {				
+				//std::cout << "Object get debug> object dominance:" << o->Dominance() << " must be higher than " << mxdom << std::endl;
+				if (InObject(o.get(), x, y) && o->Dominance()>mxdom) {
+					std::cout << "Object get debug> object dominance: " << o->Dominance() << " must be higher than " << mxdom << "; which should be the case so let's go for this\n";
+					mxdom = o->Dominance();
 					ModifyObject = o;
 					hit = true;
 				}
