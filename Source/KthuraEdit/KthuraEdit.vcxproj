@@ -180,6 +180,7 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickStream.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\QuickString.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickyMath.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Convert.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="src\UI_Blockmap.cpp" />
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
+    <ClCompile Include="src\UI_ObjectData.cpp" />
     <ClCompile Include="src\UI_SeveralStrings.cpp" />
     <ClCompile Include="src\UI_TagObject.cpp" />
     <ClCompile Include="src\UI_TagOverview.cpp" />
@@ -228,6 +230,7 @@
     <ClInclude Include="headers\UI_BlockMap.hpp" />
     <ClInclude Include="headers\UI_Layer.hpp" />
     <ClInclude Include="headers\UI_Map.hpp" />
+    <ClInclude Include="headers\UI_ObjectData.hpp" />
     <ClInclude Include="headers\UI_SeveralStrings.hpp" />
     <ClInclude Include="headers\UI_TagOverview.hpp" />
     <ClInclude Include="headers\UI_TexSelect.hpp" />
