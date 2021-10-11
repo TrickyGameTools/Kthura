@@ -1,6 +1,6 @@
 # A few things needed to do before you try anything
 
-TeddyBear was written in Visual Studio 2017, version 15.9.9, for the .NET framework 4.6
+Khutra was written in Visual Studio 2019. The C# programs require .NET 4.6 the C++ code requires vcrun to be installed on your system (although if you can get it compiled with other C++ compilers, perhaps you can get around that).
 
 Now the best approach is first to make sure to create a folder dedicated to my work. I myself used a portable hard drive. For easiness I'll pretend you use device T:\
 Make sure PowerShell is configured to run ps1 scripts (which by default it is not).
