@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.08.22
+// Version: 21.08.23
 // EndLic
 
 #include <string>
@@ -65,7 +65,7 @@ namespace KthuraEdit {
 
 	static void SetUpOD() {
 		static bool HasStage{ false };
-		if (!HasStage) UI::AddStage("OBJData");
+		if (!HasStage) { UI::AddStage("OBJData"); HasStage = true; }
 		auto Screen{ UI::GetStage("OBJData") };
 		ODScreen = Screen->MainGadget;
 		Fld.clear();
