@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.08.22
+// Version: 21.10.21
 // EndLic
 
 
@@ -599,8 +599,10 @@ namespace KthuraEdit {
 			float
 				tw = ((float)KthuraDraw::DrawDriver->ObjectWidth(O)) * O->TrueScaleX(),
 				th = ((float)KthuraDraw::DrawDriver->ObjectHeight(O)) * O->TrueScaleY();
-			//std::cout << "Obstacle Check: " << tw << "x" << th << std::endl;
+			//std::cout << "Obstacle Check: " << tw << "x" << th << "\t (Tag:" << O->Tag() << ")" << std::endl;
 			//std::cout << "- True Scale " << O->TrueScaleX() << "x" << O->TrueScaleY()<<std::endl;
+			//std::cout << "- Range: Y:" << O->Y() - th << "-" << O->Y() << "\tX:" << O->X() - (tw / 2) << "-" << O->X() + (tw / 2) << "\n";
+			//std::cout << "- Check coordinates: (" << x << "," << y << ");  Object coordinates: ("<<O->X()<<","<<O->Y()<<")\n";
 			return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
 		}
 		case KthuraKind::Pic:
@@ -694,7 +696,8 @@ namespace KthuraEdit {
 		if (TQSE_MouseHit(1) && TQSE_MouseX()>MapGroup->DrawX() && TQSE_MouseX()<MapGroup->DrawX()+MapGroup->W() && TQSE_MouseY()>MapGroup->DrawY() && TQSE_MouseY()<MapGroup->DrawY()+MapGroup->H()) {
 			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {				
 				//std::cout << "Object get debug> object dominance:" << o->Dominance() << " must be higher than " << mxdom << std::endl;
-				if (InObject(o.get(), x, y) && o->Dominance()>mxdom) {
+				//if (InObject(o.get(), x, y) && o->Dominance()>=mxdom) {
+				if (InObject(o.get(), TQSE_MouseX() - MapGroup->DrawX() + ScrollX, TQSE_MouseY() - MapGroup->DrawY() + ScrollY)){
 					std::cout << "Object get debug> object dominance: " << o->Dominance() << " must be higher than " << mxdom << "; which should be the case so let's go for this\n";
 					mxdom = o->Dominance();
 					ModifyObject = o;
