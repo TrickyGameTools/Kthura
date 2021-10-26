@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.10.21
+// Version: 21.10.23
 // EndLic
 
 
@@ -697,7 +697,7 @@ namespace KthuraEdit {
 			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {				
 				//std::cout << "Object get debug> object dominance:" << o->Dominance() << " must be higher than " << mxdom << std::endl;
 				//if (InObject(o.get(), x, y) && o->Dominance()>=mxdom) {
-				if (InObject(o.get(), TQSE_MouseX() - MapGroup->DrawX() + ScrollX, TQSE_MouseY() - MapGroup->DrawY() + ScrollY)){
+				if (o->Dominance() >= mxdom && InObject(o.get(), TQSE_MouseX() - MapGroup->DrawX() + ScrollX, TQSE_MouseY() - MapGroup->DrawY() + ScrollY)) {
 					std::cout << "Object get debug> object dominance: " << o->Dominance() << " must be higher than " << mxdom << "; which should be the case so let's go for this\n";
 					mxdom = o->Dominance();
 					ModifyObject = o;
