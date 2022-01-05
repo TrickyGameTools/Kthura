@@ -189,6 +189,10 @@ namespace KthuraEdit {
 		* AreaBox{ nullptr },
 		* SpotBox{ nullptr };
 
+	enum class OtherK {Area,Spot};
+
+	OtherK OtherKind() { return (OtherK)SpotLabel->checked; }
+
 	static void CreateOther(j19gadget* Tab) {
 		int
 			hh{ (DataTab->H()-20) / 2 },
@@ -210,6 +214,7 @@ namespace KthuraEdit {
 		SpotLabel->CBAction = OtherRadioAction;
 		AreaLabel->checked = true;
 	}
+
 
 
 
@@ -540,6 +545,13 @@ namespace KthuraEdit {
 		}
 		if (place) {
 			if (Placement.w && Placement.h) {
+				if (Tab == "Other") {
+					auto i = AreaBox->SelectedItem();
+					if (i < 0) return;
+					auto s = AreaBox->ItemText();
+					if (s.size()) AreaEffect(Placement.x, Placement.y, Placement.w, Placement.h, s);
+					return;
+				}
 				if ((Tab == "StretchedArea" || Tab == "TiledArea") && ChosenTex == "") return;
 				std::cout << "Creating area based object (" << Tab << ")\n";
 				if (!TabMap.count(Tab)) UI::Crash("No Kthura Edit Tab called '" + Tab + "'"); 
@@ -814,6 +826,30 @@ namespace KthuraEdit {
 		case TabNum::Zone:
 			WorkArea("Zone", place);
 			break;
+		case TabNum::Other:
+			// std::cout << "OtherK: " << (int)OtherKind() << "\n"; // debug only
+			switch (OtherKind()) {
+			case OtherK::Area:
+				WorkArea("Other", place);
+				break;
+			case OtherK::Spot: 
+				if (SpotBox->SelectedItem() >= 0) {
+					auto
+						s{ SpotBox->ItemText() };
+					int
+						x = Placement.x,
+						y = Placement.y;
+					if (GridMode) {
+						x += floor(GridX() / 2);
+						y += GridY();
+					}
+					int
+						dx = x + MapGroup->DrawX(),
+						dy = y + MapGroup->DrawY();
+					SpotEffect(dx, dy, s);
+				}
+				break;
+			}
 		case TabNum::Obstacles:
 			Obstacle();
 			break;
