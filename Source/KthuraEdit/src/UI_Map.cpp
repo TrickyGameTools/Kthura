@@ -60,6 +60,7 @@
 #include "../headers/UI_TagObject.hpp"
 #include "../headers/UI_ObjectData.hpp"
 #include "../headers/MapData.hpp"
+#include "../headers/Other.hpp"
 #include <TRandom.hpp>
 #include <algorithm>
 #pragma endregion
@@ -176,7 +177,41 @@ namespace KthuraEdit {
 #pragma region User Interface itself
 	static int FH() { return UI_MapEdit->MainGadget->Font()->TextHeight("ABC"); }
 
-	static void CreateOther(){}
+	static std::map<j19gadget*, j19gadget*> OtherLink;
+
+	static void OtherRadioAction(j19gadget* g, j19action a) {
+		for (auto i : OtherLink) OtherLink[i.first]->Enabled = i.first->checked;
+	}
+
+	j19gadget
+		* AreaLabel{ nullptr },
+		* SpotLabel{ nullptr },
+		* AreaBox{ nullptr },
+		* SpotBox{ nullptr };
+
+	static void CreateOther(j19gadget* Tab) {
+		int
+			hh{ (DataTab->H()-20) / 2 },
+			w{ Tab->W() };
+		
+		AreaLabel = CreateRadioButton("Area", 0, 0, w, 20, Tab);
+		SpotLabel = CreateRadioButton("Spot", 0, hh, w, 20, Tab);
+		AreaBox = CreateListBox(0, 20, w, hh - 20, Tab);
+		SpotBox = CreateListBox(0, hh + 20, w, hh - 20, Tab);
+		AreaBox->FB = 0;
+		AreaBox->FG = 180;
+		SpotBox->FR = 0;
+		SpotBox->FG = 180;
+		OtherLink[AreaLabel] = AreaBox;
+		OtherLink[SpotLabel] = SpotBox;
+		RegArea2Box(AreaBox);
+		RegSpot2Box(SpotBox);
+		AreaLabel->CBAction = OtherRadioAction;
+		SpotLabel->CBAction = OtherRadioAction;
+		AreaLabel->checked = true;
+	}
+
+
 
 	static j19gadget* DataLabel( std::string cap, j19gadget* val,bool reset=false) {
 		static int dly = 0;	
@@ -252,7 +287,7 @@ namespace KthuraEdit {
 		Tab->HData = caption;
 		Tab->FB = 255; Tab->FG = 0; Tab->FR = 180;
 		Tab->BB = 25; Tab->BG = 0; Tab->BR = 18;
-		if (caption == "Other") { CreateOther(); return; }		
+		if (caption == "Other") { CreateOther(Tab); return; }		
 		auto KV{ caption }; if (caption == "Modify") KV = "";
 		TB->ValKind = DataLabel("Kind", CreateLabel(KV, 0, 0, 0, 0, Tab),true);
 		TB->ValTex = DataLabel("Texture", CreateButton("...", 0, 0, Tab));

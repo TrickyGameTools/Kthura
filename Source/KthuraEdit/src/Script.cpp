@@ -136,6 +136,22 @@ namespace KthuraEdit {
 #pragma endregion
 
 #pragma region APIs (KSA = Kthura Script API)
+#define KSA_GetObject()\
+	KthuraObject* O{ nullptr };\
+	if (lua_isnumber(L, 1)) {\
+		auto I = luaL_checkinteger(L, 1);\
+		auto IM{ &WorkMap.Layer(CurrentLayer)->GetIDMap() };\
+		if (!IM->count(I)) { UI::Crash("No object with ID number " + to_string(I)); return 0; }\
+		O = (*IM)[I];\
+	} else if (lua_isstring(L, 1)) {\
+		auto T{ luaL_checkstring(L,1) };\
+		if (!WorkMap.Layer(CurrentLayer)->HasTag(T)) { UI::Crash(string("No object with Tag ") + T); return 0; }\
+		O = WorkMap.Layer(CurrentLayer)->TagMap(T);\
+	} else {\
+		UI::Crash("Illegal function call!");\
+		return 0;\
+	}
+
 	static int KSA_Test(lua_State* L) { cout << "Testing! Testing! One! Two! Three!\n"; return 0; }
 	static int KSA_Crash(lua_State* L) { UI::Crash(luaL_checkstring(L, 1)); }
 	static int KSA_Color(lua_State* L) { TQSG_Color(luaL_optinteger(L, 1, 255), luaL_optinteger(L, 2, 255), luaL_optinteger(L, 3, 255)); return 0; }
@@ -158,6 +174,24 @@ namespace KthuraEdit {
 		int size = luaL_optinteger(L, 2, 8);
 		AutoDrawMarker(O->X(), O->Y(),size);
 		return 0;
+	}
+
+	static int KSA_ObjSet(lua_State* L) {
+		KSA_GetObject();
+		auto Fld{ Upper(luaL_checkstring(L,2)) };
+		if (Fld == "KIND") O->Kind(luaL_checkstring(L, 3),true);
+		else if (Fld == "TEXTURE" || Fld == "TEX" || Fld == "TEXTUREFILE")  O->Texture(luaL_checkstring(L, 3));
+		else if (Fld == "DOMINANCE") O->Dominance(luaL_checkinteger(L, 3));
+		else if (Fld == "R") O->R(luaL_checkinteger(L, 3) % 256);
+		else if (Fld == "G") O->G(luaL_checkinteger(L, 3) % 256);
+		else if (Fld == "B") O->B(luaL_checkinteger(L, 3) % 256);
+		else if (Fld == "TAG") {
+			auto T{ luaL_checkstring(L,3) };
+			if (string(T) != "" && O->GetParent()->HasTag(T) && O!=O->GetParent()->TagMap(T)) UI::Crash("Script error dupe tag definition: " + string(T));
+			O->Tag(T);
+			O->GetParent()->RemapTags();
+		}
+		else UI::Crash("Unknown object field: " + Fld);
 	}
 #pragma endregion
 
@@ -189,6 +223,7 @@ namespace KthuraEdit {
 		lua_register(LState, "KTH_COLOR", KSA_Color);
 		lua_register(LState, "KTH_COLORHSV", KSA_ColorHSV);
 		lua_register(LState, "KTH_OBJMARKER", KSA_ObjMarker);
+		lua_register(LState, "KTH_OBJSET", KSA_ObjSet);
 		cout << "= Loading Neil\n";
 		auto Neil{ "--[[NEIL]]\t\tlocal function LoadNeil()\t\t"+Config::JCR()->String("Script/Neil.lua")+"\n\nend\nNeil = LoadNeil()" };
 		luaL_loadstring(LState, Neil.c_str());

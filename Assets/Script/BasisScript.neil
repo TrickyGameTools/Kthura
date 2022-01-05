@@ -21,6 +21,16 @@ QuickMeta Kth
 	
 end
 
+QuickMeta B2I
+	index
+		if key
+			return 1
+		else
+			return 0
+		end
+	end
+End
+
 class KthuraObject
 	static table ObjList = {}
 	readonly Int ID
@@ -39,7 +49,39 @@ class KthuraObject
 		Kth.ObjMarker(ID,Size)
 	End
 	
-end
+	Set String Kind
+		Kth.ObjSet(ID,"Kind",Value)
+	End
+	
+	Set String Texture
+		Kth.ObjSet(ID,"Texture",Value)
+	End
+	
+	Set String Tex
+		Kth.ObjSet(ID,"Texture",Value)
+	End
+	
+	Set String Tag
+		Kth.ObjSet(ID,"Tag",Value)
+	End
+	
+	Set Int Dominance
+		Kth.ObjSet(ID,"Dominance",Value)
+	End
+	
+	Set Int R
+		Kth.ObjSet(ID,"R",Value)
+	End
+
+	Set Int G
+		Kth.ObjSet(ID,"G",Value)
+	End
+	
+	Set Int B
+		Kth.ObjSet(ID,"B",Value)
+	End
+
+End
 
 global delegate Panic = Lua.KTH_CRASH
 

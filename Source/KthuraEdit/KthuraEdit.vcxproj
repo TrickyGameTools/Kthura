@@ -187,11 +187,14 @@
     <ClCompile Include="src\Convert.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MapData.cpp" />
+    <ClCompile Include="src\OPicRemove.cpp" />
+    <ClCompile Include="src\Other.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\UI_Blockmap.cpp" />
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
     <ClCompile Include="src\UI_ObjectData.cpp" />
+    <ClCompile Include="src\UI_Relabel.cpp" />
     <ClCompile Include="src\UI_SeveralStrings.cpp" />
     <ClCompile Include="src\UI_TagObject.cpp" />
     <ClCompile Include="src\UI_TagOverview.cpp" />
@@ -227,6 +230,8 @@
     <ClInclude Include="headers\Config.hpp" />
     <ClInclude Include="headers\Convert.hpp" />
     <ClInclude Include="headers\MapData.hpp" />
+    <ClInclude Include="headers\OPicRemove.hpp" />
+    <ClInclude Include="headers\Other.hpp" />
     <ClInclude Include="headers\QuickLuaInclude.hpp" />
     <ClInclude Include="headers\Script.hpp" />
     <ClInclude Include="headers\UI_BlockMap.hpp" />

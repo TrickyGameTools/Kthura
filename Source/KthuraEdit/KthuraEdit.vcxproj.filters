@@ -183,6 +183,15 @@
     <ClCompile Include="..\..\..\VC\June19\src\june19_scrollbar.cpp">
       <Filter>Source Files\June19</Filter>
     </ClCompile>
+    <ClCompile Include="src\OPicRemove.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Other.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UI_Relabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Config.hpp">
@@ -298,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\VC\June19\src\june19_scrollbar.hpp">
       <Filter>Source Files\June19</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\OPicRemove.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Other.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

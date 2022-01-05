@@ -29,6 +29,7 @@
 #include "../headers/UserInterface.hpp"
 #include "../headers/Convert.hpp"
 #include "../headers/Script.hpp"
+#include "../headers/OPicRemove.hpp"
 #include "../headers/UI_Map.hpp"
 #include "../headers/UI_Layer.hpp"
 #include "../headers/UI_SeveralStrings.hpp"
@@ -182,6 +183,7 @@ namespace KthuraEdit {
 		DebugMenu->AddItem("Tag Overview",ShowTags,SDLK_z);
 		DebugMenu->AddItem("PNG to JPBF", PNG2JPBF, SDLK_F12);
 		DebugMenu->AddItem("Remove \"Rotten\" Objects", RemoveRottenObjects, SDLK_INSERT);
+		DebugMenu->AddItem("Pic Remove", RemovePicObjects, SDLK_F9);
 		DebugMenu->AddItem("Optimize To Origin", OptimizeToOrigin, SDLK_F2);
 		DebugMenu->AddItem("Next Object", NextObject, SDLK_TAB);
 		// Stages
