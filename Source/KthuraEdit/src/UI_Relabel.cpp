@@ -1,3 +1,28 @@
+// Lic:
+// Kthura
+// Relabel Interface
+// 
+// 
+// 
+// (c) Jeroen P. Broks, 2022
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Please note that some references to data like pictures or audio, do not automatically
+// fall under this licenses. Mostly this is noted in the respective files.
+// 
+// Version: 22.01.06
+// EndLic
 
 // NOTE!
 // As this source file only has 1 function used in another source, 
@@ -35,7 +60,7 @@ namespace KthuraEdit {
 	static void EditLabel(j19gadget* g,j19action a) { nLabel = g->Text; }
 	static void EditOver(j19gadget* g, j19action a) { Overwrite = g->checked; }
 	static void ActCancel(j19gadget* g, j19action a) { UI::GoToStage("Map"); }
-	static void ActOkay(j19gadget* g, j19action a) {}
+	static void ActOkay(j19gadget* g, j19action a) { WorkMap.Layer(CurrentLayer)->Relabel(x, y, w, h, nLabel, Overwrite); UI::GoToStage("Map"); }
 #pragma endregion
 
 	void AE_Relabel(int _x, int _y, int _w, int _h, std::string wh) {
@@ -65,9 +90,13 @@ namespace KthuraEdit {
 			LLabel = CreateLabel("Label:", 10, 50, 200, 20, MP);
 			FLabel = CreateTextfield(200, 50, MP->W() - 210, MP);
 			FLabel->FR = 0;
-			FLabel->FB = 180;
+			FLabel->FG = 180;
+			FLabel->BG = 18;
+			FLabel->BB = 25;
 			LDelOld = CreateLabel("Overwrite:", 10, 80, 200, 20, MP);
-			FDelOld = CreateCheckBox("", MP->W() - 210, 80, 40, 40, MP);
+			FDelOld = CreateCheckBox("Yes", 200, 80, 40, 40, MP);
+			FDelOld->FR = 0;
+			FDelOld->FG = 180;
 			FLabel->CBAction = EditLabel;
 			FDelOld->CBAction = EditOver;
 			Okay = CreateButton("Okay", 100, 300, PG());
@@ -84,11 +113,12 @@ namespace KthuraEdit {
 
 		}
 		char SArea[300]{ "" }; sprintf_s(SArea, "(%04d,%04d); %04dx%04d", _x, _y, _w, _h);
-		Caption->Caption = SArea;
+		FArea->Caption = SArea;
 
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
+		UI::GoToStage("RELABEL");
 	}
 }
