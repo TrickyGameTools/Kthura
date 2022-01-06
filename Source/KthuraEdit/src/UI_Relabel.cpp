@@ -49,7 +49,7 @@ namespace KthuraEdit {
 
 
 
-	inline j19gadget* PG() { return UI::GetStage("RELABEL")->MainGadget; }
+	inline j19gadget* RL_PG() { return UI::GetStage("RELABEL")->MainGadget; }
 
 	static j19gadget
 		* Okay{ nullptr },
@@ -79,7 +79,7 @@ namespace KthuraEdit {
 			* LDelOld{ nullptr };
 		if (!Caption) {
 			UI::AddStage("RELABEL");
-			MP = PG();
+			MP = RL_PG();
 			Caption = CreateLabel("Relabel area",10,10,MP->W(),20,MP);
 			Caption->FG = 180;
 			Caption->FB = 0;
@@ -99,13 +99,13 @@ namespace KthuraEdit {
 			FDelOld->FG = 180;
 			FLabel->CBAction = EditLabel;
 			FDelOld->CBAction = EditOver;
-			Okay = CreateButton("Okay", 100, 300, PG());
+			Okay = CreateButton("Okay", 100, 300, RL_PG());
 			Okay->SetForeground(0, 255, 0, 255);
 			Okay->SetBackground(0, 25, 0, 255);
 			//Okay->CBDraw = AllowOkay;
 			Okay->CBAction = ActOkay;
 
-			Cancel = CreateButton("Cancel", 0, 300, PG());
+			Cancel = CreateButton("Cancel", 0, 300, RL_PG());
 			Cancel->SetForeground(255, 0, 0, 255);
 			Cancel->SetBackground(25, 0, 0, 255);
 			Cancel->CBAction = ActCancel;
