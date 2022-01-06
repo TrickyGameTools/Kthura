@@ -345,3 +345,7 @@ MKL*
 ._*
 Source/pack.jif
 *.neil#
+Source/KthuraEdit/headers/builddate.hpp
+Source/KthuraLauncher/builddate.cs
+Source/KthuraLauncher/builddate.cs
+Source/KthuraEdit/headers/builddate.hpp
