@@ -27,6 +27,7 @@
 #include <string>
 #include <map>
 #include "../headers/Other.hpp"
+#include "../headers/MapData.hpp"
 
 namespace KthuraEdit {
 	using namespace std;
@@ -35,22 +36,29 @@ namespace KthuraEdit {
 	static map<string, SAE> Reg_AreaEffect{};
 	static map<string, SPE> Reg_SpotEffect{};
 
-	static void Script_AreaEffect(int x, int y, int w, int h, std::string what){}
-	static void Script_SpotEffect(int x,int y,std::string what){}
+	static void Script_AreaEffect(int x, int y, int w, int h, std::string what) {}
+	static void Script_SpotEffect(int x, int y, std::string what) {}
 
 #pragma region inbuilt routines that should replace scripts
-	void AE_Relabel(int x, int y, int w, int h, std::string wh); // Header! Makes and extra hpp file unneeded	
+	// Area
+	void AE_Relabel(int x, int y, int w, int h, std::string wh); // Header! Makes and extra hpp file unneeded
+	// Spot
+	static void SE_Pivot(int x, int y, std::string wh) { auto O{ WorkMap.Layer(CurrentLayer)->RNewObject("Pivot") }; O->X(x); O->Y(y); O->Dominance(20); } // No extra code needed here!
+	void SE_Exit(int x, int y, std::string wh);
 #pragma endregion
 
 	static void O_Init(bool force=false){
 		static bool before = false;
 		if (!(before || force)) {
 			RegisterAreaEffect("Relabel", AE_Relabel);
+			RegisterSpotEffect("Exit", SE_Exit);
+			RegisterSpotEffect("Pivot", SE_Pivot);
 		}
 		before = true;
 	}
 
 	void AreaEffect(int x, int y, int w, int h, std::string what) {
+		O_Init();
 		if (what[0] == '$')
 			Script_AreaEffect(x, y, w, h, what);
 		else {
