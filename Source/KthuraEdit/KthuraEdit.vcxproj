@@ -191,6 +191,7 @@
     <ClCompile Include="src\Other.cpp" />
     <ClCompile Include="src\Script.cpp" />
     <ClCompile Include="src\UI_Blockmap.cpp" />
+    <ClCompile Include="src\UI_ExitSpot.cpp" />
     <ClCompile Include="src\UI_Layer.cpp" />
     <ClCompile Include="src\UI_Map.cpp" />
     <ClCompile Include="src\UI_ObjectData.cpp" />
