@@ -423,6 +423,19 @@ namespace KthuraEdit {
 		//std::cout << "DrawExit." << o->Tag() << ": (" << o->X() + ix - scrollx << "," << o->Y() + iy - scrolly << ")" << std::endl;
 	}
 
+	void DrawPivot(KthuraObject* o, int ix, int iy, int scrollx, int scrolly) {
+		auto
+			dx{ (o->X() + ix) - scrollx },
+			dy{ (o->Y() + iy) - scrolly },
+			mx{ TQSE_MouseX() },
+			my{ TQSE_MouseY() };
+		TQSG_ACol(180, 255, 255, 255);
+		DrawMarker(dx, dy);
+		if (mx > dx - 8 && mx < dx + 8 && my > dy - 8 && my < dy + 8)
+			UI_MapEdit->MainGadget->Font()->Draw(o->Tag(), dx, dy + 9, 2, 0);
+		//std::cout << "DrawExit." << o->Tag() << ": (" << o->X() + ix - scrollx << "," << o->Y() + iy - scrolly << ")" << std::endl;
+	}
+
 	void UI_MapStart() {
 		// Start
 		UI::AddStage("Map");
@@ -464,6 +477,7 @@ namespace KthuraEdit {
 		RenewLayers();
 		KthuraDraw::DrawZone = ZoneFunction;
 		KthuraDraw::DrawExit = DrawExit;
+		KthuraDraw::DrawPivot = DrawPivot;
 	}
 
 	void RenewLayers() {
@@ -549,6 +563,7 @@ namespace KthuraEdit {
 					auto i = AreaBox->SelectedItem();
 					if (i < 0) return;
 					auto s = AreaBox->ItemText();
+					std::cout << "Area Script effect: " << s << std::endl;
 					if (s.size()) AreaEffect(Placement.x, Placement.y, Placement.w, Placement.h, s);
 					return;
 				}
@@ -843,10 +858,11 @@ namespace KthuraEdit {
 						x += floor(GridX() / 2);
 						y += GridY();
 					}
-					int
-						dx = x + MapGroup->DrawX(),
-						dy = y + MapGroup->DrawY();
-					SpotEffect(dx, dy, s);
+					//int
+					//	dx = x + MapGroup->DrawX(),
+					//	dy = y + MapGroup->DrawY();
+					if (TQSE_MouseHit(1) && ml)
+						SpotEffect(x, y, s);
 				}
 				break;
 			}
