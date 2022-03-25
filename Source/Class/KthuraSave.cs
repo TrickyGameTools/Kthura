@@ -61,7 +61,7 @@ namespace NSKthura {
             return ret.ToString();
         }
 
-        public static void Save(Kthura map, TJCRCreate j, string prefix, string storage="Store",string Author="",string Notes="") {
+        public static void Save(Kthura map, TJCRCreate j, string prefix="", string storage="Store",string Author="",string Notes="") {
             j.NewStringMap(map.MetaData, $"{prefix}Data", storage, Author, Notes);
             j.AddString(GenObjects(map), $"{prefix}Objects", storage, Author, Notes);
         }
