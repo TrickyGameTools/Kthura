@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 22.03.21
+// Version: 22.03.26
 // EndLic
 
 // self
@@ -200,7 +200,7 @@ namespace KthuraEdit {
 		TQSE_Poll();
 		Screen()->Draw();
 		if (CS->PostJune) CS->PostJune();
-		//if (TQSE_Quit()) go_on = false;
+		if (TQSE_Quit()) go_on = false;
 #ifdef QUICK_QUIT
 		if (TQSE_KeyHit(SDLK_ESCAPE)) go_on = false;
 #endif
