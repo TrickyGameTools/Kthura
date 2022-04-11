@@ -62,6 +62,7 @@ namespace NSKthura {
         }
 
         public static void Save(Kthura map, TJCRCreate j, string prefix="", string storage="Store",string Author="",string Notes="") {
+            if (Kthura.LoadUnknown) foreach (var unk in map.Unknown) j.AddBytes(unk.Value, unk.Key, storage, Author, Notes);
             j.NewStringMap(map.MetaData, $"{prefix}Data", storage, Author, Notes);
             j.AddString(GenObjects(map), $"{prefix}Objects", storage, Author, Notes);
         }

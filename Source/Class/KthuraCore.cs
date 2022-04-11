@@ -738,6 +738,7 @@ namespace NSKthura {
 		public TJCRDIR TextureJCR;
 		public SortedDictionary<string, KthuraLayer> Layers = new SortedDictionary<string, KthuraLayer>();
 		public SortedDictionary<string, string> MetaData = new SortedDictionary<string, string>();
+		public SortedDictionary<string, byte[]> Unknown = new SortedDictionary<string, byte[]>();
 
 		#endregion
 
@@ -784,8 +785,15 @@ namespace NSKthura {
 			// This is the TRUE load routine. All overloads eventually lead to this one! ;-P
 			var ret = new Kthura {
 				MetaData = new SortedDictionary<string, string>(),
+				Unknown = new SortedDictionary<string, byte[]>(),
 				TextureJCR = TexJcr
 			};
+			if (LoadUnknown) {
+				foreach(var unk in sourcedir.Entries) {
+					var up = prefix.ToUpper();
+					if (qstr.Prefixed(unk.Key, up) && up != $"{up}DATA" && up != $"{up}OBJECTS") ret.Unknown[unk.Value.Entry] = sourcedir.JCR_B(unk.Key);
+				}
+			}
 			var m = sourcedir.LoadStringMap($"{prefix}Data");
 			if (m == null) {
 				Console.WriteLine($"ERROR! Failed to load {prefix}Data");
@@ -976,6 +984,8 @@ namespace NSKthura {
 		#region Core functions as statics (since C# requires classes even when you don't need them).
 		static TJCRDIR DefaultTextureJCR = null;
 		static public void SetDefaultTextureJCR(TJCRDIR j) => DefaultTextureJCR = j;
+
+		static public bool LoadUnknown = false;
 		#endregion
 	}
 
