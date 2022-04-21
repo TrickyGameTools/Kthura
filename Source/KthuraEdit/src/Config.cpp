@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2021
+// (c) Jeroen P. Broks, 2021, 2022
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.07.25
+// Version: 22.04.21
 // EndLic
 
 // Myself
@@ -109,7 +109,7 @@ namespace KthuraEdit {
 		if (Merge) {
 			_TexJCR = jcr6::JT_Dir(); // Make sure it's all empty!
 			//UI::Crash("Merge mode not yet available"); // This will be there! I am too dependent on this one myself.
-			for (auto scdir : ProjectConfig.List("Paths." + Platform(), "TexMaps")) {
+			for (auto scdir : *ProjectConfig.List("Paths." + Platform(), "TexMaps")) {
 				auto Lijstje = FileList(scdir,DirWant::Directories);
 				for (auto LD : Lijstje) {
 					cout << "Tex Merge Mode -> Adding: " << LD << endl;
@@ -128,11 +128,15 @@ namespace KthuraEdit {
 	}
 
 	std::vector<string> Config::PrjMapMeta() {		
-		return ProjectConfig.List("Map", "GeneralData");
+		return *ProjectConfig.List("Map", "GeneralData");
 	}
 
 	std::vector<std::string> Config::ScriptLibPath() {
-		return GlobalConfig.List(Platform(), "ScriptLibraries");
+		return *GlobalConfig.List(Platform(), "ScriptLibraries");
+	}
+
+	std::vector<string>* Config::ProjectSpecial() {
+		return ProjectConfig.List("Map", "Special");		
 	}
 
 	Success Config::GetJCR() {
