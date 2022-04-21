@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2021
+// (c) Jeroen P. Broks, 2021, 2022
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.04.17
+// Version: 22.04.21
 // EndLic
 #pragma once
 
@@ -73,6 +73,8 @@ namespace KthuraEdit {
 		static jcr6::JT_Dir* JCR();
 		static std::vector<std::string> PrjMapMeta();
 		static std::vector<std::string> ScriptLibPath();
+
+		static std::vector<std::string>* ProjectSpecial();
 
 		static Success GetJCR();
 		static bool FWindowed();
