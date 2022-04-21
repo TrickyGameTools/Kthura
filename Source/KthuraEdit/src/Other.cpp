@@ -21,23 +21,33 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 22.01.06
+// Version: 22.04.21
 // EndLic
 #include <iostream>
 #include <string>
 #include <map>
 #include "../headers/Other.hpp"
 #include "../headers/MapData.hpp"
+#include "../headers/Config.hpp"
+#include "../headers/Script.hpp"
+
+using namespace TrickyUnits;
+using namespace std;
 
 namespace KthuraEdit {
-	using namespace std;
 	typedef struct { PO_AreaEffect f; } SAE;
 	typedef struct { PO_SpotEffect f; } SPE;
 	static map<string, SAE> Reg_AreaEffect{};
 	static map<string, SPE> Reg_SpotEffect{};
 
 	static void Script_AreaEffect(int x, int y, int w, int h, std::string what) {}
-	static void Script_SpotEffect(int x, int y, std::string what) {}
+	static void Script_SpotEffect(int x, int y, std::string what) {
+		string s{ "$" };
+		vector<string> para{ s + to_string(x), s + to_string(y) };
+		string f{ "CSPOT_" };
+		f += TrickyUnits::right(what, what.size() - 1);
+		CallBack(f + ".Create", para);
+	}
 
 #pragma region inbuilt routines that should replace scripts
 	// Area
@@ -53,6 +63,19 @@ namespace KthuraEdit {
 			RegisterAreaEffect("Relabel", AE_Relabel);
 			RegisterSpotEffect("Exit", SE_Exit);
 			RegisterSpotEffect("Pivot", SE_Pivot);
+			for (auto Special : *Config::ProjectSpecial()) {
+				switch (Special[0]) {
+				case '$':
+					RegisterSpotEffect(Special, Script_SpotEffect);
+					break;
+				case '@':
+					RegisterAreaEffect(Special, Script_AreaEffect);
+					break;
+				default:
+					cout << "Unknown prefix: " << Special[0] << " on special " << Special << endl;
+					break;
+				}
+			}
 		}
 		before = true;
 	}
