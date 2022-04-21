@@ -41,7 +41,8 @@ function private:builddate{
 
 function private:bld($packagedir,$packagename) {
 	#$compiler = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\msbuild.exe";
-	$compiler = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/MSBuild.exe"
+	#$compiler = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/MSBuild.exe"
+	$compiler = "C:/Program Files/Microsoft Visual Studio/2022/community/msbuild/current/bin/msbuild.exe"
 	$result = "---"
 	write-host "Compiling: " -nonewline -Foregroundcolor Yellow
 	write-host $packagename -ForeGroundColor Cyan
