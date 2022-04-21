@@ -85,6 +85,18 @@ End
 
 global delegate Panic = Lua.KTH_CRASH
 
+global var CreateObstacle(int x, int y, string Tex)
+	int RID = Kth.CreateObj("Obstacle",x,y,Tex)
+	return KthuraObject.GetObjByID(RID)
+end
+
+
+global var CreatePivot(int x, int y)
+	int RID = Kth.CreateObj("Pivot",x,y)
+	return KthuraObject.GetObjByID(RID)
+end
+
+
 Init
 	// Test!
 	#pure
