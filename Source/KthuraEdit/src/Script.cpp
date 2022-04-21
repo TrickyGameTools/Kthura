@@ -21,9 +21,10 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 22.01.06
+// Version: 22.04.21
 // EndLic
 
+#define Debug_Script
 
 // C++
 #include <string>
@@ -53,7 +54,11 @@ using namespace std;
 using namespace TrickyUnits;
 using namespace NSKthura;
 
-
+#ifdef Debug_Script
+#define Chat(a) std::cout << "Script Debug> "<<a<<std::endl;
+#else
+#define Chat(a)
+#endif
 
 namespace KthuraEdit {
 
@@ -140,7 +145,7 @@ namespace KthuraEdit {
 	KthuraObject* O{ nullptr };\
 	if (lua_isnumber(L, 1)) {\
 		auto I = luaL_checkinteger(L, 1);\
-		auto IM{ &WorkMap.Layer(CurrentLayer)->GetIDMap() };\
+		auto IM{ WorkMap.Layer(CurrentLayer)->GetIDPMap() };\
 		if (!IM->count(I)) { UI::Crash("No object with ID number " + to_string(I)); return 0; }\
 		O = (*IM)[I];\
 	} else if (lua_isstring(L, 1)) {\
@@ -160,9 +165,9 @@ namespace KthuraEdit {
 		KthuraObject* O{ nullptr };
 		if (lua_isnumber(L, 1)) {
 			auto I = luaL_checkinteger(L, 1);
-			auto IM{ &WorkMap.Layer(CurrentLayer)->GetIDMap() };
-			if (!IM->count(I)) { UI::Crash("No object with ID number " + to_string(I)); return 0; }
-			O = (*IM)[I];
+			auto IM{ WorkMap.Layer(CurrentLayer)->GetIDMap() };
+			if (!IM.count(I)) { UI::Crash("No object with ID number " + to_string(I)); return 0; }
+			O = IM[I];
 		} else if (lua_isstring(L, 1)) {
 			auto T{ luaL_checkstring(L,1) };
 			if (!WorkMap.Layer(CurrentLayer)->HasTag(T)) { UI::Crash(string("No object with Tag ") + T); return 0; }
@@ -190,8 +195,57 @@ namespace KthuraEdit {
 			if (string(T) != "" && O->GetParent()->HasTag(T) && O!=O->GetParent()->TagMap(T)) UI::Crash("Script error dupe tag definition: " + string(T));
 			O->Tag(T);
 			O->GetParent()->RemapTags();
+			Chat("Object #" << O->ID() << " tagged as: " << T);
 		}
 		else UI::Crash("Unknown object field: " + Fld);
+	}
+
+	static int KSA_CreateObject(lua_State* L) {
+		auto Kind{ luaL_checkstring(L,1) };
+		auto NObj{ WorkMap.Layer(CurrentLayer)->RNewObject(Kind) };
+		switch (NObj->EKind()) {
+		case KthuraKind::Custom:
+		case KthuraKind::CustomItem:
+		case KthuraKind::Exit:
+		case KthuraKind::Obstacle:
+			NObj->Texture(luaL_checkstring(L, 4));
+				// FALLTHROUGH!!!
+		case KthuraKind::Pivot:
+			{
+				auto
+					x{ luaL_checkinteger(L,2) },
+					y{ luaL_checkinteger(L,3) };
+				NObj->X(x);
+				NObj->Y(y);
+			} break;
+		case KthuraKind::TiledArea:
+		case KthuraKind::StretchedArea:
+			NObj->Texture(luaL_checkstring(L, 6));
+			// FALLTHROUGH!
+		case KthuraKind::Rect:
+		case KthuraKind::Zone: {
+			auto
+				x{ luaL_checkinteger(L,2) },
+				y{ luaL_checkinteger(L,3) },
+				w{ luaL_checkinteger(L,4) },
+				h{ luaL_checkinteger(L,5) };
+			NObj->X(x);
+			NObj->Y(y);
+			NObj->W(w);
+			NObj->H(h);
+		} break;
+		default:
+			UI::Crash("Kind " + string(Kind) + " cannot be used in this version of the Kthura Map Editor");
+			break;
+		}
+		Chat("Object '" << Kind << "' created. #" << NObj->ID());
+		lua_pushinteger(L,NObj->ID());
+		return 1;
+	}
+
+	static int KSA_HasTag(lua_State* L) {
+		lua_pushboolean(L, WorkMap.Layer(CurrentLayer)->HasTag(luaL_checkstring(L, 1)));
+		return 1;
 	}
 #pragma endregion
 
@@ -204,7 +258,8 @@ namespace KthuraEdit {
 
 #pragma region Init & Done
 	void InitScript() {
-		JCRScriptPatchList(&Config::ScriptLibPath());
+		auto SLP{ Config::ScriptLibPath() };
+		JCRScriptPatchList(&SLP);
 		KthuraDraw::DrawCSpot = DrawCustomItem;
 		cout << "Initiating scripting engine\n";
 		LState = luaL_newstate();
@@ -224,6 +279,8 @@ namespace KthuraEdit {
 		lua_register(LState, "KTH_COLORHSV", KSA_ColorHSV);
 		lua_register(LState, "KTH_OBJMARKER", KSA_ObjMarker);
 		lua_register(LState, "KTH_OBJSET", KSA_ObjSet);
+		lua_register(LState, "KTH_CREATEOBJ", KSA_CreateObject);
+		lua_register(LState, "KTH_HASTAG", KSA_HasTag);
 		cout << "= Loading Neil\n";
 		auto Neil{ "--[[NEIL]]\t\tlocal function LoadNeil()\t\t"+Config::JCR()->String("Script/Neil.lua")+"\n\nend\nNeil = LoadNeil()" };
 		luaL_loadstring(LState, Neil.c_str());
@@ -289,6 +346,7 @@ namespace KthuraEdit {
 			else
 				Para += "\"" + PR + "\"";
 		}
+		Chat("Calling " << f << " with parameters "<< Para);
 		switch (LKind) {
 		case ScriptKind::Lua:
 			RawCall(f,Para);
