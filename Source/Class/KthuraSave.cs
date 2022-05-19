@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraSave.cs
 // Save Kthura for C#
-// version: 22.04.21
+// version: 22.05.13
 // Copyright (C) 2019, 2022 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -62,7 +62,12 @@ namespace NSKthura {
         }
 
         public static void Save(Kthura map, TJCRCreate j, string prefix="", string storage="Store",string Author="",string Notes="") {
-            if (Kthura.LoadUnknown) foreach (var unk in map.Unknown) j.AddBytes(unk.Value, unk.Key, storage, Author, Notes);
+            if (Kthura.LoadUnknown) {
+                foreach (var unk in map.Unknown) {
+                    System.Diagnostics.Debug.WriteLine($"Adding unknown {unk.Key} ({unk.Value.Length} bytes)");
+                    j.AddBytes(unk.Value, unk.Key, storage, Author, Notes);
+                }
+            }
             j.NewStringMap(map.MetaData, $"{prefix}Data", storage, Author, Notes);
             j.AddString(GenObjects(map), $"{prefix}Objects", storage, Author, Notes);
         }
