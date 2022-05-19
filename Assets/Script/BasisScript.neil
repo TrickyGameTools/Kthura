@@ -80,6 +80,10 @@ class KthuraObject
 	Set Int B
 		Kth.ObjSet(ID,"B",Value)
 	End
+	
+	Set Int Alpha
+		Kth.ObjSet(ID,"Alpha",Value)
+	End
 
 End
 
