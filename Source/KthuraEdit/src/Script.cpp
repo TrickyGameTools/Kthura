@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 22.04.21
+// Version: 22.05.13
 // EndLic
 
 #define Debug_Script
@@ -190,6 +190,8 @@ namespace KthuraEdit {
 		else if (Fld == "R") O->R(luaL_checkinteger(L, 3) % 256);
 		else if (Fld == "G") O->G(luaL_checkinteger(L, 3) % 256);
 		else if (Fld == "B") O->B(luaL_checkinteger(L, 3) % 256);
+		else if (Fld == "ALPHA" || Fld=="ALPHA255") O->Alpha255(luaL_checkinteger(L, 3) % 256);
+		else if (Fld == "ALPHA1000") O->Alpha1000(luaL_checkinteger(L, 3) % 1001);
 		else if (Fld == "TAG") {
 			auto T{ luaL_checkstring(L,3) };
 			if (string(T) != "" && O->GetParent()->HasTag(T) && O!=O->GetParent()->TagMap(T)) UI::Crash("Script error dupe tag definition: " + string(T));
