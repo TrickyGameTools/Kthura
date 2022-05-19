@@ -4,7 +4,7 @@
 // 
 // 
 // 
-// (c) Jeroen P. Broks, 2021
+// (c) Jeroen P. Broks, 2021, 2022
 // 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 21.06.23
+// Version: 22.05.13
 // EndLic
 #include <iostream>
 #include <TQSE.hpp>
@@ -108,6 +108,7 @@ namespace KthuraEdit {
 		using namespace std;
 		using namespace NSKthura;
 		vector<int> Victims;
+		ModifyObject = nullptr;
 		for (auto o : WorkMap.Layer(CurrentLayer)->Objects) {
 			switch (o->EKind()) {
 			case KthuraKind::Rect:
