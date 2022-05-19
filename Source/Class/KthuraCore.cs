@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 22.04.21
+// version: 22.05.13
 // Copyright (C) 2019, 2020, 2021, 2022 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -151,7 +151,7 @@ namespace NSKthura {
 				_alpha1000 = (int)((float)(((float)value / (float)255) * (float)1000));
 				if (_alpha1000 < 0) _alpha1000 = 0;
 				if (_alpha1000 > 1000) _alpha1000 = 1000;
-				Debug.WriteLine($"Alpha255 set. 1000={Alpha1000}; 255={Alpha255};");
+				//Debug.WriteLine($"Alpha255 set. 1000={Alpha1000}; 255={Alpha255};");
 			}
 		}
 		public int Alpha1000 {
@@ -168,7 +168,7 @@ namespace NSKthura {
 				_alpha255 = (int)((float)(((float)value / 1000) * 255));
 				if (_alpha255 < 0) _alpha255 = 0;
 				if (_alpha255 > 255) _alpha255 = 255;
-				Debug.WriteLine($"Alpha1000 set. 1000={Alpha1000}; 255={Alpha255};");
+				//Debug.WriteLine($"Alpha1000 set. 1000={Alpha1000}; 255={Alpha255};");
 			}
 		}
 
@@ -253,7 +253,7 @@ namespace NSKthura {
 		public int WalkSpot = 0;
 		public string Wind = "North";
 		public int WalkingToX = 0, WalkingToY = 0;
-		public Path FoundPath = null;
+		public TrickyUnits.Dijkstra.Path FoundPath = null;
 		public int PathIndex = 0;
 		public int PathLength {
 			get {
@@ -770,7 +770,7 @@ namespace NSKthura {
 
 		public static Kthura Load(TJCRDIR sourcedir, string prefix, TJCRDIR TexJcr) {
 
-			bool dochat = true;
+			bool dochat = false;
 			bool containslayers = false; // Will be used to "repair" older maps without layers, as this is no longer supported.
 
 			void crash(string er) => throw new Exception($"KthuraLoad: {er}");
@@ -791,7 +791,7 @@ namespace NSKthura {
 			if (LoadUnknown) {
 				foreach(var unk in sourcedir.Entries) {
 					var up = prefix.ToUpper();
-					if (qstr.Prefixed(unk.Key, up) && up != $"{up}DATA" && up != $"{up}OBJECTS") ret.Unknown[unk.Value.Entry] = sourcedir.JCR_B(unk.Key);
+					if (qstr.Prefixed(unk.Key.ToUpper(), up) && unk.Key != $"{up}DATA" && unk.Key != $"{up}OBJECTS") ret.Unknown[unk.Value.Entry] = sourcedir.JCR_B(unk.Key);
 				}
 			}
 			var m = sourcedir.LoadStringMap($"{prefix}Data");
