@@ -21,7 +21,7 @@
 // Please note that some references to data like pictures or audio, do not automatically
 // fall under this licenses. Mostly this is noted in the respective files.
 // 
-// Version: 22.01.06
+// Version: 22.05.19
 // EndLic
 
 
@@ -35,6 +35,8 @@
 	t2 = CreateTextfield(100, 0, 80, temp); \
 	t1->FR = 255; t1->FG = 180; t1->FB = 0; t1->BG = 25; t1->BG = 18; t1->BB = 0; \
 	t2->FR = 255; t2->FG = 180; t2->FB = 0; t2->BG = 25; t2->BG = 18; t2->BB = 0; \
+	t1->SetFont(Config::JCR(),"Fonts/DOSFont_thin.jfbf");\
+	t2->SetFont(Config::JCR(),"Fonts/DOSFont_thin.jfbf");\
 }
 #pragma endregion
 
@@ -75,6 +77,8 @@ using namespace NSKthura;
 namespace KthuraEdit {
 
 #pragma region Work tabs
+	
+	static bool AutoTex{ false };
 
 	enum class TabNum {
 		NONE,
@@ -119,6 +123,7 @@ namespace KthuraEdit {
 		j19gadget* ValVisible{ nullptr };
 		j19gadget* ValTag{ nullptr };
 		j19gadget* ValLabels{ nullptr };
+		j19gadget* ChkAutoTexMod{ nullptr };
 		std::string Tex{ "" };
 		std::string Lab{ "" };
 	};
@@ -166,6 +171,8 @@ namespace KthuraEdit {
 	qtf(ModG, G);
 	qtf(ModB, B);
 	qtf(ModA, Alpha255);
+
+	qtf(ModAnimSpeed, AnimSpeed);
 
 	qcf(ModImp, Impassible);
 	qcf(ModFrc, ForcePassible);
@@ -261,15 +268,21 @@ namespace KthuraEdit {
 		if (source->HData == "Modify" && ModifyObject) ModifyObject->RotationDegrees(ToInt(source->Text));
 	}
 
-	static void ToggleImp(j19gadget* source, j19action) {
+	static void ToggleImp(j19gadget* source, j19action a) {
 		auto frc = (&TabMap[source->GetParent()->HData])->ValForcePassible;
 		frc->Enabled = !source->checked;
 		// TODO: Change object state if in modify mode
 	}
-	static void ToggleFrc(j19gadget* source, j19action) {
+	static void ToggleFrc(j19gadget* source, j19action a) {
 		auto imp = (&TabMap[source->GetParent()->HData])->ValImpassible;
 		imp->Enabled = !source->checked;
 		// TODO: Change object state if in modify mode
+	}
+
+	static void ToggleAutoTex(j19gadget* source, j19action a) {
+		AutoTex = source->checked;
+		WorkMap.Options.Value("Jeroen_Editor", "AutoTex", std::to_string(AutoTex));
+		std::cout << "Auto Tex Inseration Modulo: " << AutoTex << std::endl;
 	}
 
 
@@ -341,6 +354,10 @@ namespace KthuraEdit {
 			DataButt->CBAction = GoToObjectData;
 		}
 		TB->ValLabels->CBAction = GoLabel;
+		if (caption == "TiledArea") {
+			TB->ChkAutoTexMod = DataLabel("AutoTexIns", CreateCheckBox("", 0, 0, 0, 0, Tab));
+			TB->ChkAutoTexMod->CBAction = ToggleAutoTex;
+		}
 		TB->ValLabels->HData = caption;
 		if (caption == "Modify") {
 			TB->ValX->CBAction = ModX;
@@ -356,6 +373,8 @@ namespace KthuraEdit {
 			TB->ValColR->CBAction = ModR;
 			TB->ValColG->CBAction = ModG;
 			TB->ValColB->CBAction = ModB;
+
+			TB->ValAnimSpeed->CBAction = ModAnimSpeed;
 
 			TB->ValImpassible->CBAction = ModImp;
 			TB->ValForcePassible->CBAction = ModFrc;
@@ -590,6 +609,14 @@ namespace KthuraEdit {
 				O->ScaleY(1000);
 				O->Dominance(ToInt(GTab->ValDom->Text));
 				O->Labels(GTab->Lab);
+				if (Tab == "TiledArea" && AutoTex) {
+					auto
+						TW{ KthuraDraw::DrawDriver->TexWidth(O) },
+						TH{ KthuraDraw::DrawDriver->TexHeight(O) };
+					printf("TiledArea with autocorrection position: (%05d,%05d); Tex Size: %05dx%05d; Insert Postion:(%05d,%05d);\n",O->X(),O->Y(),TW,TH,O->X()%TW,O->Y()%TH);
+					O->insertx(-(O->X() % TW));
+					O->inserty(-(O->Y() % TH));
+				}
 				if (Tab == "Zone") {
 					int i = 0;
 					std::string mTag;
@@ -661,11 +688,23 @@ namespace KthuraEdit {
 			float
 				tw = ((float)KthuraDraw::DrawDriver->ObjectWidth(O)) * O->TrueScaleX(),
 				th = ((float)KthuraDraw::DrawDriver->ObjectHeight(O)) * O->TrueScaleY();
+			int
+				sx = O->X(),
+				ey = O->Y(),
+				ex = O->X() - (tw / 2),
+				sy = O->Y() - th;
+			if (ex < sx) { int tx = ex; ex = sx; sx = tx; }
+			if (ey < sy) { int ty = ey; ey = sy; sy = ty; }
+
 			//std::cout << "Obstacle Check: " << tw << "x" << th << "\t (Tag:" << O->Tag() << ")" << std::endl;
 			//std::cout << "- True Scale " << O->TrueScaleX() << "x" << O->TrueScaleY()<<std::endl;
 			//std::cout << "- Range: Y:" << O->Y() - th << "-" << O->Y() << "\tX:" << O->X() - (tw / 2) << "-" << O->X() + (tw / 2) << "\n";
 			//std::cout << "- Check coordinates: (" << x << "," << y << ");  Object coordinates: ("<<O->X()<<","<<O->Y()<<")\n";
-			return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
+			
+			//return y <= O->Y() && y >= O->Y() - th && x >= O->X() - (tw / 2) && x <= O->X() + (tw / 2);
+
+			//printf("Obstacle InObjectCheck: Chk(%d,%d);   Start(%d,%d); End(%d,%d)\n", x, y, sx, sy, ex, ey); // debug only
+			return y <= ey && y >= sy && x <= ex && x >= sx;
 		}
 		case KthuraKind::Pic:
 			return x >= O->X() && y >= O->Y() && x <= KthuraDraw::DrawDriver->ObjectWidth(O) && y <= KthuraDraw::DrawDriver->ObjectHeight(O);		
@@ -724,8 +763,8 @@ namespace KthuraEdit {
 			TB.ValW->Text = to_string(ModifyObject->W());
 			TB.ValH->Text = to_string(ModifyObject->H());
 			TB.ValRotDeg->Text = to_string(ModifyObject->RotationDegrees()); Deg2Rad(TB.ValRotDeg, j19action::Type);
-			TB.ValScaleX->Text = to_string(ModifyObject->ScaleX());
-			TB.ValScaleY->Text = to_string(ModifyObject->ScaleY());
+			if (TB.ValScaleX->Text != "" && TB.ValScaleX->Text != "-") TB.ValScaleX->Text = to_string(ModifyObject->ScaleX());
+			if (TB.ValScaleY->Text != "" && TB.ValScaleY->Text != "-") TB.ValScaleY->Text = to_string(ModifyObject->ScaleY());
 			LabelCalc("Modify", ModifyObject->Labels());
 			if (ModifyObject->Tag() != "") TB.ValTag->Caption = ModifyObject->Tag(); else TB.ValTag->Caption = "...";
 			TB.ValVisible->checked = ModifyObject->Visible();
@@ -755,18 +794,20 @@ namespace KthuraEdit {
 			*/
 		bool hit{ false };
 		int mxdom{ -1 };
-		if (TQSE_MouseHit(1) && TQSE_MouseX()>MapGroup->DrawX() && TQSE_MouseX()<MapGroup->DrawX()+MapGroup->W() && TQSE_MouseY()>MapGroup->DrawY() && TQSE_MouseY()<MapGroup->DrawY()+MapGroup->H()) {
-			for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {				
-				//std::cout << "Object get debug> object dominance:" << o->Dominance() << " must be higher than " << mxdom << std::endl;
-				//if (InObject(o.get(), x, y) && o->Dominance()>=mxdom) {
-				if (o->Dominance() >= mxdom && InObject(o.get(), TQSE_MouseX() - MapGroup->DrawX() + ScrollX, TQSE_MouseY() - MapGroup->DrawY() + ScrollY)) {
-					std::cout << "Object get debug> object dominance: " << o->Dominance() << " must be higher than " << mxdom << "; which should be the case so let's go for this\n";
-					mxdom = o->Dominance();
-					ModifyObject = o;
-					hit = true;
+		if (TQSE_MouseHit(1)){
+			if(TQSE_MouseX() > MapGroup->DrawX() && TQSE_MouseX() < MapGroup->DrawX() + MapGroup->W() && TQSE_MouseY() > MapGroup->DrawY() && TQSE_MouseY() < MapGroup->DrawY() + MapGroup->H()) {
+				for (auto o : WorkMap.Layers[CurrentLayer]->Objects) {
+					//std::cout << "Object get debug> object dominance:" << o->Dominance() << " must be higher than " << mxdom << std::endl;
+					//if (InObject(o.get(), x, y) && o->Dominance()>=mxdom) {
+					if (o->Dominance() >= mxdom && InObject(o.get(), TQSE_MouseX() - MapGroup->DrawX() + ScrollX, TQSE_MouseY() - MapGroup->DrawY() + ScrollY)) {
+						std::cout << "Object get debug> object dominance: " << o->Dominance() << " must be higher than " << mxdom << "; which should be the case so let's go for this\n";
+						mxdom = o->Dominance();
+						ModifyObject = o;
+						hit = true;
+					}
 				}
-			}
 			if (!hit) ModifyObject = nullptr;
+			}
 		}
 		EnableModifyTab();
 		if (ModifyObject) {
