@@ -200,6 +200,8 @@ namespace NSKthura {
 			Parent.cnt++;
 			prnt.Objects.Add(this);
 		}
+
+		
 	}
 
 	class KthuraActor : KthuraObject {
@@ -707,6 +709,45 @@ namespace NSKthura {
 			BuildBlockMap();
 		}
 		#endregion
+
+
+		/// <summary>
+		/// Clones an existing Kthura object. The original object could be from any map and any layer. Dupe Tags will automatically be renamed. You cannot close actors, this will result into a null value being returned.
+		/// </summary>
+		/// <param name="original">Original Kthura Object</param>
+		/// <returns>Clonened object</returns>
+		public KthuraObject Clone(KthuraObject original) {
+			if (original.kind == "Actor") return null;
+			var ret = new KthuraObject(original.kind, this);
+			ret.Alpha255 = original.Alpha255;
+			ret.Texture = original.Texture;
+			ret.AnimFrame = original.AnimFrame;
+			ret.AnimSpeed = original.AnimSpeed;
+			ret.R = original.R;
+			ret.G = original.G;
+			ret.B = original.B;
+			ret.x = original.x;
+			ret.y = original.y;
+			ret.h = original.h;
+			ret.w = original.w;
+			ret.Dominance = original.Dominance;
+			ret.Impassible = original.Impassible;
+			ret.ForcePassible = original.ForcePassible;
+			ret.Labels = original.Labels;
+			var Tag = original.Tag;
+			uint i = 0;
+			while (HasTag(Tag)) { Tag = $"{original.Tag}_{i++}"; }
+			ret.Tag = Tag;
+			ret.insertx = original.insertx;
+			ret.inserty = original.inserty;
+			ret.MetaData.Clear();
+			foreach (var item in original.MetaData) ret.MetaData[item.Key] = item.Value;
+			ret.ScaleX = original.ScaleX;
+			ret.ScaleY = original.ScaleY;
+			ret.RotationDegrees = original.RotationDegrees;
+			ret.Visible = original.Visible;			
+			return ret;
+		}
 	}
 
 
