@@ -1,7 +1,7 @@
 // Lic:
 // Class/KthuraCore.cs
 // Kthura Core in C#
-// version: 22.05.13
+// version: 22.06.16
 // Copyright (C) 2019, 2020, 2021, 2022 Jeroen P. Broks
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
