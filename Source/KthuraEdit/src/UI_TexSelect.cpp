@@ -125,7 +125,7 @@ namespace KthuraEdit {
 							UsedTexList->AddItem(ExtractDir(e.second.Entry()));
 						BundleAdded[Path] = true;
 					}
-				} else if (ExtractExt(e.first) == "PNG") {
+				} else if (ExtractExt(e.first) == "PNG" || ExtractExt(e.first) == "BMP" || ExtractExt(e.first) == "JPG" || ExtractExt(e.first) == "JPEG") {
 					TexList->AddItem(e.second.Entry());
 					if (WorkMap.UsedTex(e.second.Entry()))
 						UsedTexList->AddItem(e.second.Entry());
