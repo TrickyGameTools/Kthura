@@ -183,6 +183,7 @@
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TRandom.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickyMath.cpp" />
     <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickySTOI.cpp" />
+    <ClCompile Include="..\..\..\VC\TrickyUnits\Source\TrickyTime.cpp" />
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Convert.cpp" />
     <ClCompile Include="src\Main.cpp" />

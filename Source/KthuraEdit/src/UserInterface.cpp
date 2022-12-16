@@ -81,7 +81,7 @@ namespace KthuraEdit {
 		st = Upper(st);
 		if (Stage.count(st)) Crash("Dupe stage: " + st);
 		Stage[st] = UI{st};
-		Stage[st].MainGadget = CreateGroup(0, 0, TQSG_ScreenWidth(), TQSG_ScreenHeight() - 36,WorkScreen());
+		Stage[st].MainGadget = june19::CreateGroup(0, 0, TQSG_ScreenWidth(), TQSG_ScreenHeight() - 36,june19::WorkScreen());
 	}
 
 	UI* UI::GetStage(std::string st) {
@@ -215,5 +215,6 @@ namespace KthuraEdit {
 		std::cout << "Closing User Interface\n";
 		MenuSave(nullptr, j19action::Unknown);
 		DoneScript();
+		june19::FreeJune19();
 	}
 }
