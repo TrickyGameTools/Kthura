@@ -120,6 +120,17 @@ namespace KthuraEdit {
 					cout << "Object #" << o->ID() << " (" << o->Kind() << ") is \"Rotten\" and will be killed\n";
 				}
 				break;
+			case KthuraKind::Exit:
+				if (o->MetaData("Wind") == "") {
+					if (o->MetaData("___DontAskAboutWindAgain") != "TRUE") {
+						cout << "Exit #" << o->ID() << " has no wind!\n";
+						if (TrickyUnits::TQSE_Yes("Exit ("+o->Tag()+") found without Wind!\nAssume North ? ")) {
+							o->MetaData("Wind","North");
+						} else {
+							o->MetaData("___DontAskAboutWindAgain","TRUE");
+						}
+					}
+				}
 			}
 		}
 		// KILL!
